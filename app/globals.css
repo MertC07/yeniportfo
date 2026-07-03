@@ -39,8 +39,9 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
 
-  /* Fluid display scale */
-  --text-display-xl: clamp(3rem, 10vw, 9rem);
+  /* Fluid display scale — 9vw keeps the longest single words
+     (RESTRAINT., SOMETHING) inside the viewport down to 375px */
+  --text-display-xl: clamp(2rem, 9vw, 9rem);
   --text-display-lg: clamp(2.25rem, 6.5vw, 5.5rem);
   --text-display-md: clamp(1.75rem, 4vw, 3.25rem);
 

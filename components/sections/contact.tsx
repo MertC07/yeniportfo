@@ -14,7 +14,7 @@ export function Contact() {
       <div className="mt-20 flex flex-col items-center text-center">
         <RevealText
           as="h2"
-          lines={["Let's build", "something rare."]}
+          lines={["Let's build", "something", "rare."]}
           className="font-display text-display-xl font-extrabold uppercase leading-[0.95] tracking-tight"
         />
 
