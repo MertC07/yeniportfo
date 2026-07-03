@@ -1,0 +1,139 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
+import { heroStatement, profile } from "@/lib/data";
+import { useLocalTime } from "@/lib/hooks/use-local-time";
+import { cn } from "@/lib/utils";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const time = useLocalTime(profile.timezone);
+
+  const glowX = useMotionValue(0);
+  const glowY = useMotionValue(0);
+  const springX = useSpring(glowX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(glowY, { stiffness: 50, damping: 20 });
+
+  // Scroll-out parallax: the statement drifts up and dims as you leave
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const titleY = useTransform(exitProgress, [0, 1], [0, -90]);
+  const titleOpacity = useTransform(exitProgress, [0, 0.85], [1, 0.1]);
+
+  useEffect(() => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    glowX.jump(rect.width * 0.55);
+    glowY.jump(rect.height * 0.35);
+  }, [glowX, glowY]);
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    glowX.set(e.clientX - rect.left);
+    glowY.set(e.clientY - rect.top);
+  };
+
+  return (
+    <section
+      ref={sectionRef}
+      onMouseMove={onMouseMove}
+      className="relative flex min-h-svh flex-col justify-end overflow-hidden px-5 sm:px-8 lg:px-12"
+    >
+      {/* Cursor-tracking spotlight */}
+      <motion.div
+        aria-hidden
+        style={{ x: springX, y: springY }}
+        className="pointer-events-none absolute left-0 top-0 size-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl sm:size-[48rem]"
+      >
+        <div
+          className="size-full rounded-full"
+          style={{
+            background: "radial-gradient(circle, var(--glow), transparent 65%)",
+          }}
+        />
+      </motion.div>
+
+      <motion.h1
+        aria-label={heroStatement.lines.join(" ")}
+        style={{ y: titleY, opacity: titleOpacity }}
+        className="relative pt-28 font-display text-display-xl font-extrabold uppercase leading-[0.95] tracking-tight"
+      >
+        {heroStatement.lines.map((line, i) => {
+          const endsWithPeriod = line.endsWith(".");
+          const text = endsWithPeriod ? line.slice(0, -1) : line;
+          return (
+            <span key={i} aria-hidden className="block overflow-hidden">
+              <motion.span
+                className={cn(
+                  "block will-change-transform",
+                  i % 2 === 1 && "text-right"
+                )}
+                initial={{ y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1, delay: 0.35 + i * 0.11, ease: EASE }}
+              >
+                {text}
+                {endsWithPeriod && <span className="text-accent">.</span>}
+              </motion.span>
+            </span>
+          );
+        })}
+      </motion.h1>
+
+      {/* Scroll cue */}
+      <motion.div
+        aria-hidden
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.4 }}
+        className="relative mt-14 flex items-center gap-3 sm:mt-20"
+      >
+        <span className="microlabel">Scroll</span>
+        <motion.span
+          className="block h-px w-10 origin-left bg-accent"
+          animate={{ scaleX: [0.3, 1, 0.3] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </motion.div>
+
+      {/* Meta row */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
+        className="relative mt-6 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t hairline pb-8 pt-6"
+      >
+        <p className="max-w-md text-sm leading-relaxed text-muted sm:text-base">
+          {heroStatement.sub}
+        </p>
+        <div className="flex flex-col gap-2 sm:items-end">
+          <p className="microlabel">{profile.location}</p>
+          <p className="microlabel tabular-nums" suppressHydrationWarning>
+            {time ? `${time} — local` : " "}
+          </p>
+          {profile.available && (
+            <p className="microlabel flex items-center gap-2 text-foreground">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative inline-flex size-2 rounded-full bg-accent" />
+              </span>
+              {profile.availabilityNote}
+            </p>
+          )}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
