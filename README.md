@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mert Ceren — Portfolio
 
-## Getting Started
+A cinematic, editorial portfolio built from scratch. Dark-first with a light mode, smooth-scroll storytelling, and a sticky-stacked project showcase.
 
-First, run the development server:
+**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · Motion · Lenis · next-themes
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build (fully static)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing your content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All site content lives in **one file**: [`lib/data.ts`](lib/data.ts)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `profile` — name, role, location, email, availability
+- `heroStatement` — the big hero lines and subline
+- `projects` — the four project cards (title, description, tags, colors; swap the CSS-generated `palette` visual for real screenshots when ready)
+- `experience` — the timeline entries
+- `skillTiers` / `techMarquee` — the skills grid and marquee
+- `testimonials` / `awards` / `posts` — the quote rotation, award rows, and journal cards
+- `socials`, `site` — links and SEO metadata (search for `EDIT:` comments)
 
-## Learn More
+## Design system
 
-To learn more about Next.js, take a look at the following resources:
+Design tokens (colors for both themes, fluid type scale, fonts) are defined in [`app/globals.css`](app/globals.css). Typography: Syne (display) · Inter (body) · JetBrains Mono (labels).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/            layout, page, globals.css, sitemap, robots
+components/
+  providers/    theme + Lenis smooth scroll (with reduced-motion handling)
+  layout/       header, mobile menu, theme toggle, footer
+  sections/     hero, works, about, skills, testimonials, awards, journal, contact
+  ui/           reveal text, magnetic button, project card, marquee, …
+lib/            data.ts (all content), hooks, utils
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Animations run for all visitors by design (`prefers-reduced-motion` is intentionally not honored); only `transform`/`opacity` are animated for 60fps.
