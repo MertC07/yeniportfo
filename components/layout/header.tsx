@@ -31,6 +31,11 @@ export function Header() {
   const goTo = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
     setMenuOpen(false);
+    // On subpages the anchor target doesn't exist — go home with the hash
+    if (!document.querySelector(href)) {
+      window.location.assign(`/${href}`);
+      return;
+    }
     if (lenis) lenis.scrollTo(href, { duration: 1.4 });
     else document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -38,6 +43,10 @@ export function Header() {
   const goTop = (e: React.MouseEvent) => {
     e.preventDefault();
     setMenuOpen(false);
+    if (window.location.pathname !== "/") {
+      window.location.assign("/");
+      return;
+    }
     if (lenis) lenis.scrollTo(0, { duration: 1.4 });
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };

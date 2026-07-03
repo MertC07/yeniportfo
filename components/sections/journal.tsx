@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "motion/react";
 import { posts } from "@/lib/data";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const MotionLink = motion.create(Link);
 
 export function Journal() {
   return (
@@ -13,9 +15,9 @@ export function Journal() {
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {posts.map((post, i) => (
-          <motion.a
-            key={post.title}
-            href={post.href}
+          <MotionLink
+            key={post.slug}
+            href={`/journal/${post.slug}`}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10% 0px" }}
@@ -40,7 +42,7 @@ export function Journal() {
                 Read ↗
               </span>
             </div>
-          </motion.a>
+          </MotionLink>
         ))}
       </div>
     </section>

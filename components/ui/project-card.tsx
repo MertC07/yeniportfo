@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   motion,
   useMotionValue,
@@ -129,8 +130,8 @@ export function ProjectCard({
               ))}
             </ul>
             <Magnetic>
-              <a
-                href={project.href}
+              <Link
+                href={`/work/${project.slug}`}
                 aria-label={`View case study: ${project.title}`}
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
               >
@@ -138,7 +139,7 @@ export function ProjectCard({
                 <span aria-hidden className="text-sm leading-none">
                   ↗
                 </span>
-              </a>
+              </Link>
             </Magnetic>
           </div>
         </div>
