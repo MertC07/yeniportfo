@@ -9,7 +9,7 @@ import { CopyEmailButton } from "@/components/ui/copy-email-button";
 export function Contact() {
   return (
     <section id="contact" className="px-5 py-28 sm:px-8 sm:py-40 lg:px-12">
-      <SectionHeading index="07" label="Contact" meta="Replies within 24h" />
+      <SectionHeading index="05" label="Contact" meta="Replies within 24h" />
 
       <div className="mt-20 flex flex-col items-center text-center">
         <RevealText

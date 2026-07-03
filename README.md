@@ -18,10 +18,11 @@ All site content lives in **one file**: [`lib/data.ts`](lib/data.ts)
 
 - `profile` — name, role, location, email, availability
 - `heroStatement` — the big hero lines and subline
-- `projects` — the four project cards (title, description, tags, colors; swap the CSS-generated `palette` visual for real screenshots when ready)
+- `projects` — the project cards + case studies (title, description, tags, colors; swap the CSS-generated `palette` visual for real screenshots when ready)
 - `experience` — the timeline entries
 - `skillTiers` / `techMarquee` — the skills grid and marquee
-- `testimonials` / `awards` / `posts` — the quote rotation, award rows, and journal cards
+- `testimonials` / `awards` — empty until real entries exist; fill them, then re-mount the sections in `app/page.tsx`
+- `posts` — the journal cards and article bodies
 - `socials`, `site` — links and SEO metadata (search for `EDIT:` comments)
 
 ## Design system

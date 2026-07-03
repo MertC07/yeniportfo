@@ -11,7 +11,7 @@ const MotionLink = motion.create(Link);
 export function Journal() {
   return (
     <section id="journal" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
-      <SectionHeading index="06" label="Journal" meta="Notes on craft" />
+      <SectionHeading index="04" label="Journal" meta="Notes on craft" />
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {posts.map((post, i) => (

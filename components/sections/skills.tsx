@@ -15,9 +15,9 @@ import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const DISCIPLINES: Array<Skill["discipline"]> = [
-  "Frontend",
-  "Motion",
+  "AI / ML",
   "Backend",
+  "Frontend",
   "Tooling",
 ];
 

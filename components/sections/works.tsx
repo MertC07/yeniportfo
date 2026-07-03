@@ -18,7 +18,7 @@ export function Works() {
       <SectionHeading
         index="01"
         label="Selected Works"
-        meta={`${projects.length} projects — 2024 / 2026`}
+        meta={`${projects.length} projects — 2025 / 2026`}
       />
       <div ref={stackRef} className="mt-8">
         {projects.map((project, i) => (

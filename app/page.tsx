@@ -4,8 +4,6 @@ import { Hero } from "@/components/sections/hero";
 import { Works } from "@/components/sections/works";
 import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
-import { Testimonials } from "@/components/sections/testimonials";
-import { Awards } from "@/components/sections/awards";
 import { Journal } from "@/components/sections/journal";
 import { Contact } from "@/components/sections/contact";
 
@@ -18,8 +16,8 @@ export default function Home() {
         <Works />
         <About />
         <Skills />
-        <Testimonials />
-        <Awards />
+        {/* Testimonials and Awards stay unmounted until real entries
+            exist in lib/data.ts — re-add them here and renumber. */}
         <Journal />
         <Contact />
       </main>

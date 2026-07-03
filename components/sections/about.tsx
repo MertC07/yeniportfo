@@ -74,7 +74,7 @@ export function About() {
           <ol>
             {experience.map((entry, i) => (
               <motion.li
-                key={entry.period}
+                key={`${entry.period}-${entry.title}`}
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10% 0px" }}
