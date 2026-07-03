@@ -102,6 +102,17 @@ html.custom-cursor * {
   }
 }
 
+/* Hero line reveal runs in pure CSS so it starts with first paint
+   instead of waiting for hydration (keeps mobile LCP low). */
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 /* Mono micro-label */
 .microlabel {
   font-family: var(--font-jetbrains-mono), monospace;

@@ -75,18 +75,16 @@ export function Hero() {
           const text = endsWithPeriod ? line.slice(0, -1) : line;
           return (
             <span key={i} aria-hidden className="block overflow-hidden">
-              <motion.span
+              <span
                 className={cn(
-                  "block will-change-transform",
+                  "block will-change-transform animate-[rise_1s_cubic-bezier(0.16,1,0.3,1)_both]",
                   i % 2 === 1 && "text-right"
                 )}
-                initial={{ y: "110%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 1, delay: 0.35 + i * 0.11, ease: EASE }}
+                style={{ animationDelay: `${0.25 + i * 0.1}s` }}
               >
                 {text}
                 {endsWithPeriod && <span className="text-accent">.</span>}
-              </motion.span>
+              </span>
             </span>
           );
         })}
@@ -109,9 +107,12 @@ export function Hero() {
       </motion.div>
 
       {/* Meta row */}
+      {/* No opacity animation here: this paragraph is the page's LCP
+          element, and an SSR'd opacity:0 delays its first paint until
+          hydration. The slide-in is covered by the preloader anyway. */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ y: 24 }}
+        animate={{ y: 0 }}
         transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
         className="relative mt-6 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t hairline pb-8 pt-6"
       >

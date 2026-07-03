@@ -72,7 +72,7 @@ export function Header() {
           <a
             href="#main"
             onClick={goTop}
-            aria-label={`${profile.name} — back to top`}
+            aria-label={`${profile.monogram}. ${profile.name} — back to top`}
             className="font-display text-lg font-extrabold tracking-tight"
           >
             {profile.monogram}

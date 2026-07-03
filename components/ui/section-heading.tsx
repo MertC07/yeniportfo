@@ -24,13 +24,13 @@ export function SectionHeading({ index, label, meta, className }: SectionHeading
       className={cn("border-t hairline pt-4", className)}
     >
       <div className="flex items-baseline justify-between gap-4">
-        <p className="microlabel">
+        <h2 className="microlabel">
           <span className="text-accent">{index}</span>
           <span className="mx-3 select-none" aria-hidden>
             —
           </span>
           {label}
-        </p>
+        </h2>
         {meta && <p className="microlabel hidden sm:block">{meta}</p>}
       </div>
     </motion.div>

@@ -48,7 +48,7 @@ export function Footer() {
 
       {/* Cropped wordmark */}
       <div aria-hidden className="mt-8 overflow-hidden">
-        <p className="translate-y-[14%] select-none whitespace-nowrap text-center font-display text-[15.5vw] font-extrabold uppercase leading-[0.8] tracking-tight text-foreground/[0.06]">
+        <p className="translate-y-[14%] select-none whitespace-nowrap bg-foreground/[0.06] bg-clip-text text-center font-display text-[15.5vw] font-extrabold uppercase leading-[0.8] tracking-tight text-transparent">
           {profile.name}
         </p>
       </div>

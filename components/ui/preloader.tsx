@@ -22,12 +22,12 @@ export function Preloader() {
   useEffect(() => {
     if (!shouldShow) return;
     document.body.style.overflow = "hidden";
-    const exitTimer = setTimeout(() => setPhase("exit"), 1300);
+    const exitTimer = setTimeout(() => setPhase("exit"), 950);
     const doneTimer = setTimeout(() => {
       document.body.style.overflow = "";
       window.sessionStorage.setItem("intro-seen", "1");
       setPhase("done");
-    }, 2100);
+    }, 1650);
     return () => {
       clearTimeout(exitTimer);
       clearTimeout(doneTimer);
@@ -50,7 +50,7 @@ export function Preloader() {
         <span className="text-accent">.</span>
       </p>
       <div className="h-px w-44 overflow-hidden">
-        <div className="h-full w-full origin-left animate-[loadbar_1.2s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
+        <div className="h-full w-full origin-left animate-[loadbar_0.9s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
       </div>
       <p className="microlabel">
         {profile.name} — Portfolio
