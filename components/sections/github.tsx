@@ -179,6 +179,33 @@ export function GithubStats() {
             </div>
           </motion.div>
         </div>
+
+        {/* Live GitHub Contribution Graph Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+          className="group relative overflow-hidden rounded-2xl border hairline bg-surface/40 p-6 sm:p-8 backdrop-blur-sm transition-all duration-300 hover:border-accent/40"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h4 className="font-display text-lg font-bold">Canlı Katkı Haritası (Contribution Graph)</h4>
+              <p className="mt-1 text-xs text-muted">Son 1 yıllık GitHub commit ve kod aktivite yoğunluğu</p>
+            </div>
+            <span className="microlabel text-accent font-mono">@MertC07</span>
+          </div>
+
+          <div className="flex items-center justify-center overflow-x-auto rounded-xl border hairline bg-black/60 p-4 py-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://ghchart.rshah.org/f97316/MertC07"
+              alt="Mert Ceren Live GitHub Contribution Graph"
+              className="min-w-[650px] w-full h-auto opacity-95 transition-opacity hover:opacity-100"
+              loading="lazy"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
