@@ -564,7 +564,7 @@ export const ui = {
       label: "Certificates",
       meta: "Courses & credentials",
       view: "View credential ↗",
-      showMore: "Show {n} more",
+      showMore: "Show more",
       showLess: "Show less",
     },
     github: {

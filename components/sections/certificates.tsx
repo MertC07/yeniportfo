@@ -126,8 +126,6 @@ export function Certificates() {
   const total = certificates.length;
   const shown = certificates.slice(0, visible);
   const allShown = visible >= total;
-  // Next click reveals up to BATCH more, capped at what's left.
-  const nextCount = Math.min(BATCH, total - visible);
 
   return (
     <section id="certificates" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
@@ -155,9 +153,7 @@ export function Certificates() {
             aria-controls="certificates"
             className="microlabel rounded-full border hairline px-6 py-3 text-foreground transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
           >
-            {allShown
-              ? copy.showLess
-              : copy.showMore.replace("{n}", String(nextCount))}
+            {allShown ? copy.showLess : copy.showMore}
           </button>
         </div>
       )}
