@@ -65,6 +65,9 @@ export async function generateMetadata({
       description: site.description,
     },
     robots: { index: true, follow: true },
+    verification: {
+      google: "ritwe6f3XsnpHr7JNveLqu_-yCIRypKoDU9texqIOzY",
+    },
   };
 }
 
