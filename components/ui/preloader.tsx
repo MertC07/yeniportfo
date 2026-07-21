@@ -46,8 +46,8 @@ export function Preloader() {
         phase === "exit" ? "-translate-y-full" : "translate-y-0"
       )}
     >
-      <p className="font-display text-6xl font-extrabold tracking-tight">
-        {profile.monogram}
+      <p className="font-display text-4xl font-extrabold lowercase tracking-tight sm:text-6xl">
+        {profile.wordmark}
         <span className="text-accent">.</span>
       </p>
       <div className="h-px w-44 overflow-hidden">

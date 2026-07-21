@@ -105,7 +105,7 @@ export default async function OpengraphImage() {
           }}
         >
           <span>
-            {profile.monogram}
+            {profile.wordmark}
             <span style={{ color: "#ff4d00" }}>.</span>
           </span>
           <span style={{ color: "#8a867c" }}>PORTFOLIO — 2026</span>

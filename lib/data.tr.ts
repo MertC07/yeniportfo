@@ -9,6 +9,7 @@ import type { Certificate, ExperienceEntry, Post, Project, SkillTier, Ui } from 
 export const profile = {
   name: "Mert Ceren",
   monogram: "MC",
+  wordmark: "mertceren",
   role: "Yapay Zekâ & Full-Stack Geliştirici",
   tagline:
     "Yazılımın fiziksel dünyayla buluştuğu akıllı sistemler geliştiriyorum.",

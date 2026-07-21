@@ -7,6 +7,7 @@
 export const profile = {
   name: "Mert Ceren",
   monogram: "MC",
+  wordmark: "mertceren",
   role: "AI & Full-Stack Developer",
   tagline: "Building intelligent systems where software meets the physical world.",
   location: "Istanbul, Türkiye", // EDIT: or "Bandırma, Türkiye" outside internship season

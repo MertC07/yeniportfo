@@ -77,10 +77,10 @@ export function Header() {
           <a
             href="#main"
             onClick={goTop}
-            aria-label={`${profile.monogram}. ${profile.name} — ${ui.backToTopAria}`}
-            className="font-display text-lg font-extrabold tracking-tight"
+            aria-label={`${profile.wordmark}. ${profile.name} — ${ui.backToTopAria}`}
+            className="font-display text-lg font-extrabold lowercase tracking-tight"
           >
-            {profile.monogram}
+            {profile.wordmark}
             <span className="text-accent">.</span>
           </a>
 
