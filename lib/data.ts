@@ -329,7 +329,11 @@ export type Certificate = {
   issued: string;
   /** Issuer logo under /public/logos. */
   logo?: string;
-  /** Credential URL — omit (or "#") to hide the link. */
+  /**
+   * Credential link — omit (or "#") to hide it. Either a verification URL
+   * or a file you dropped in /public/certificates, e.g.
+   * "/certificates/csharp.pdf". Clicking anywhere on the card opens it.
+   */
   href?: string;
 };
 
@@ -500,6 +504,8 @@ export const ui = {
       label: "Certificates",
       meta: "Courses & credentials",
       view: "View credential ↗",
+      showMore: "Show {n} more",
+      showLess: "Show less",
     },
     github: {
       label: "GitHub & Code Activity",

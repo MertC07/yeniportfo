@@ -323,6 +323,8 @@ export const ui: Ui = {
       label: "Sertifikalar",
       meta: "Kurslar & belgeler",
       view: "Sertifikayı gör ↗",
+      showMore: "{n} sertifika daha göster",
+      showLess: "Daha az göster",
     },
     github: {
       label: "GitHub & Kod Aktivitesi",
