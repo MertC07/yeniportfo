@@ -18,7 +18,7 @@ export const profile = {
 };
 
 export const heroStatement = {
-  lines: ["Mert", "Ceren", "Software", "Engineer"],
+  lines: ["Mert", "Ceren", "Software", "Developer"],
   sub: "I am a software engineering student at Bandırma Onyedi Eylül University. I build computer vision systems using YOLO and Python, and develop web platforms with React and .NET Core.",
 };
 

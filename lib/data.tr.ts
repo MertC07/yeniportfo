@@ -21,7 +21,7 @@ export const profile = {
 };
 
 export const heroStatement = {
-  lines: ["Mert", "Ceren", "Yazılım", "Mühendisi"],
+  lines: ["Mert", "Ceren", "Yazılım", "Geliştirici"],
   sub: "Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisiyim. YOLO ve Python ile bilgisayarlı görü sistemleri geliştiriyor, React ve .NET Core ile web platformları inşa ediyorum.",
 };
 
