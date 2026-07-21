@@ -388,15 +388,15 @@ export const awards = [
 // EDIT: örnek satırlar — canlıya almadan gerçek sertifikalarınla değiştir.
 export const certificates: Certificate[] = [
   {
-    year: "2026",
     title: "Örnek: Makine Öğrenmesi Sertifikası",
     issuer: "Kurum adı (örn. BTK Akademi)",
+    issued: "Mar 2026",
     href: "#",
   },
   {
-    year: "2025",
     title: "Örnek: Web Geliştirme Sertifikası",
     issuer: "Kurum adı (örn. Coursera)",
+    issued: "Kas 2025",
   },
 ];
 

@@ -316,25 +316,28 @@ export const awards: Award[] = [
 ];
 
 export type Certificate = {
-  year: string;
   title: string;
   issuer: string;
-  /** Verification / credential URL — omit (or "#") to hide the link. */
+  /** Issue date exactly as the credential states it, e.g. "Mar 2025". */
+  issued: string;
+  /** Issuer logo under /public/logos. */
+  logo?: string;
+  /** Credential URL — omit (or "#") to hide the link. */
   href?: string;
 };
 
 // EDIT: sample rows — replace with your real certificates before deploying.
 export const certificates: Certificate[] = [
   {
-    year: "2026",
     title: "Sample: Machine Learning Certificate",
     issuer: "Issuer name (e.g. BTK Akademi)",
+    issued: "Mar 2026",
     href: "#",
   },
   {
-    year: "2025",
     title: "Sample: Web Development Certificate",
     issuer: "Issuer name (e.g. Coursera)",
+    issued: "Nov 2025",
   },
 ];
 
