@@ -298,20 +298,12 @@ export type Award = {
   project: string;
 };
 
-// Empty until real recognition exists (TEKNOFEST 2026 results, etc.).
-// Add entries here, then mount <Awards /> again in app/page.tsx.
 export const awards: Award[] = [
   {
     year: "2026",
-    title: "TEKNOFEST Finalist",
+    title: "TEKNOFEST 2026 Finalist",
     issuer: "T3 Foundation",
     project: "Smart Road Safety",
-  },
-  {
-    year: "2025",
-    title: "High Honor Roll",
-    issuer: "Bandırma Onyedi Eylül University",
-    project: "Academic Excellence",
   },
 ];
 

@@ -360,15 +360,9 @@ export const testimonials = [
 export const awards = [
   {
     year: "2026",
-    title: "TEKNOFEST Finalisti",
+    title: "TEKNOFEST 2026 Finalisti",
     issuer: "T3 Vakfı",
-    project: "Smart Road Safety",
-  },
-  {
-    year: "2025",
-    title: "Yüksek Onur Belgesi",
-    issuer: "Bandırma Onyedi Eylül Üniversitesi",
-    project: "Akademik Başarı",
+    project: "Akıllı Yol Güvenliği",
   },
 ];
 
