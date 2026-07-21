@@ -17,8 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority,
       alternates: {
         languages: {
-          en: `${site.url}${path}`,
           tr: `${site.url}${localePath("tr", path)}`,
+          en: `${site.url}${localePath("en", path)}`,
         },
       },
     }))

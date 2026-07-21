@@ -10,7 +10,7 @@ import type { ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
 
 export const locales = ["en", "tr"] as const;
 export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = "en";
+export const defaultLocale: Locale = "tr";
 
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
@@ -69,8 +69,11 @@ export function getContent(locale: Locale): Content {
   return bundles[locale];
 }
 
-/** Prefix a root-relative path for the given locale: "/" → "/tr", "/work/x" → "/tr/work/x". */
+/**
+ * Turkish is the default and lives at the root URLs; English is prefixed.
+ * "/" → "/en", "/work/x" → "/en/work/x" for English; unchanged for Turkish.
+ */
 export function localePath(locale: Locale, path: string): string {
-  if (locale === "en") return path;
-  return path === "/" ? "/tr" : `/tr${path}`;
+  if (locale === "tr") return path;
+  return path === "/" ? "/en" : `/en${path}`;
 }

@@ -28,7 +28,10 @@ export async function generateMetadata({
     description: post.excerpt,
     alternates: {
       canonical: localePath(lang, `/journal/${slug}`),
-      languages: { en: `/journal/${slug}`, tr: `/tr/journal/${slug}` },
+      languages: {
+        tr: localePath("tr", `/journal/${slug}`),
+        en: localePath("en", `/journal/${slug}`),
+      },
     },
   };
 }

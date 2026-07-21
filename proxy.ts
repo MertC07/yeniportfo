@@ -2,24 +2,33 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * English lives at the root URLs (/, /work/x), Turkish under /tr.
- * Both trees render from app/[lang], so bare paths are rewritten
- * (not redirected — the visible URL stays clean) to their /en form.
+ * Turkish is the default and lives at the root URLs (/, /work/x); English
+ * lives under /en. Both trees render from app/[lang], so bare paths are
+ * rewritten (not redirected — the visible URL stays clean) to their /tr form.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isTurkish = pathname === "/tr" || pathname.startsWith("/tr/");
+
+  // Turkish used to live under /tr; it is now the root. Redirect the old
+  // URLs so shared links and search results survive the swap.
+  if (pathname === "/tr" || pathname.startsWith("/tr/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.slice(3) || "/";
+    return NextResponse.redirect(url, 308);
+  }
+
+  const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
 
   // not-found.tsx receives no params, so the locale travels as a header.
   const headers = new Headers(request.headers);
-  headers.set("x-locale", isTurkish ? "tr" : "en");
+  headers.set("x-locale", isEnglish ? "en" : "tr");
 
-  if (isTurkish) {
+  if (isEnglish) {
     return NextResponse.next({ request: { headers } });
   }
 
   const url = request.nextUrl.clone();
-  url.pathname = `/en${pathname}`;
+  url.pathname = `/tr${pathname}`;
   return NextResponse.rewrite(url, { request: { headers } });
 }
 

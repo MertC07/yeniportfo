@@ -49,7 +49,7 @@ export async function generateMetadata({
     authors: [{ name: profile.name }],
     alternates: {
       canonical: localePath(lang, "/"),
-      languages: { en: "/", tr: "/tr" },
+      languages: { tr: localePath("tr", "/"), en: localePath("en", "/") },
     },
     openGraph: {
       title: site.title,

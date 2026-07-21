@@ -29,7 +29,10 @@ export async function generateMetadata({
     description: project.description,
     alternates: {
       canonical: localePath(lang, `/work/${slug}`),
-      languages: { en: `/work/${slug}`, tr: `/tr/work/${slug}` },
+      languages: {
+        tr: localePath("tr", `/work/${slug}`),
+        en: localePath("en", `/work/${slug}`),
+      },
     },
   };
 }

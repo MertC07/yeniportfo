@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
+import { localePath } from "@/lib/content";
 
 /**
  * EN ↔ TR switch: links to the same page in the other locale.
@@ -14,12 +15,10 @@ export function LanguageToggle() {
   const { ui } = useContent();
   const pathname = usePathname() ?? "/";
 
-  const target =
-    locale === "en"
-      ? pathname === "/"
-        ? "/tr"
-        : `/tr${pathname}`
-      : pathname.replace(/^\/tr(?=\/|$)/, "") || "/";
+  // Strip any locale prefix to the bare path, then re-prefix for the other
+  // locale. Turkish lives at the root, English under /en.
+  const bare = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const target = localePath(locale === "tr" ? "en" : "tr", bare);
 
   return (
     <a
