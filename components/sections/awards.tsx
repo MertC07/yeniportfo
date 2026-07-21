@@ -14,7 +14,7 @@ export function Awards() {
   return (
     <section id="awards" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
-        index="05"
+        index="04"
         label={ui.sections.awards.label}
         meta={ui.sections.awards.meta}
       />

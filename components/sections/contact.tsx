@@ -12,7 +12,7 @@ export function Contact() {
   return (
     <section id="contact" className="px-5 py-28 sm:px-8 sm:py-40 lg:px-12">
       <SectionHeading
-        index="07"
+        index="06"
         label={ui.sections.contact.label}
         meta={ui.sections.contact.meta}
       />

@@ -15,7 +15,7 @@ export function Journal() {
   return (
     <section id="journal" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
-        index="06"
+        index="05"
         label={ui.sections.journal.label}
         meta={ui.sections.journal.meta}
       />
