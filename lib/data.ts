@@ -11,7 +11,7 @@ export const profile = {
   tagline: "Building intelligent systems where software meets the physical world.",
   location: "Istanbul, Türkiye", // EDIT: or "Bandırma, Türkiye" outside internship season
   timezone: "Europe/Istanbul",
-  email: "mertceren.2004.mc@gmail.com",
+  email: "mertceren.2003.mc@gmail.com",
   available: true,
   availabilityNote: "Open to internships & freelance",
   image: "/portrait.png",

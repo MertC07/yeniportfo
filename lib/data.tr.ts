@@ -14,7 +14,7 @@ export const profile = {
     "Yazılımın fiziksel dünyayla buluştuğu akıllı sistemler geliştiriyorum.",
   location: "İstanbul, Türkiye",
   timezone: "Europe/Istanbul",
-  email: "mertceren.2004.mc@gmail.com",
+  email: "mertceren.2003.mc@gmail.com",
   available: true,
   availabilityNote: "Staj ve freelance işlere açığım",
   image: "/portrait.png",
