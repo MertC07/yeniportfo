@@ -449,5 +449,65 @@ export const certificates: Certificate[] = [
     issuer: "BANÜ Bilişim ve Teknoloji Topluluğu",
     issued: "Nis 2024",
   },
+  {
+    title: "Web ve Mobil Uygulama Geliştirme Alanında React'ın Katkıları Nelerdir?",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Mar 2024",
+  },
+  {
+    title: "Yazılımda Test",
+    issuer: "BANÜ Bilişim ve Teknoloji Topluluğu",
+    issued: "Mar 2024",
+  },
+  {
+    title: "İş Hayatında En Çok Kullanılan Excel Fonksiyonları",
+    issuer: "BANÜ Yönetim Bilişim Sistemleri Topluluğu",
+    issued: "Mar 2024",
+  },
+  {
+    title: "Okul Bitti Ya Sonra?",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Mar 2024",
+  },
+  {
+    title: "Temel Network Eğitimi",
+    issuer: "BANÜ Cyber",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Yeni Başlayanlar için Python Programlama",
+    issuer: "BTK Akademi",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Sağlıklı Yaşam ve Ek Gıdaların Önemi",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Mülakat 101 (kariyer.net)",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Yazılım Zirvesi",
+    issuer: "BANÜ Bilişim ve Teknoloji Topluluğu",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Kariyer.net İş Hayatına İlk Adım",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Ara 2023",
+  },
+  {
+    title: "Yazılımda Kariyer Yolu 5",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Kas 2023",
+  },
+  {
+    title: "Siber Güvenlik",
+    issuer: "BANÜ Yazılım Mühendisliği Topluluğu",
+    issued: "Kas 2023",
+  },
 ];
 

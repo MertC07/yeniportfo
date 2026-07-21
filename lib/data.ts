@@ -393,6 +393,66 @@ export const certificates: Certificate[] = [
     issuer: "BANÜ Informatics and Technology Society",
     issued: "Apr 2024",
   },
+  {
+    title: "What Are React's Contributions to Web & Mobile App Development?",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Mar 2024",
+  },
+  {
+    title: "Software Testing",
+    issuer: "BANÜ Informatics and Technology Society",
+    issued: "Mar 2024",
+  },
+  {
+    title: "The Most-Used Excel Functions in Business Life",
+    issuer: "BANÜ Management Information Systems Society",
+    issued: "Mar 2024",
+  },
+  {
+    title: "School's Over — What Now?",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Mar 2024",
+  },
+  {
+    title: "Fundamentals of Networking",
+    issuer: "BANÜ Cyber",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Python Programming for Beginners",
+    issuer: "BTK Akademi",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Healthy Living & the Importance of Supplements",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Interview 101 (kariyer.net)",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Software Summit",
+    issuer: "BANÜ Informatics and Technology Society",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Kariyer.net: First Step into Working Life",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Dec 2023",
+  },
+  {
+    title: "Career Path in Software 5",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Nov 2023",
+  },
+  {
+    title: "Cybersecurity",
+    issuer: "BANÜ Software Engineering Society",
+    issued: "Nov 2023",
+  },
 ];
 
 export type Post = {
