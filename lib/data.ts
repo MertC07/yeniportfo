@@ -250,7 +250,7 @@ export const skillTiers: SkillTier[] = [
     tier: "Fluent",
     blurb: "Comfortable at production depth.",
     skills: [
-      { name: "FastAPI", discipline: "Backend", note: "Lightweight Python services" },
+      { name: "Node.js / Express", discipline: "Backend", note: "REST APIs with Prisma ORM" },
       { name: "SignalR", discipline: "Backend", note: "Real-time notifications" },
       { name: "Computer Vision", discipline: "AI / ML", note: "Live image analysis" },
       { name: "System Design", discipline: "Tooling", note: "Architecture before code" },
@@ -278,7 +278,8 @@ export const techMarquee = [
   "React",
   "SignalR",
   "PostgreSQL",
-  "FastAPI",
+  "Express",
+  "Prisma",
   "SQL",
   "Prompt Engineering",
 ];
@@ -456,6 +457,9 @@ export const navItems = [
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
+  { label: "GitHub", href: "#github" },
+  { label: "Certificates", href: "#certificates" },
+  { label: "Awards", href: "#awards" },
   { label: "Contact", href: "#contact" },
 ] as const;
 

@@ -203,7 +203,7 @@ export const skillTiers: SkillTier[] = [
     tier: "Akıcı",
     blurb: "Üretim derinliğinde rahatım.",
     skills: [
-      { name: "FastAPI", discipline: "Backend", note: "Hafif Python servisleri" },
+      { name: "Node.js / Express", discipline: "Backend", note: "Prisma ORM ile REST API'ler" },
       { name: "SignalR", discipline: "Backend", note: "Gerçek zamanlı bildirimler" },
       { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "Canlı görüntü analizi" },
       { name: "Sistem Tasarımı", discipline: "Tooling", note: "Koddan önce mimari" },
@@ -275,6 +275,9 @@ export const navItems = [
   { label: "İşler", href: "#work" },
   { label: "Hakkımda", href: "#about" },
   { label: "Yetenekler", href: "#skills" },
+  { label: "GitHub", href: "#github" },
+  { label: "Sertifikalar", href: "#certificates" },
+  { label: "Ödüller", href: "#awards" },
   { label: "İletişim", href: "#contact" },
 ] as const;
 

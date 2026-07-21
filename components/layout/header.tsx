@@ -85,7 +85,7 @@ export function Header() {
           </a>
 
           <div className="flex items-center gap-3 sm:gap-6">
-            <nav aria-label="Primary" className="hidden items-center gap-7 md:flex">
+            <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-7">
               {navItems.map((item) => (
                 <a
                   key={item.href}
@@ -107,7 +107,7 @@ export function Header() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? ui.menu.close : ui.menu.open}
-              className="relative flex size-10 items-center justify-center md:hidden"
+              className="relative flex size-10 items-center justify-center lg:hidden"
             >
               <span
                 className={cn(
@@ -133,7 +133,7 @@ export function Header() {
         id="mobile-menu"
         inert={!menuOpen}
         className={cn(
-          "fixed inset-0 z-40 flex flex-col justify-between bg-background px-6 pb-10 pt-28 transition-opacity duration-300 md:hidden",
+          "fixed inset-0 z-40 flex flex-col justify-between bg-background px-6 pb-10 pt-28 transition-opacity duration-300 lg:hidden",
           menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         )}
       >
