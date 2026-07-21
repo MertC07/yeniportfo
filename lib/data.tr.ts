@@ -59,26 +59,29 @@ export const projects: Project[] = [
     year: "2026",
     category: "Eğitim Teknolojisi · Web Platformu",
     description:
-      "Envanter takip sistemiyle bütünleşik 360° panoramik kampüs deneyimi — önde React ve Pannellum, arkada FastAPI ve PostgreSQL. Kampüsü her yerden gez; içindekileri tek panelden yönet.",
-    tags: ["React", "Pannellum", "FastAPI", "PostgreSQL"],
+      "Envanter takip sistemiyle bütünleşik 360° panoramik kampüs deneyimi — önde React, Photo Sphere Viewer ve Leaflet, arkada PostgreSQL üzerinde Express ve Prisma. Kampüsü her yerden gez; içindekileri tek panelden yönet.",
+    tags: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
     href: "#",
     image: "/projects/virtual-campus.png",
+    status: "Geliştirme aşamasında",
     palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
     caseStudy: {
       intro:
         "Kampüs, daha varmadan gezebilmen gereken bir yerdir — ve birinin dürüst tutmak zorunda olduğu bir demirbaş listesidir. Sanal Kampüs ikisini de aynı platformdan yapıyor.",
       facts: [
         { label: "Rol", value: "Full-Stack Geliştirici" },
-        { label: "Frontend", value: "React + Pannellum" },
-        { label: "Backend", value: "FastAPI + PostgreSQL" },
-        { label: "Durum", value: "Geliştirme Aşamasında" },
+        { label: "Frontend", value: "React + Vite, Tailwind CSS" },
+        { label: "360° & harita", value: "Photo Sphere Viewer + Leaflet" },
+        { label: "Backend", value: "Node.js üzerinde Express + Prisma" },
+        { label: "Veritabanı", value: "PostgreSQL 16 (Docker)" },
+        { label: "Durum", value: "Geliştirme aşamasında" },
       ],
       challenge:
         "Aday öğrenciler kampüsü yerinde gezmeden görmek istiyor; idarenin ise aynı binalardaki envanteri takip etmesi gerekiyor — genellikle birbirinden kopuk iki araçla çözülen iki problem. Hedef tek platformdu: her cihazda akıcı 360° gezinme, arkasında yapılandırılmış, sorgulanabilir veri.",
       approach:
-        "Pannellum panoramik sahneleri React kabuğu içinde işliyor; hotspot navigasyonu odaları ve binaları gezilebilir bir tura bağlıyor. FastAPI backend'i sahne ve envanter verisini PostgreSQL'den sunuyor — ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında yaşayan odanın ta kendisi. Tek doğruluk kaynağı, birbirinden çok farklı iki kitle.",
+        "Photo Sphere Viewer panoramik sahneleri Vite ile kurulmuş React kabuğu içinde işliyor, Leaflet ise kampüs haritasını taşıyor; böylece ziyaretçi genel görünümle bir oda arasında bağı kaybetmeden gezinebiliyor. Prisma destekli Express API'si sahne ve envanter verisini PostgreSQL'den sunuyor — ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında yaşayan odanın ta kendisi. Tek doğruluk kaynağı, birbirinden çok farklı iki kitle.",
       outcome:
-        "Projenin temel mimarisi kuruldu; 360° panoramik sahneler ile FastAPI envanter backend'i birbirine bağlandı. Şu an kampüs genelinde yeni konumların eklenmesi ve yönetim panelinin detaylandırılması üzerinde aktif olarak çalışmaya devam ediyoruz.",
+        "Hâlâ geliştirme aşamasında. Temel mimari ayakta — panoramik sahneler, kampüs haritası ve Prisma destekli envanter API'si birbiriyle konuşuyor — şimdiki iş yeni kampüs konumlarını çekmek ve yönetim panelini detaylandırmak.",
     },
   },
   {
@@ -212,7 +215,7 @@ export const skillTiers: SkillTier[] = [
     blurb: "Güncel meraklar, hızla büyüyor.",
     skills: [
       { name: "5G & Edge", discipline: "Tooling", note: "TEKNOFEST akıllı ulaşım" },
-      { name: "Pannellum / 360°", discipline: "Frontend", note: "Panoramik web deneyimleri" },
+      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramik web deneyimleri" },
       { name: "Model Optimizasyonu", discipline: "AI / ML", note: "Daha hızlı çıkarım, aynı gözler" },
     ],
   },

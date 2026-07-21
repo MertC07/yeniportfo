@@ -133,9 +133,20 @@ export function ProjectCard({
             </span>
             {project.category}
           </p>
-          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/70">
-            {project.year}
-          </p>
+          <div className="flex items-center gap-3">
+            {project.status && (
+              <span className="flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white backdrop-blur-sm">
+                <span className="relative flex size-1.5">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-70" />
+                  <span className="relative inline-flex size-1.5 rounded-full bg-accent" />
+                </span>
+                {project.status}
+              </span>
+            )}
+            <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/70">
+              {project.year}
+            </p>
+          </div>
         </div>
 
         {/* Bottom content */}

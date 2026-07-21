@@ -36,6 +36,8 @@ export type Project = {
   tags: string[];
   href: string;
   image?: string;
+  /** Shown as a badge on the card while a project is still being built. */
+  status?: string;
   /** Colors driving the CSS-generated visual for each card. */
   palette: { from: string; via: string; to: string };
   caseStudy: {
@@ -83,26 +85,29 @@ export const projects: Project[] = [
     year: "2026",
     category: "EdTech · Web Platform",
     description:
-      "A 360° panoramic campus experience with an integrated inventory tracking system — React and Pannellum on the front, FastAPI and PostgreSQL behind it. Walk the campus from anywhere; manage what's inside it from one panel.",
-    tags: ["React", "Pannellum", "FastAPI", "PostgreSQL"],
+      "A 360° panoramic campus experience with an integrated inventory tracking system — React, Photo Sphere Viewer and Leaflet on the front, Express and Prisma over PostgreSQL behind it. Walk the campus from anywhere; manage what's inside it from one panel.",
+    tags: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
     href: "#",
     image: "/projects/virtual-campus.png",
+    status: "In development",
     palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
     caseStudy: {
       intro:
         "A campus is a place you should be able to visit before you arrive — and an asset list someone has to keep honest. Virtual Campus does both from the same platform.",
       facts: [
         { label: "Role", value: "Full-Stack Developer" },
-        { label: "Frontend", value: "React + Pannellum" },
-        { label: "Backend", value: "FastAPI + PostgreSQL" },
-        { label: "Status", value: "In Development" },
+        { label: "Frontend", value: "React + Vite, Tailwind CSS" },
+        { label: "360° & maps", value: "Photo Sphere Viewer + Leaflet" },
+        { label: "Backend", value: "Express + Prisma on Node.js" },
+        { label: "Database", value: "PostgreSQL 16 (Docker)" },
+        { label: "Status", value: "In development" },
       ],
       challenge:
         "Prospective students want to see the campus without traveling to it, and administration needs to track inventory across the same buildings — two problems usually solved by two disconnected tools. The goal was one platform: smooth 360° navigation on any device, backed by structured, queryable data.",
       approach:
-        "Pannellum renders the panoramic scenes inside a React shell, with hotspot navigation linking rooms and buildings into a walkable tour. A FastAPI backend serves scene and inventory data from PostgreSQL, so the same room a visitor tours is the room whose equipment records live in the database — one source of truth, two very different audiences.",
+        "Photo Sphere Viewer renders the panoramic scenes inside a React shell built with Vite, and Leaflet carries the campus map, so a visitor can move between an overview and a room without losing the thread. An Express API backed by Prisma serves scene and inventory data from PostgreSQL, so the same room a visitor tours is the room whose equipment records live in the database — one source of truth, two very different audiences.",
       outcome:
-        "The core architecture has been established, linking 360° panoramas with the FastAPI database backend. We are currently actively capturing new campus scenes and building out the admin inventory dashboard.",
+        "Still in development. The core architecture is standing — panoramic scenes, the campus map and the Prisma-backed inventory API all talk to each other — and the work now is capturing new campus locations and building out the admin dashboard.",
     },
   },
   {
@@ -257,7 +262,7 @@ export const skillTiers: SkillTier[] = [
     blurb: "Current curiosities, growing fast.",
     skills: [
       { name: "5G & Edge", discipline: "Tooling", note: "TEKNOFEST smart mobility" },
-      { name: "Pannellum / 360°", discipline: "Frontend", note: "Panoramic web experiences" },
+      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramic web experiences" },
       { name: "Model Optimization", discipline: "AI / ML", note: "Faster inference, same eyes" },
     ],
   },
