@@ -302,8 +302,8 @@ export const awards: Award[] = [
   {
     year: "2026",
     title: "TEKNOFEST 2026 Finalist",
-    issuer: "T3 Foundation",
-    project: "Smart Road Safety",
+    issuer: "T3 Foundation & Ministry of Industry and Technology",
+    project: "5G & AI Smart Road Safety",
   },
 ];
 

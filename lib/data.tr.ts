@@ -361,8 +361,8 @@ export const awards = [
   {
     year: "2026",
     title: "TEKNOFEST 2026 Finalisti",
-    issuer: "T3 Vakfı",
-    project: "Akıllı Yol Güvenliği",
+    issuer: "T3 Vakfı & Sanayi ve Teknoloji Bakanlığı",
+    project: "5G & Yapay Zeka ile Akıllı Yol Güvenliği",
   },
 ];
 
