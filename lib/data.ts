@@ -149,6 +149,7 @@ export type ExperienceEntry = {
   place: string;
   summary: string;
   detail: string;
+  logo?: string;
 };
 
 export const experience: ExperienceEntry[] = [
@@ -159,6 +160,7 @@ export const experience: ExperienceEntry[] = [
     summary: "20-day mandatory software engineering internship.",
     detail:
       "Completing a 20-day mandatory engineering internship within the Software Branch Directorate under İSKİ IT Department.",
+    logo: "/logos/iski.png",
   },
   {
     period: "Dec 2025 — Jun 2026",
@@ -167,6 +169,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Technical support, inventory tracking, and hardware setup.",
     detail:
       "Supported the university's IT Department through an İŞKUR-backed student program, handling user queries, computer/printer installation, and IT inventory tracking.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "Nov 2024 — Mar 2025",
@@ -175,6 +178,7 @@ export const experience: ExperienceEntry[] = [
     summary: "The bridge between a platform and its campus.",
     detail:
       "Represented Etkin Kampüs at BANÜ — community building, outreach, and being the local face of a national student platform.",
+    logo: "/logos/etkin-kampus.png",
   },
   {
     period: "2024 — 2028",
@@ -183,6 +187,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Where the fundamentals click.",
     detail:
       "Algorithms, software architecture, systems, and engineering fundamentals. Putting theoretical knowledge into practice through real projects.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "2024 — Now",
@@ -191,6 +196,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Communication bridge between faculty and students.",
     detail:
       "Facilitating communication, information flow, and coordination between faculty members and fellow student classmates.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "2023 — 2024",
@@ -199,6 +205,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Voluntary 1-year English language training.",
     detail:
       "Completed a 1-year optional English prep program prior to starting the B.Sc. program in Software Engineering.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "Sep 2018 — Jun 2022",
@@ -206,6 +213,7 @@ export const experience: ExperienceEntry[] = [
     place: "Eyüpsultan Anatolian High School",
     summary: "Science and mathematics track.",
     detail: "Completed secondary education focusing on mathematics and natural sciences.",
+    logo: "/logos/eyupsultan.png",
   },
 ];
 

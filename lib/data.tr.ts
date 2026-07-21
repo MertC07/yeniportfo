@@ -127,6 +127,7 @@ export const experience: ExperienceEntry[] = [
     summary: "20 günlük zorunlu yazılım mühendisliği stajı.",
     detail:
       "İSKİ Bilgi İşlem Dairesi Başkanlığı Yazılım Şube Müdürlüğü bünyesinde 20 günlük zorunlu yazılım mühendisliği stajımı gerçekleştiriyorum.",
+    logo: "/logos/iski.png",
   },
   {
     period: "Ara 2025 — Haz 2026",
@@ -135,6 +136,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Teknik destek, envanter takibi ve donanım kurulumu.",
     detail:
       "İŞKUR destekli kısmi zamanlı öğrenci programı kapsamında üniversitenin Bilgi İşlem Daire Başkanlığı bünyesinde teknik destek, kullanıcı desteği, bilgisayar/yazıcı kurulumu ve envanter takibi süreçlerinde görev aldım.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "Kas 2024 — Mar 2025",
@@ -143,6 +145,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Bir platformla kampüsü arasındaki köprü.",
     detail:
       "Etkin Kampüs'ü BANÜ'de temsil ettim — topluluk kurma, iletişim ve ulusal bir öğrenci platformunun yereldeki yüzü olmak.",
+    logo: "/logos/etkin-kampus.png",
   },
   {
     period: "2024 — 2028",
@@ -151,6 +154,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Temellerin oturduğu yer.",
     detail:
       "Algoritmalar, yazılım mimarisi, sistemler ve mühendislik prensipleri. Teorik bilgileri gerçek projeler üreterek pratiğe döküyorum.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "2024 — Şu an",
@@ -159,6 +163,7 @@ export const experience: ExperienceEntry[] = [
     summary: "Akademisyenler ve öğrenciler arası iletişim köprüsü.",
     detail:
       "Akademisyenlerimiz ile öğrenci arkadaşlarım arasındaki iletişimi, bilgi akışını ve ders/bölüm süreçlerindeki koordinasyonu sağlıyorum.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "2023 — 2024",
@@ -167,6 +172,7 @@ export const experience: ExperienceEntry[] = [
     summary: "İsteğe bağlı 1 yıllık İngilizce hazırlık programı.",
     detail:
       "Yazılım mühendisliği lisans eğitimi öncesinde 1 yıllık isteğe bağlı İngilizce hazırlık eğitimini başarıyla tamamladım.",
+    logo: "/logos/banu.jpg",
   },
   {
     period: "Eyl 2018 — Haz 2022",
@@ -174,6 +180,7 @@ export const experience: ExperienceEntry[] = [
     place: "Eyüpsultan Anadolu Lisesi",
     summary: "Sayısal ağırlıklı lise eğitimi.",
     detail: "Lise öğrenimi döneminde sayısal ve fen bilimleri odaklı eğitim aldım.",
+    logo: "/logos/eyupsultan.png",
   },
 ];
 

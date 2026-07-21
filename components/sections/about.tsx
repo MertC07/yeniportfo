@@ -97,21 +97,33 @@ export function About() {
                 tabIndex={0}
                 className="group border-t hairline py-7 outline-none transition-colors duration-300 first:border-t-0 hover:bg-surface/60 focus-visible:bg-surface/60 sm:px-4"
               >
-                <div className="grid gap-2 sm:grid-cols-[9.5rem_1fr] sm:gap-6">
-                  <p className="microlabel pt-1.5 text-accent">{entry.period}</p>
-                  <div>
-                    <h3 className="font-display text-xl font-bold sm:text-2xl">
-                      {entry.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted">
-                      {entry.place} · {entry.summary}
-                    </p>
-                    {/* Detail expands on hover / keyboard focus */}
-                    <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-focus-within:grid-rows-[1fr] group-hover:grid-rows-[1fr]">
-                      <div className="overflow-hidden">
-                        <p className="max-w-lg pt-3 text-sm leading-relaxed text-foreground/80">
-                          {entry.detail}
-                        </p>
+                <div className="grid gap-3 sm:grid-cols-[9.5rem_1fr] sm:gap-6 items-start">
+                  <p className="microlabel pt-2 text-accent">{entry.period}</p>
+                  <div className="flex items-start gap-4">
+                    {entry.logo && (
+                      <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border hairline bg-surface/80 p-1.5 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40 mt-0.5">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={entry.logo}
+                          alt={entry.place}
+                          className="h-full w-full object-contain rounded-lg"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 space-y-1">
+                      <h3 className="font-display text-xl font-bold sm:text-2xl">
+                        {entry.title}
+                      </h3>
+                      <p className="text-sm text-muted">
+                        {entry.place} · {entry.summary}
+                      </p>
+                      {/* Detail expands on hover / keyboard focus */}
+                      <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-focus-within:grid-rows-[1fr] group-hover:grid-rows-[1fr]">
+                        <div className="overflow-hidden">
+                          <p className="max-w-lg pt-3 text-sm leading-relaxed text-foreground/80">
+                            {entry.detail}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
