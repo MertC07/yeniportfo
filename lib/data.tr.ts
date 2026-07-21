@@ -114,8 +114,8 @@ export const about = {
   manifesto:
     "Gerçek problemleri çözen, temiz, yüksek performanslı ve güvenilir çalışan yazılımlar geliştirmeye odaklanıyorum.",
   paragraphs: [
-    "Projeler üreterek öğrenen bir yazılım mühendisliği öğrencisiyim. Otonom sürüş için bilgisayarlı görü tabanlı yol güvenliği sistemi, envanter takip entegrasyonlu 360° sanal tur platformu ve yerel işletmeler için özel yönetim panelleri geliştirdim.",
-    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ'de stajyer, üniversitemin bilgi işlem dairesinde ise yarı zamanlı geliştirici olarak deneyim kazanıyorum.",
+    "Projeler üreterek öğrenen bir yazılım mühendisliği öğrencisiyim. Otonom sürüş için bilgisayarlı görü tabanlı yol güvenliği sistemi, geliştirmekte olduğum envanter takip entegrasyonlu 360° sanal tur platformu ve yerel işletmeler için özel yönetim panelleri üzerinde çalışıyorum.",
+    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ'de yazılım mühendisliği stajyeri olarak deneyim kazanıyorum.",
   ],
 };
 
@@ -129,12 +129,12 @@ export const experience: ExperienceEntry[] = [
       "Şehrin su ve kanalizasyon idaresinin BT organizasyonunda staj — gerçek kullanıcıları ve gerçek sorumluluğu olan kurumsal ölçekli sistemler ve yazılımın kritik altyapıyı nasıl çalıştırdığına ilk bakış.",
   },
   {
-    period: "2025 — Şu an",
-    title: "Yarı Zamanlı Öğrenci Geliştirici",
-    place: "BANÜ Bilgi İşlem",
-    summary: "Üniversite sistemleri, içeriden.",
+    period: "Ara 2025 — Haz 2026",
+    title: "Bilgi İşlem Öğrenci Asistanı",
+    place: "Bandırma Onyedi Eylül Üniversitesi (Yarı Zamanlı)",
+    summary: "Teknik destek, envanter takibi ve donanım kurulumu.",
     detail:
-      "Eğitimimin yanında üniversitenin Bilgi İşlem Daire Başkanlığı'nda yarı zamanlı çalışıyorum — kampüs sistemlerine destek ve Sanal Kampüs platformu dahil üniversite için geliştirme.",
+      "İŞKUR destekli kısmi zamanlı öğrenci programı kapsamında üniversitenin Bilgi İşlem Daire Başkanlığı bünyesinde teknik destek, kullanıcı desteği, bilgisayar/yazıcı kurulumu ve envanter takibi süreçlerinde görev aldım.",
   },
   {
     period: "2025 — Şu an",

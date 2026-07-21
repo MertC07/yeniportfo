@@ -138,8 +138,8 @@ export const about = {
   manifesto:
     "I focus on building clean, high-performance software that solves real problems and works reliably in production.",
   paragraphs: [
-    "I am a software engineering student who learns by building projects. I have developed a computer vision road safety system for autonomous driving, a 360° virtual tour platform with inventory tracking, and custom management panels for local businesses.",
-    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am gaining experience as an intern at İSKİ and working as a part-time student developer at my university's IT department.",
+    "I am a software engineering student who learns by building projects. I have developed a computer vision road safety system for autonomous driving, an ongoing 360° virtual tour platform with inventory tracking, and custom management panels for local businesses.",
+    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am gaining experience as a software engineering intern at İSKİ.",
   ],
 };
 
@@ -162,12 +162,12 @@ export const experience: ExperienceEntry[] = [
       "Internship inside the IT organization of the city's water and sewerage administration — enterprise-scale systems with real users and real stakes, and a first look at how software runs critical infrastructure.",
   },
   {
-    period: "2025 — Now",
-    title: "Part-time Student Developer",
-    place: "BANÜ IT Department",
-    summary: "University systems, from the inside.",
+    period: "Dec 2025 — Jun 2026",
+    title: "IT Student Assistant",
+    place: "Bandırma Onyedi Eylül University (Part-time)",
+    summary: "Technical support, inventory tracking, and hardware setup.",
     detail:
-      "Working part-time in the university's IT department (Bilgi İşlem Daire Başkanlığı) alongside my studies — supporting campus systems and building for the university, including the Virtual Campus platform.",
+      "Supported the university's IT Department through an İŞKUR-backed student program, handling user queries, computer/printer installation, and IT inventory tracking.",
   },
   {
     period: "2025 — Now",
