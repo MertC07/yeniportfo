@@ -23,8 +23,11 @@ const DISCIPLINES: Array<Skill["discipline"]> = [
 ];
 
 export function Skills() {
-  const [active, setActive] = useState<Skill["discipline"] | null>(null);
+  const [pinned, setPinned] = useState<Skill["discipline"] | null>(null);
+  const [hovered, setHovered] = useState<Skill["discipline"] | null>(null);
   const { skillTiers, ui } = useContent();
+
+  const active = hovered ?? pinned;
 
   // Marquee leans with scroll velocity — texture that reacts to the reader
   const { scrollY } = useScroll();
@@ -41,30 +44,47 @@ export function Skills() {
           meta={ui.sections.skills.meta}
         />
 
-        {/* Discipline filter — hover to highlight, click/tap to pin */}
+        {/* Discipline filter — hover to preview, click to pin */}
         <div
-          className="mt-10 flex flex-wrap gap-2"
-          onMouseLeave={() => setActive(null)}
+          className="mt-10 flex flex-wrap items-center gap-2"
+          onMouseLeave={() => setHovered(null)}
         >
-          {DISCIPLINES.map((discipline) => (
+          {DISCIPLINES.map((discipline) => {
+            const isPinned = pinned === discipline;
+            const isHovered = hovered === discipline;
+
+            return (
+              <button
+                key={discipline}
+                type="button"
+                aria-pressed={isPinned}
+                onMouseEnter={() => setHovered(discipline)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() =>
+                  setPinned((current) => (current === discipline ? null : discipline))
+                }
+                className={cn(
+                  "rounded-full border px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-all duration-300 cursor-pointer select-none",
+                  isPinned
+                    ? "border-accent bg-accent text-accent-ink font-semibold"
+                    : isHovered
+                    ? "border-accent/60 bg-accent/10 text-foreground"
+                    : "hairline text-muted hover:border-foreground/40 hover:text-foreground"
+                )}
+              >
+                {discipline} {isPinned && "✓"}
+              </button>
+            );
+          })}
+          {pinned && (
             <button
-              key={discipline}
               type="button"
-              aria-pressed={active === discipline}
-              onMouseEnter={() => setActive(discipline)}
-              onClick={() =>
-                setActive((current) => (current === discipline ? null : discipline))
-              }
-              className={cn(
-                "rounded-full border px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-colors duration-300",
-                active === discipline
-                  ? "border-accent bg-accent text-accent-ink"
-                  : "hairline text-muted hover:border-foreground/40 hover:text-foreground"
-              )}
+              onClick={() => setPinned(null)}
+              className="rounded-full border hairline px-3 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted hover:border-foreground/40 hover:text-foreground transition-colors duration-300 cursor-pointer"
             >
-              {discipline}
+              ✕
             </button>
-          ))}
+          )}
         </div>
 
         {/* Tier columns */}
