@@ -51,7 +51,7 @@ export function GithubStats() {
   return (
     <section id="github" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
-        index="05"
+        index="04"
         label={githubSection.label}
         meta={githubSection.meta}
       />

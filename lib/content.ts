@@ -29,6 +29,7 @@ export type Content = {
   ui: Ui;
   testimonials: typeof en.testimonials;
   awards: typeof en.awards;
+  certificates: typeof en.certificates;
 };
 
 const bundles: Record<Locale, Content> = {
@@ -45,6 +46,7 @@ const bundles: Record<Locale, Content> = {
     ui: en.ui,
     testimonials: en.testimonials,
     awards: en.awards,
+    certificates: en.certificates,
   },
   tr: {
     profile: tr.profile,
@@ -59,6 +61,7 @@ const bundles: Record<Locale, Content> = {
     ui: tr.ui,
     testimonials: tr.testimonials,
     awards: tr.awards,
+    certificates: tr.certificates,
   },
 };
 

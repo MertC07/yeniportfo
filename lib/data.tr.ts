@@ -4,7 +4,7 @@
  * English source so both locales share the same routes and visuals.
  */
 
-import type { ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
+import type { Certificate, ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
 
 export const profile = {
   name: "Mert Ceren",
@@ -312,6 +312,11 @@ export const ui: Ui = {
       label: "Ödüller & Başarılar",
       meta: "Dış onaylar",
     },
+    certificates: {
+      label: "Sertifikalar",
+      meta: "Kurslar & belgeler",
+      view: "Sertifikayı gör ↗",
+    },
     github: {
       label: "GitHub & Kod Aktivitesi",
       meta: "@MertC07 hesabından canlı veriler",
@@ -377,6 +382,21 @@ export const awards = [
     title: "TEKNOFEST 2026 Finalisti",
     issuer: "T3 Vakfı & Sanayi ve Teknoloji Bakanlığı",
     project: "5G & Yapay Zeka ile Akıllı Yol Güvenliği",
+  },
+];
+
+// EDIT: örnek satırlar — canlıya almadan gerçek sertifikalarınla değiştir.
+export const certificates: Certificate[] = [
+  {
+    year: "2026",
+    title: "Örnek: Makine Öğrenmesi Sertifikası",
+    issuer: "Kurum adı (örn. BTK Akademi)",
+    href: "#",
+  },
+  {
+    year: "2025",
+    title: "Örnek: Web Geliştirme Sertifikası",
+    issuer: "Kurum adı (örn. Coursera)",
   },
 ];
 

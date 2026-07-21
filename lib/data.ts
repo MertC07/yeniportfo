@@ -315,6 +315,29 @@ export const awards: Award[] = [
   },
 ];
 
+export type Certificate = {
+  year: string;
+  title: string;
+  issuer: string;
+  /** Verification / credential URL — omit (or "#") to hide the link. */
+  href?: string;
+};
+
+// EDIT: sample rows — replace with your real certificates before deploying.
+export const certificates: Certificate[] = [
+  {
+    year: "2026",
+    title: "Sample: Machine Learning Certificate",
+    issuer: "Issuer name (e.g. BTK Akademi)",
+    href: "#",
+  },
+  {
+    year: "2025",
+    title: "Sample: Web Development Certificate",
+    issuer: "Issuer name (e.g. Coursera)",
+  },
+];
+
 export type Post = {
   slug: string;
   title: string;
@@ -416,6 +439,11 @@ export const ui = {
     awards: {
       label: "Awards & Recognition",
       meta: "External validations",
+    },
+    certificates: {
+      label: "Certificates",
+      meta: "Courses & credentials",
+      view: "View credential ↗",
     },
     github: {
       label: "GitHub & Code Activity",

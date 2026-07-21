@@ -6,23 +6,23 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-export function Awards() {
-  const { awards, ui } = useContent();
+export function Certificates() {
+  const { certificates, ui } = useContent();
 
-  if (!awards.length) return null;
+  if (!certificates.length) return null;
 
   return (
-    <section id="awards" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+    <section id="certificates" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
-        index="06"
-        label={ui.sections.awards.label}
-        meta={ui.sections.awards.meta}
+        index="05"
+        label={ui.sections.certificates.label}
+        meta={ui.sections.certificates.meta}
       />
 
       <ol className="mt-10">
-        {awards.map((award, i) => (
+        {certificates.map((certificate, i) => (
           <motion.li
-            key={`${award.year}-${award.title}`}
+            key={`${certificate.year}-${certificate.title}`}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10% 0px" }}
@@ -32,13 +32,26 @@ export function Awards() {
             <span className="microlabel text-accent">0{i + 1}</span>
             <div>
               <h3 className="font-display text-xl font-bold sm:text-2xl">
-                {award.title}
+                {certificate.title}
               </h3>
               <p className="mt-1 text-sm text-muted">
-                {award.issuer} · {award.project}
+                {certificate.issuer}
+                {certificate.href && certificate.href !== "#" && (
+                  <>
+                    {" · "}
+                    <a
+                      href={certificate.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      {ui.sections.certificates.view}
+                    </a>
+                  </>
+                )}
               </p>
             </div>
-            <span className="microlabel">{award.year}</span>
+            <span className="microlabel">{certificate.year}</span>
           </motion.li>
         ))}
       </ol>
