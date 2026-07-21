@@ -28,6 +28,9 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+/** Stable, redirect-free path to the generated social card. */
+const OG_IMAGE = "/opengraph-image";
+
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
@@ -58,11 +61,17 @@ export async function generateMetadata({
       siteName: profile.name,
       locale: lang === "tr" ? "tr_TR" : "en_US",
       type: "website",
+      // Referenced explicitly: app/opengraph-image.tsx sits in the root
+      // segment while every page renders from app/[lang], so the file
+      // convention never attaches it on its own. A root-level path also
+      // dodges the /tr → / redirect that a locale-scoped image would hit.
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: site.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: site.title,
       description: site.description,
+      images: [OG_IMAGE],
     },
     robots: { index: true, follow: true },
     verification: {
