@@ -326,18 +326,61 @@ export type Certificate = {
   href?: string;
 };
 
-// EDIT: sample rows — replace with your real certificates before deploying.
+// Mirrors the LinkedIn "Licenses & certifications" list, newest first.
+// Titles are translated for this locale; issuer names stay as issued.
 export const certificates: Certificate[] = [
   {
-    title: "Sample: Machine Learning Certificate",
-    issuer: "Issuer name (e.g. BTK Akademi)",
-    issued: "Mar 2026",
-    href: "#",
+    title: "Generative AI for Games Development",
+    issuer: "edX",
+    logo: "/logos/edx.svg",
+    issued: "Jul 2026",
+    href: "https://courses.edx.org/certificates/9716406a25684da384f57cea96bdfeee",
   },
   {
-    title: "Sample: Web Development Certificate",
-    issuer: "Issuer name (e.g. Coursera)",
-    issued: "Nov 2025",
+    title: "Generative AI in Research",
+    issuer: "BTK Akademi",
+    issued: "Jun 2026",
+  },
+  {
+    title: "Anthropic Claude",
+    issuer: "BTK Akademi",
+    issued: "Jun 2026",
+  },
+  {
+    title: "ChatGPT 2026: Prompt Engineering, Content & Image Generation",
+    issuer: "Academy Club",
+    issued: "Jan 2026",
+  },
+  {
+    title: "C# Programming",
+    issuer: "BTK Akademi",
+    issued: "Sep 2025",
+  },
+  {
+    title: "Introduction to Artificial Intelligence and Its Algorithms",
+    issuer: "BTK Akademi",
+    issued: "Oct 2024",
+  },
+  {
+    title: "In-Depth Coding 101 with C# and Software Career Training",
+    issuer: "Bahçeşehir Wissen Akademie",
+    issued: "Oct 2024",
+  },
+  {
+    title: "PESNERGY Career Summit",
+    issuer: "IEEE BANÜ Student Branch",
+    logo: "/logos/ieee.svg",
+    issued: "Jun 2024",
+  },
+  {
+    title: "MII (Management Informatics Innovation) Summit",
+    issuer: "BANÜ Management Information Systems Society",
+    issued: "May 2024",
+  },
+  {
+    title: "Career Horizons of a Successful Engineer",
+    issuer: "BANÜ Informatics and Technology Society",
+    issued: "Apr 2024",
   },
 ];
 

@@ -6,6 +6,31 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+const STOPWORDS = new Set(["ve", "and", "of", "the", "for"]);
+
+/**
+ * Issuers without a logo file fall back to a short mark, so every card keeps
+ * the same shape. An issuer that already leads with an acronym (BTK, BANÜ)
+ * keeps it; otherwise the first letters of its significant words are used.
+ */
+function initials(issuer: string) {
+  const words = issuer
+    .replace(/[()]/g, " ")
+    .split(/[\s-]+/)
+    .filter((word) => /[a-zA-ZçğıöşüÇĞİÖŞÜ]/.test(word));
+
+  const [first] = words;
+  if (first && first.length >= 2 && first.length <= 5 && first === first.toLocaleUpperCase("tr")) {
+    return first;
+  }
+
+  return words
+    .filter((word) => !STOPWORDS.has(word.toLocaleLowerCase("tr")))
+    .slice(0, 3)
+    .map((word) => word[0].toLocaleUpperCase("tr"))
+    .join("");
+}
+
 export function Certificates() {
   const { certificates, ui } = useContent();
 
@@ -30,16 +55,23 @@ export function Certificates() {
             className="group flex flex-col justify-between gap-4 rounded-xl border hairline bg-surface/50 p-5 transition-[transform,border-color] duration-400 hover:-translate-y-1 hover:border-accent/60"
           >
             <div className="flex items-start gap-4">
-              {certificate.logo && (
-                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border hairline bg-surface/80 p-1.5 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border hairline bg-surface/80 p-1.5 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40">
+                {certificate.logo ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={certificate.logo}
                     alt={certificate.issuer}
                     className="h-full w-full rounded-lg object-contain"
                   />
-                </div>
-              )}
+                ) : (
+                  <span
+                    aria-hidden
+                    className="font-mono text-[0.625rem] font-medium tracking-tight text-muted"
+                  >
+                    {initials(certificate.issuer)}
+                  </span>
+                )}
+              </div>
               <div className="flex-1">
                 <h3 className="font-display text-lg font-bold leading-tight">
                   {certificate.title}

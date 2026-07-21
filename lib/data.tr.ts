@@ -388,15 +388,57 @@ export const awards = [
 // EDIT: örnek satırlar — canlıya almadan gerçek sertifikalarınla değiştir.
 export const certificates: Certificate[] = [
   {
-    title: "Örnek: Makine Öğrenmesi Sertifikası",
-    issuer: "Kurum adı (örn. BTK Akademi)",
-    issued: "Mar 2026",
-    href: "#",
+    title: "Generative AI for Games Development",
+    issuer: "edX",
+    logo: "/logos/edx.svg",
+    issued: "Tem 2026",
+    href: "https://courses.edx.org/certificates/9716406a25684da384f57cea96bdfeee",
   },
   {
-    title: "Örnek: Web Geliştirme Sertifikası",
-    issuer: "Kurum adı (örn. Coursera)",
-    issued: "Kas 2025",
+    title: "Araştırmada Üretken Yapay Zekâ Kullanımı",
+    issuer: "BTK Akademi",
+    issued: "Haz 2026",
+  },
+  {
+    title: "Anthropic Claude",
+    issuer: "BTK Akademi",
+    issued: "Haz 2026",
+  },
+  {
+    title: "ChatGPT 2026: Prompt Mühendisliği, İçerik ve Görsel Üretme",
+    issuer: "Academy Club",
+    issued: "Oca 2026",
+  },
+  {
+    title: "C# Programlama",
+    issuer: "BTK Akademi",
+    issued: "Eyl 2025",
+  },
+  {
+    title: "Yapay Zeka ve Algoritmalarına Giriş",
+    issuer: "BTK Akademi",
+    issued: "Eki 2024",
+  },
+  {
+    title: "C# ile Derinlemesine Kodlama 101 ve Yazılımda Kariyer Eğitimi",
+    issuer: "Bahçeşehir Wissen Akademie",
+    issued: "Eki 2024",
+  },
+  {
+    title: "PESNERGY Kariyer Zirvesi",
+    issuer: "IEEE BANÜ Öğrenci Kolu",
+    logo: "/logos/ieee.svg",
+    issued: "Haz 2024",
+  },
+  {
+    title: "MII (Management Informatics Innovation) Zirvesi",
+    issuer: "BANÜ Yönetim Bilişim Sistemleri Topluluğu",
+    issued: "May 2024",
+  },
+  {
+    title: "Başarılı Bir Mühendisin Kariyer Ufukları",
+    issuer: "BANÜ Bilişim ve Teknoloji Topluluğu",
+    issued: "Nis 2024",
   },
 ];
 
