@@ -68,14 +68,14 @@ export const projects: Project[] = [
       facts: [
         { label: "Role", value: "Project Coordinator & AI/ML Engineer" },
         { label: "Team", value: "5Genç" },
-        { label: "Stage", value: "TEKNOFEST 2026" },
+        { label: "Stage", value: "In Development (TEKNOFEST 2026)" },
       ],
       challenge:
         "Assisted and autonomous driving systems need to see hazards — vehicles, pedestrians, unexpected obstacles — in real time, and a detection that arrives late is a detection that never happened. The system had to combine low-latency 5G transport with vision models fast enough to matter at road speed.",
       approach:
         "We built the perception layer on YOLO-family models (YOLOv8, then YOLOv11), trained and iterated in Python on scenario-specific datasets. 5G network integration carries detections with minimal latency, so alerts can reach vehicles and infrastructure while they are still actionable. As coordinator, I own the architecture end to end — from model training loops to how the pieces talk over the network.",
       outcome:
-        "The system runs real-time detection over live video and is being prepared for the TEKNOFEST 2026 season with Team 5Genç. The project has already done its quieter job too: it turned a course-level interest in computer vision into a working, field-tested pipeline.",
+        "Active development is ongoing, focusing on training models and integrating low-latency 5G pipelines for the TEKNOFEST 2026 season. We are continuously testing new road scenarios to improve real-time detection accuracy.",
     },
   },
   {
@@ -96,13 +96,14 @@ export const projects: Project[] = [
         { label: "Role", value: "Full-Stack Developer" },
         { label: "Frontend", value: "React + Pannellum" },
         { label: "Backend", value: "FastAPI + PostgreSQL" },
+        { label: "Status", value: "In Development" },
       ],
       challenge:
         "Prospective students want to see the campus without traveling to it, and administration needs to track inventory across the same buildings — two problems usually solved by two disconnected tools. The goal was one platform: smooth 360° navigation on any device, backed by structured, queryable data.",
       approach:
         "Pannellum renders the panoramic scenes inside a React shell, with hotspot navigation linking rooms and buildings into a walkable tour. A FastAPI backend serves scene and inventory data from PostgreSQL, so the same room a visitor tours is the room whose equipment records live in the database — one source of truth, two very different audiences.",
       outcome:
-        "The platform delivers full panoramic tours with the inventory system integrated behind them, replacing static photo galleries and spreadsheet-based tracking with something people actually use from a browser.",
+        "The core architecture has been established, linking 360° panoramas with the FastAPI database backend. We are currently actively capturing new campus scenes and building out the admin inventory dashboard.",
     },
   },
   {

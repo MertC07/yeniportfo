@@ -43,14 +43,14 @@ export const projects: Project[] = [
       facts: [
         { label: "Rol", value: "Proje Koordinatörü & AI/ML Mühendisi" },
         { label: "Takım", value: "5Genç" },
-        { label: "Aşama", value: "TEKNOFEST 2026" },
+        { label: "Aşama", value: "Geliştirme Aşamasında (TEKNOFEST 2026)" },
       ],
       challenge:
         "Destekli ve otonom sürüş sistemlerinin tehlikeleri — araçları, yayaları, beklenmedik engelleri — gerçek zamanlı görmesi gerekir; geç gelen bir tespit, hiç gelmemiş bir tespittir. Sistem, düşük gecikmeli 5G iletimini yol hızında anlam taşıyacak kadar hızlı görü modelleriyle birleştirmek zorundaydı.",
       approach:
         "Algı katmanını YOLO ailesi modeller (önce YOLOv8, sonra YOLOv11) üzerine kurduk; senaryoya özel veri setleriyle Python'da eğitip yineledik. 5G ağ entegrasyonu tespitleri minimum gecikmeyle taşıyor; böylece uyarılar araçlara ve altyapıya hâlâ işe yarar durumdayken ulaşabiliyor. Koordinatör olarak mimariyi uçtan uca ben üstleniyorum — model eğitim döngülerinden parçaların ağ üzerinde nasıl konuştuğuna kadar.",
       outcome:
-        "Sistem canlı video üzerinde gerçek zamanlı tespit yapıyor ve 5Genç takımıyla TEKNOFEST 2026 sezonuna hazırlanıyor. Proje daha sessiz işini de çoktan yaptı: ders düzeyindeki bir bilgisayarlı görü merakını çalışan, sahada denenmiş bir hatta dönüştürdü.",
+        "Sistem üzerinde aktif geliştirme süreci devam etmekte olup, model eğitimleri ve 5G entegrasyonu aşamaları 5Genç takımıyla TEKNOFEST 2026 sezonu için hazırlanmaktadır. Gerçek zamanlı tespit başarım oranlarını artırmak için yeni senaryolar üzerinde çalışmaya devam ediyoruz.",
     },
   },
   {
@@ -71,13 +71,14 @@ export const projects: Project[] = [
         { label: "Rol", value: "Full-Stack Geliştirici" },
         { label: "Frontend", value: "React + Pannellum" },
         { label: "Backend", value: "FastAPI + PostgreSQL" },
+        { label: "Durum", value: "Geliştirme Aşamasında" },
       ],
       challenge:
         "Aday öğrenciler kampüsü yerinde gezmeden görmek istiyor; idarenin ise aynı binalardaki envanteri takip etmesi gerekiyor — genellikle birbirinden kopuk iki araçla çözülen iki problem. Hedef tek platformdu: her cihazda akıcı 360° gezinme, arkasında yapılandırılmış, sorgulanabilir veri.",
       approach:
         "Pannellum panoramik sahneleri React kabuğu içinde işliyor; hotspot navigasyonu odaları ve binaları gezilebilir bir tura bağlıyor. FastAPI backend'i sahne ve envanter verisini PostgreSQL'den sunuyor — ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında yaşayan odanın ta kendisi. Tek doğruluk kaynağı, birbirinden çok farklı iki kitle.",
       outcome:
-        "Platform, arkasına envanter sistemi entegre edilmiş eksiksiz panoramik turlar sunuyor; statik fotoğraf galerilerinin ve tablo tabanlı takibin yerini insanların tarayıcıdan gerçekten kullandığı bir şey aldı.",
+        "Projenin temel mimarisi kuruldu; 360° panoramik sahneler ile FastAPI envanter backend'i birbirine bağlandı. Şu an kampüs genelinde yeni konumların eklenmesi ve yönetim panelinin detaylandırılması üzerinde aktif olarak çalışmaya devam ediyoruz.",
     },
   },
   {
