@@ -5,11 +5,12 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { RevealText } from "@/components/ui/reveal-text";
 import { Magnetic } from "@/components/ui/magnetic-button";
-import { projects, profile } from "@/lib/data";
+import { getContent, isLocale, localePath } from "@/lib/content";
+import { projects } from "@/lib/data";
 
-type Params = { slug: string };
+type Params = { lang: string; slug: string };
 
-export function generateStaticParams(): Params[] {
+export function generateStaticParams(): Array<Pick<Params, "slug">> {
   return projects.map(({ slug }) => ({ slug }));
 }
 
@@ -18,12 +19,18 @@ export async function generateMetadata({
 }: {
   params: Promise<Params>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+  const { projects: localizedProjects, profile } = getContent(lang);
+  const project = localizedProjects.find((p) => p.slug === slug);
   if (!project) return {};
   return {
     title: `${project.title} — ${profile.name}`,
     description: project.description,
+    alternates: {
+      canonical: localePath(lang, `/work/${slug}`),
+      languages: { en: `/work/${slug}`, tr: `/tr/work/${slug}` },
+    },
   };
 }
 
@@ -34,11 +41,13 @@ export default async function CaseStudyPage({
 }: {
   params: Promise<Params>;
 }) {
-  const { slug } = await params;
-  const index = projects.findIndex((p) => p.slug === slug);
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
+  const { projects: localizedProjects, ui } = getContent(lang);
+  const index = localizedProjects.findIndex((p) => p.slug === slug);
   if (index === -1) notFound();
-  const project = projects[index];
-  const next = projects[(index + 1) % projects.length];
+  const project = localizedProjects[index];
+  const next = localizedProjects[(index + 1) % localizedProjects.length];
   const { palette, caseStudy } = project;
 
   return (
@@ -48,14 +57,14 @@ export default async function CaseStudyPage({
         {/* Breadcrumb row */}
         <div className="flex items-baseline justify-between border-t hairline pt-4">
           <Link
-            href="/#work"
+            href={`${localePath(lang, "/")}#work`}
             className="microlabel transition-colors duration-300 hover:text-accent"
           >
-            ← Selected Works
+            {ui.caseStudy.back}
           </Link>
           <p className="microlabel">
             {String(index + 1).padStart(2, "0")} /{" "}
-            {String(projects.length).padStart(2, "0")}
+            {String(localizedProjects.length).padStart(2, "0")}
           </p>
         </div>
 
@@ -123,7 +132,7 @@ export default async function CaseStudyPage({
             ))}
             {project.href !== "#" && (
               <div className="flex items-baseline justify-between gap-6 border-b hairline py-4">
-                <dt className="microlabel">Live</dt>
+                <dt className="microlabel">{ui.caseStudy.live}</dt>
                 <dd>
                   <a
                     href={project.href}
@@ -131,7 +140,7 @@ export default async function CaseStudyPage({
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-accent hover:underline sm:text-base"
                   >
-                    Visit site ↗
+                    {ui.caseStudy.visit}
                   </a>
                 </dd>
               </div>
@@ -148,7 +157,7 @@ export default async function CaseStudyPage({
                 <span className="mx-3 select-none" aria-hidden>
                   —
                 </span>
-                {block.charAt(0).toUpperCase() + block.slice(1)}
+                {ui.caseStudy.blocks[block]}
               </h2>
               <p className="max-w-2xl text-sm leading-relaxed text-foreground/85 sm:text-base">
                 {caseStudy[block]}
@@ -159,10 +168,10 @@ export default async function CaseStudyPage({
 
         {/* Next project */}
         <div className="mt-24 border-t hairline pt-10 sm:mt-32">
-          <p className="microlabel">Next project</p>
+          <p className="microlabel">{ui.caseStudy.next}</p>
           <Magnetic strength={0.1}>
             <Link
-              href={`/work/${next.slug}`}
+              href={localePath(lang, `/work/${next.slug}`)}
               className="group mt-4 inline-flex items-baseline gap-5 font-display text-display-lg font-extrabold uppercase tracking-tight transition-colors duration-300 hover:text-accent"
             >
               {next.title}

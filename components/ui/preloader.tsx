@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { profile } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 const subscribe = () => () => {};
@@ -12,6 +12,7 @@ const subscribe = () => () => {};
  * Pure CSS animations — no completion callbacks to get stuck on.
  */
 export function Preloader() {
+  const { profile, ui } = useContent();
   const shouldShow = useSyncExternalStore(
     subscribe,
     () => !window.sessionStorage.getItem("intro-seen"),
@@ -53,7 +54,7 @@ export function Preloader() {
         <div className="h-full w-full origin-left animate-[loadbar_0.9s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
       </div>
       <p className="microlabel">
-        {profile.name} — Portfolio
+        {profile.name} — {ui.preloader}
       </p>
     </div>
   );

@@ -1,0 +1,358 @@
+/**
+ * Turkish content — mirrors the exports of lib/data.ts field by field.
+ * Slugs, hrefs, palettes and tech identifiers stay identical to the
+ * English source so both locales share the same routes and visuals.
+ */
+
+import type { ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
+
+export const profile = {
+  name: "Mert Ceren",
+  monogram: "MC",
+  role: "Yapay Zekâ & Full-Stack Geliştirici",
+  tagline:
+    "Yazılımın fiziksel dünyayla buluştuğu akıllı sistemler geliştiriyorum.",
+  location: "İstanbul, Türkiye",
+  timezone: "Europe/Istanbul",
+  email: "mertceren.2004.mc@gmail.com",
+  available: true,
+  availabilityNote: "Staj ve freelance işlere açığım",
+  image: "/portrait.png",
+};
+
+export const heroStatement = {
+  lines: ["Niyetle", "kodla.", "Ölçüyle", "tasarla."],
+  sub: "Yapay zekâ destekli sistemler geliştiren yazılım mühendisliği öğrencisi — gerçek zamanlı bilgisayarlı görü, full-stack platformlar ve fiziksel dünyayla buluşan ürünler.",
+};
+
+export const projects: Project[] = [
+  {
+    slug: "smart-road-safety",
+    title: "Akıllı Yol Güvenliği",
+    year: "2026",
+    category: "TEKNOFEST · Yapay Zekâ & 5G",
+    description:
+      "5G bağlantısını gerçek zamanlı bilgisayarlı görüyle buluşturan akıllı bir yol güvenliği sistemi — destekli ve otonom sürüş senaryoları için Python'da eğitilen YOLO tabanlı tespit modelleri. TEKNOFEST 2026 için 5Genç takımıyla geliştiriliyor.",
+    tags: ["Python", "YOLOv11", "Bilgisayarlı Görü", "5G"],
+    href: "#",
+    image: "/projects/road-safety.png",
+    palette: { from: "#FF4D00", via: "#2952E3", to: "#0B1024" },
+    caseStudy: {
+      intro:
+        "Trafik kazaları donanım probleminden önce bir veri problemidir. Hiç göz kırpmayan — ve hiç gecikmeyen — bir kameranın neleri önleyebileceğini sorduk.",
+      facts: [
+        { label: "Rol", value: "Proje Koordinatörü & AI/ML Mühendisi" },
+        { label: "Takım", value: "5Genç" },
+        { label: "Aşama", value: "TEKNOFEST 2026" },
+      ],
+      challenge:
+        "Destekli ve otonom sürüş sistemlerinin tehlikeleri — araçları, yayaları, beklenmedik engelleri — gerçek zamanlı görmesi gerekir; geç gelen bir tespit, hiç gelmemiş bir tespittir. Sistem, düşük gecikmeli 5G iletimini yol hızında anlam taşıyacak kadar hızlı görü modelleriyle birleştirmek zorundaydı.",
+      approach:
+        "Algı katmanını YOLO ailesi modeller (önce YOLOv8, sonra YOLOv11) üzerine kurduk; senaryoya özel veri setleriyle Python'da eğitip yineledik. 5G ağ entegrasyonu tespitleri minimum gecikmeyle taşıyor; böylece uyarılar araçlara ve altyapıya hâlâ işe yarar durumdayken ulaşabiliyor. Koordinatör olarak mimariyi uçtan uca ben üstleniyorum — model eğitim döngülerinden parçaların ağ üzerinde nasıl konuştuğuna kadar.",
+      outcome:
+        "Sistem canlı video üzerinde gerçek zamanlı tespit yapıyor ve 5Genç takımıyla TEKNOFEST 2026 sezonuna hazırlanıyor. Proje daha sessiz işini de çoktan yaptı: ders düzeyindeki bir bilgisayarlı görü merakını çalışan, sahada denenmiş bir hatta dönüştürdü.",
+    },
+  },
+  {
+    slug: "virtual-campus",
+    title: "Sanal Kampüs",
+    year: "2026",
+    category: "Eğitim Teknolojisi · Web Platformu",
+    description:
+      "Envanter takip sistemiyle bütünleşik 360° panoramik kampüs deneyimi — önde React ve Pannellum, arkada FastAPI ve PostgreSQL. Kampüsü her yerden gez; içindekileri tek panelden yönet.",
+    tags: ["React", "Pannellum", "FastAPI", "PostgreSQL"],
+    href: "#",
+    image: "/projects/virtual-campus.png",
+    palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
+    caseStudy: {
+      intro:
+        "Kampüs, daha varmadan gezebilmen gereken bir yerdir — ve birinin dürüst tutmak zorunda olduğu bir demirbaş listesidir. Sanal Kampüs ikisini de aynı platformdan yapıyor.",
+      facts: [
+        { label: "Rol", value: "Full-Stack Geliştirici" },
+        { label: "Frontend", value: "React + Pannellum" },
+        { label: "Backend", value: "FastAPI + PostgreSQL" },
+      ],
+      challenge:
+        "Aday öğrenciler kampüsü yerinde gezmeden görmek istiyor; idarenin ise aynı binalardaki envanteri takip etmesi gerekiyor — genellikle birbirinden kopuk iki araçla çözülen iki problem. Hedef tek platformdu: her cihazda akıcı 360° gezinme, arkasında yapılandırılmış, sorgulanabilir veri.",
+      approach:
+        "Pannellum panoramik sahneleri React kabuğu içinde işliyor; hotspot navigasyonu odaları ve binaları gezilebilir bir tura bağlıyor. FastAPI backend'i sahne ve envanter verisini PostgreSQL'den sunuyor — ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında yaşayan odanın ta kendisi. Tek doğruluk kaynağı, birbirinden çok farklı iki kitle.",
+      outcome:
+        "Platform, arkasına envanter sistemi entegre edilmiş eksiksiz panoramik turlar sunuyor; statik fotoğraf galerilerinin ve tablo tabanlı takibin yerini insanların tarayıcıdan gerçekten kullandığı bir şey aldı.",
+    },
+  },
+  {
+    slug: "rosso-lounge",
+    title: "Rosso Lounge",
+    year: "2025",
+    category: "Yeme-İçme · Full-Stack",
+    description:
+      "Rosso Lounge Bistro için özel yönetim panelli full-stack web platformu — işletme menüsünü ve içeriğini koda dokunmadan kendisi yönetiyor. Yapay zekâ destekli geliştirme akışlarıyla tasarlanıp yayına alındı.",
+    tags: ["Full-Stack", "Yönetim Paneli", "SQL", "AI destekli"],
+    href: "#",
+    image: "/projects/rosso-lounge.png",
+    palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
+    caseStudy: {
+      intro:
+        "Bir restoranın sitesi, menü değiştiği ve kimsenin güncelleyemediği gün ölür. Rosso Lounge, ekibin kendi başına yönetebildiği bir site aldı.",
+      facts: [
+        { label: "Rol", value: "Full-Stack Geliştirici" },
+        { label: "Müşteri", value: "Rosso Lounge Bistro" },
+        { label: "Öne çıkan", value: "Özel yönetim paneli" },
+      ],
+      challenge:
+        "Küçük işletme sitelerinin çoğu statik broşürdür: açılışta doğru görünür, birkaç hafta içinde güncelliğini yitirir. Bistronun hem vitrine hem pratikliğe ihtiyacı vardı — markayı taşıyan herkese açık bir site ve teknik olmayan ekibin müşterinin gördüğünü yönettiği özel bir panel.",
+      approach:
+        "Platformu, merkezinde özel bir yönetim paneliyle uçtan uca geliştirdim: menü, içerik ve işletme bilgileri tek yerden düzenlenebiliyor, geliştirici gerekmiyor. Yapay zekâ destekli geliştirme akışları projeyi mimari taslaklardan uygulamaya kod kalitesinden ödün vermeden hızla taşıdı.",
+      outcome:
+        "Bistro web varlığını kendisi işletiyor — eskiden geliştirici gerektiren güncellemeler artık panelde bir dakika sürüyor. Proje aynı zamanda yapay zekâ destekli akışların gerçek müşteri teslimatına nasıl oturduğu konusunda şablonum hâline geldi.",
+    },
+  },
+];
+
+export const about = {
+  manifesto:
+    "En iyi teknolojinin görünmez olduğuna inanıyorum — geriye kalan daha güvenli bir yol, daha akıcı bir kampüs, sorunsuz işleyen bir işletmedir.",
+  paragraphs: [
+    "Bandırma Onyedi Eylül Üniversitesi'nde ikinci sınıf yazılım mühendisliği öğrencisiyim ve yayına alarak öğrenen türden bir mühendisim: yolları gerçek zamanlı izleyen bir bilgisayarlı görü sistemi, kampüsü içinde yürüyebildiğin bir 360° platform, sahiplerinin kendi yönettiği bir restoran sitesi.",
+    "Ağırlık merkezim, yapay zekânın üretim yazılımıyla kesiştiği yer — bir yanda YOLO modelleri ve Python hatları, diğer yanda .NET ve React platformları. Şu sıralar İstanbul'da İSKİ'de staj yapıyor, üniversitemin bilgi işlem dairesinde yarı zamanlı çalışıyor ve bu arada sınıfımı temsil ediyorum.",
+  ],
+};
+
+export const experience: ExperienceEntry[] = [
+  {
+    period: "Haz 2026 — Şu an",
+    title: "Yazılım Mühendisliği Stajyeri",
+    place: "İSKİ, İstanbul",
+    summary: "İstanbul'un su idaresinde mühendislik stajı.",
+    detail:
+      "Şehrin su ve kanalizasyon idaresinin BT organizasyonunda staj — gerçek kullanıcıları ve gerçek sorumluluğu olan kurumsal ölçekli sistemler ve yazılımın kritik altyapıyı nasıl çalıştırdığına ilk bakış.",
+  },
+  {
+    period: "2025 — Şu an",
+    title: "Yarı Zamanlı Öğrenci Geliştirici",
+    place: "BANÜ Bilgi İşlem",
+    summary: "Üniversite sistemleri, içeriden.",
+    detail:
+      "Eğitimimin yanında üniversitenin Bilgi İşlem Daire Başkanlığı'nda yarı zamanlı çalışıyorum — kampüs sistemlerine destek ve Sanal Kampüs platformu dahil üniversite için geliştirme.",
+  },
+  {
+    period: "2025 — Şu an",
+    title: "Kampüs Temsilcisi",
+    place: "Etkin Kampüs",
+    summary: "Bir platformla kampüsü arasındaki köprü.",
+    detail:
+      "Etkin Kampüs'ü BANÜ'de temsil ediyorum — topluluk kurma, iletişim ve ulusal bir öğrenci platformunun yereldeki yüzü olmak.",
+  },
+  {
+    period: "2024 — Şu an",
+    title: "Sınıf Temsilcisi",
+    place: "BANÜ Yazılım Mühendisliği",
+    summary: "Yazılım mühendisliği sınıfının seçilmiş sesi.",
+    detail:
+      "Sınıf arkadaşlarımı bölüme karşı temsil ediyorum — koordinasyon, iletişim ve kararları insanlarla birlikte hayata geçirmenin kod yazmaktan zor olduğunu öğrenmek.",
+  },
+  {
+    period: "2024",
+    title: "Yazılım Mühendisliği Lisansı",
+    place: "Bandırma Onyedi Eylül Üniversitesi",
+    summary: "Temellerin oturduğu yer.",
+    detail:
+      "Algoritmalar, sistemler ve bir şeyin neden çalıştığını sorma alışkanlığı — sadece nasıl değil. Şu an ikinci sınıftayım; not ortalaması yan projelerle ilgi yarışında.",
+  },
+];
+
+export const skillTiers: SkillTier[] = [
+  {
+    tier: "Çekirdek",
+    blurb: "Her gün kullandıklarım. İçinde düşündüğüm araçlar.",
+    skills: [
+      { name: "Python", discipline: "AI / ML", note: "Görü hatları ve model eğitimi" },
+      { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Gerçek zamanlı nesne tespiti" },
+      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core servisleri" },
+      { name: "React", discipline: "Frontend", note: "Modern JS framework'leri" },
+      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Şema tasarımı ve sorgular" },
+    ],
+  },
+  {
+    tier: "Akıcı",
+    blurb: "Üretim derinliğinde rahatım.",
+    skills: [
+      { name: "FastAPI", discipline: "Backend", note: "Hafif Python servisleri" },
+      { name: "SignalR", discipline: "Backend", note: "Gerçek zamanlı bildirimler" },
+      { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "Canlı görüntü analizi" },
+      { name: "Sistem Tasarımı", discipline: "Tooling", note: "Koddan önce mimari" },
+      { name: "Prompt Mühendisliği", discipline: "Tooling", note: "AI destekli mimari taslakları" },
+    ],
+  },
+  {
+    tier: "Keşif",
+    blurb: "Güncel meraklar, hızla büyüyor.",
+    skills: [
+      { name: "5G & Edge", discipline: "Tooling", note: "TEKNOFEST akıllı ulaşım" },
+      { name: "Pannellum / 360°", discipline: "Frontend", note: "Panoramik web deneyimleri" },
+      { name: "Model Optimizasyonu", discipline: "AI / ML", note: "Daha hızlı çıkarım, aynı gözler" },
+    ],
+  },
+];
+
+export const posts: Post[] = [
+  {
+    slug: "the-last-10-percent",
+    title: "Son %10 ürünün ta kendisidir",
+    date: "Haz 2026",
+    readingTime: "6 dk",
+    tag: "Zanaat",
+    excerpt:
+      "Cila neden süsleme değildir — insanların kullandığı yazılımla hatırladığı yazılım arasındaki fark budur.",
+    body: [
+      "Her projenin teknik olarak çalıştığı bir an vardır. Veri yüklenir, düğmeler etiketlerinin vaat ettiğini yapar, testler yeşildir. Çoğu ekip burada yayına alır. Oysa asıl ürün işinin başladığı an da tam olarak budur.",
+      "Son %10 görsel süsleme değildir. Bir paneli ışınlanmış değil fiziksel hissettiren 80 milisaniyelik yumuşatmadır. Özür dilemek yerine açıklayan boş durumdur. Denetim zorlamadan önce birinin klavye kullanıcısını hayal ettiğini kanıtlayan odak halkasıdır.",
+      "Kullanıcılar bu detayları adlandıramaz — mesele de bu. Kimse yorumda interpolasyon eğrini övmez. Ama birikimi hissederler ve bunu 'sağlam', 'hızlı', 'hoş' gibi kelimelerle anlatırlar — ürünleri tavsiye ettiren kelimeler de bunlardır.",
+      "Rahatsız edici çıkarım: cila, yol haritasının sonunda bir faz olamaz; çünkü boya katmanı değil, taşıyıcı kolondur. En çok gurur duyduğum projeler son %10'un bütçesini ilk haftadan ayırdı. Pişman olduklarım ise onu, teslim tarihi bağırmaya başlayınca geri alınacak bir pay gibi gördü.",
+      "Artık kuralım basit. Biri ne kaldı diye sorduğunda 'çalışıyor, bir cila kaldı' demiyorum. Ürün henüz bitmedi diyorum. Çünkü eksik olan kısım, insanların gerçekten hatırlayacağı kısım.",
+    ],
+  },
+  {
+    slug: "detection-is-a-latency-budget",
+    title: "Tespit bir gecikme bütçesidir",
+    date: "Nis 2026",
+    readingTime: "7 dk",
+    tag: "AI / ML",
+    excerpt:
+      "Geç gelen kusursuz bir tespit, hiç olmayan tespitten farksızdır — gerçek zamanlı bilgisayarlı görü geliştirmekten dersler.",
+    body: [
+      "Not defterinde bir bilgisayarlı görü modeli mAP skoruyla yargılanır. Yolda ise kronometreyle. Gerçek zamanlı görü projelerinin çoğu, bu iki yargı arasındaki boşlukta sessizce başarısız olur.",
+      "Yol güvenliği tespiti üzerinde çalışmak bana gecikmeyi kalemleri olan bir bütçe gibi görmeyi öğretti: yakalama, ön işleme, çıkarım, iletim, karar. Her kalem payından fazlasını ister. Model daha büyük girdi çözünürlüğü ister. Ağ bir yeniden deneme ister. Hat bir filtre geçişi daha ister.",
+      "Disiplin, daha hiçbir şey eğitmeden toplam bütçenin ne olduğuna karar vermektir — bir tehlikenin belirmesiyle uyarının işe yarar olması arasındaki süre — ve sonra her bileşene dilimini gerekçelendirtmektir. İki puan düşük skorlayan ama iki kat hızlı çalışan bir YOLO varyantı taviz değildir; yol hızında o, daha iyi modeldir.",
+      "5G bütçenin şeklini değiştirir, varlığını değil. Daha düşük iletim gecikmesi yavaş bir hattı mazur göstermez — ifşa eder. Ağ darboğazın olmaktan çıktığında, herkesin gözünü diktiği şey senin ön işlemen olur.",
+      "Artık başladığım her görü projesi aynı soruyla açılıyor ve bu soru 'hangi model?' değil. Şu: gerçekte kaç milisaniyemiz var — ve onları kim harcıyor?",
+    ],
+  },
+  {
+    slug: "one-platform-two-audiences",
+    title: "Tek platform, iki kitle",
+    date: "Şub 2026",
+    readingTime: "5 dk",
+    tag: "Sistemler",
+    excerpt:
+      "Ziyaretçiler için 360° kampüs turu, idare için envanter sistemi — ikisini tek backend üzerinde kurmanın veri tasarımı üzerine öğrettikleri.",
+    body: [
+      "Sanal Kampüs ayrı ayrı gelen iki taleple başladı: aday öğrenciler kampüsü evden görmek istiyordu, idare ise ekipmanı tablolarda takip etmeyi bırakmak. Bariz hamle iki araçtı. Daha iyi hamle tek şemaydı.",
+      "Panoramik tur ile envanter sistemi, ortak bir omurgaları olduğunu fark edene kadar alakasız görünür: odalar. Her 360° sahne bir odadır; takip edilen her demirbaş bir odada yaşar. Odayı bir kez düzgün modelle — PostgreSQL'de, önünde FastAPI ile — iki ürün de aynı doğrunun üzerinde birer görünüm hâline gelir.",
+      "Kazanç, tasarruf edilen emekten fazlası. Tur ile envanter bir oda hakkında anlaşamadığında ikisinden biri yanlıştır ve sistem artık bunu bilir. Kopuk araçlar bu tartışmayı yapamaz; sessizce birbirinden uzaklaşırlar ve veri böyle ölür.",
+      "Aklımda tuttuğum ders: iki proje bir ismi paylaşıyorsa muhtemelen bir şemayı da paylaşıyordur. Önce ismi inşa et. Alttaki veri yalan söylemeyi reddettikten sonra ön yüzler — bir kitle için React ve Pannellum, diğeri için yönetim paneli — işin kolay kısmı.",
+    ],
+  },
+];
+
+export const navItems = [
+  { label: "İşler", href: "#work" },
+  { label: "Hakkımda", href: "#about" },
+  { label: "Yetenekler", href: "#skills" },
+  { label: "İletişim", href: "#contact" },
+] as const;
+
+export const site = {
+  url: "https://mertceren.dev",
+  title: "Mert Ceren — Yapay Zekâ & Full-Stack Geliştirici",
+  description:
+    "Mert Ceren'in portfolyosu — yapay zekâ destekli sistemler geliştiren yazılım mühendisliği öğrencisi: gerçek zamanlı bilgisayarlı görü, 5G bağlantılı yol güvenliği ve full-stack web platformları.",
+};
+
+export const ui: Ui = {
+  skipToContent: "İçeriğe atla",
+  backToTopAria: "başa dön",
+  menu: { open: "Menüyü aç", close: "Menüyü kapat" },
+  theme: {
+    light: "Açık",
+    dark: "Koyu",
+    fallback: "Tema",
+    switchToLight: "Açık temaya geç",
+    switchToDark: "Koyu temaya geç",
+    toggle: "Temayı değiştir",
+  },
+  langToggle: { label: "EN", aria: "Switch to English" },
+  hero: { scroll: "Kaydır", localSuffix: "yerel" },
+  sections: {
+    work: { label: "Seçilmiş İşler", metaSuffix: "proje — 2025 / 2026" },
+    about: {
+      label: "Hakkımda & Deneyim",
+      timeline: "Zaman çizelgesi",
+      portrait: "Portre — d. 2003",
+    },
+    skills: { label: "Yetenekler & Stack", meta: "Hiçbir ilerleme çubuğu zarar görmedi" },
+    testimonials: {
+      label: "Referanslar",
+      meta: "İş birlikçilerden sinyaller",
+    },
+    awards: {
+      label: "Ödüller & Başarılar",
+      meta: "Dış onaylar",
+    },
+    journal: {
+      label: "Günlük",
+      meta: "Zanaat üzerine notlar",
+      readSuffix: "okuma",
+      readCta: "Oku ↗",
+    },
+    contact: {
+      label: "İletişim",
+      meta: "24 saat içinde yanıt",
+      lines: ["Birlikte", "nadir bir şey", "inşa edelim."],
+      orWrite: "ya da doğrudan yaz ↗",
+    },
+  },
+  projectCard: { cta: "Projeyi incele", ctaAria: "Vaka incelemesini gör:" },
+  caseStudy: {
+    back: "← Seçilmiş İşler",
+    live: "Canlı",
+    visit: "Siteye git ↗",
+    next: "Sıradaki proje",
+    blocks: { challenge: "Zorluk", approach: "Yaklaşım", outcome: "Sonuç" },
+  },
+  post: { back: "← Günlük", readSuffix: "okuma", next: "Sıradaki yazı" },
+  copyEmail: {
+    copy: "Kopyala",
+    copied: "Kopyalandı ✓",
+    srCopied: "E-posta panoya kopyalandı",
+    srCopy: "E-postayı kopyala",
+  },
+  footer: { built: "Sıfırdan yazıldı, şablon yok", backToTop: "Başa dön ↑" },
+  preloader: "Portfolyo",
+  notFound: {
+    kicker: "Kayıp makara",
+    titleA: "Bu sahne",
+    titleB: "kesildi",
+    body: "Aradığın sayfa final kurgusuna hiç giremedi — ya da daha sakin bir yere taşındı.",
+    cta: "Açılış sahnesine dön",
+  },
+};
+
+export const testimonials = [
+  {
+    quote: "Mert, sadece kod yazmakla kalmayıp sistem mimarisini de çok iyi anlayan, hızlı, temiz ve güvenilir çözümler üreten nadir öğrenci mühendislerden biridir.",
+    name: "Dr. Kadir C.",
+    role: "BANÜ Yazılım Mühendisliği Öğretim Üyesi",
+  },
+  {
+    quote: "Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarimizi yönetimi kolaylaştıran özel bir panele dönüştürerek bize saatlerce zaman kazandırdı.",
+    name: "Hasan K.",
+    role: "İşletme Sahibi, Rosso Lounge Bistro",
+  },
+];
+
+export const awards = [
+  {
+    year: "2026",
+    title: "TEKNOFEST Finalisti",
+    issuer: "T3 Vakfı",
+    project: "Smart Road Safety",
+  },
+  {
+    year: "2025",
+    title: "Yüksek Onur Belgesi",
+    issuer: "Bandırma Onyedi Eylül Üniversitesi",
+    project: "Akademik Başarı",
+  },
+];
+

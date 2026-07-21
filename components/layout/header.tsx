@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { useLenis } from "lenis/react";
-import { navItems, profile } from "@/lib/data";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
+import { localePath } from "@/lib/content";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +15,9 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const lenis = useLenis();
   const { scrollY } = useScroll();
+  const locale = useLocale();
+  const { navItems, profile, ui } = useContent();
+  const home = localePath(locale, "/");
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
@@ -33,7 +38,7 @@ export function Header() {
     setMenuOpen(false);
     // On subpages the anchor target doesn't exist — go home with the hash
     if (!document.querySelector(href)) {
-      window.location.assign(`/${href}`);
+      window.location.assign(home === "/" ? `/${href}` : `${home}${href}`);
       return;
     }
     if (lenis) lenis.scrollTo(href, { duration: 1.4 });
@@ -43,8 +48,8 @@ export function Header() {
   const goTop = (e: React.MouseEvent) => {
     e.preventDefault();
     setMenuOpen(false);
-    if (window.location.pathname !== "/") {
-      window.location.assign("/");
+    if (window.location.pathname !== home) {
+      window.location.assign(home);
       return;
     }
     if (lenis) lenis.scrollTo(0, { duration: 1.4 });
@@ -57,7 +62,7 @@ export function Header() {
         href="#main"
         className="sr-only z-100 bg-accent text-accent-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:rounded-full focus:px-5 focus:py-3 focus:font-mono focus:text-xs"
       >
-        Skip to content
+        {ui.skipToContent}
       </a>
 
       <header
@@ -72,7 +77,7 @@ export function Header() {
           <a
             href="#main"
             onClick={goTop}
-            aria-label={`${profile.monogram}. ${profile.name} — back to top`}
+            aria-label={`${profile.monogram}. ${profile.name} — ${ui.backToTopAria}`}
             className="font-display text-lg font-extrabold tracking-tight"
           >
             {profile.monogram}
@@ -93,6 +98,7 @@ export function Header() {
               ))}
             </nav>
 
+            <LanguageToggle />
             <ThemeToggle />
 
             <button
@@ -100,7 +106,7 @@ export function Header() {
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? ui.menu.close : ui.menu.open}
               className="relative flex size-10 items-center justify-center md:hidden"
             >
               <span

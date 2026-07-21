@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { testimonials } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { cn } from "@/lib/utils";
 
@@ -14,22 +14,26 @@ const ROTATE_MS = 6000;
  * timer; the mono index buttons switch (and reset the timer).
  */
 export function Testimonials() {
+  const { testimonials, ui } = useContent();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    if (!testimonials.length) return;
     const id = setInterval(
       () => setActive((current) => (current + 1) % testimonials.length),
       ROTATE_MS
     );
     return () => clearInterval(id);
-  }, [active]);
+  }, [active, testimonials.length]);
+
+  if (!testimonials.length) return null;
 
   return (
     <section id="testimonials" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
         index="04"
-        label="Testimonials"
-        meta="Signal from collaborators"
+        label={ui.sections.testimonials.label}
+        meta={ui.sections.testimonials.meta}
       />
 
       <motion.div

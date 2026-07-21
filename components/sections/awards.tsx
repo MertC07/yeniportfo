@@ -1,18 +1,22 @@
 "use client";
 
 import { motion } from "motion/react";
-import { awards } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Awards() {
+  const { awards, ui } = useContent();
+
+  if (!awards.length) return null;
+
   return (
     <section id="awards" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
         index="05"
-        label="Awards & Recognition"
-        meta={`${awards.length} mentions`}
+        label={ui.sections.awards.label}
+        meta={ui.sections.awards.meta}
       />
 
       <ol className="mt-10">

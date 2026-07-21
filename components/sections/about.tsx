@@ -1,15 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { about, experience, profile } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function About() {
+  const { about, experience, profile, ui } = useContent();
   return (
     <section id="about" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
-      <SectionHeading index="02" label="About & Experience" meta={profile.location} />
+      <SectionHeading index="02" label={ui.sections.about.label} meta={profile.location} />
 
       <div className="mt-14 grid gap-16 lg:grid-cols-[5fr_7fr] lg:gap-20">
         {/* Sticky manifesto column */}
@@ -45,32 +46,46 @@ export function About() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-10% 0px" }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="relative mt-10 flex aspect-[5/4] max-w-sm flex-col justify-between overflow-hidden rounded-2xl border hairline bg-surface p-6"
+            className="relative mt-10 flex aspect-[5/4] max-w-sm flex-col justify-between overflow-hidden rounded-2xl border hairline bg-surface p-6 group/portrait text-white"
           >
+            {profile.image && (
+              <>
+                <img
+                  src={profile.image}
+                  alt={profile.name}
+                  className="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-luminosity group-hover/portrait:opacity-90 group-hover/portrait:mix-blend-normal group-hover/portrait:scale-[1.03] transition-all duration-700 ease-out"
+                />
+                {/* Scrim for text readability */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45 z-10"
+                />
+              </>
+            )}
             <span
               aria-hidden
-              className="pointer-events-none absolute -bottom-10 -right-6 select-none font-display text-[10rem] font-extrabold leading-none text-foreground/[0.05]"
+              className="pointer-events-none absolute -bottom-10 -right-6 select-none font-display text-[10rem] font-extrabold leading-none text-white/[0.04]"
             >
               {profile.monogram}
             </span>
             <span
               aria-hidden
-              className="absolute left-1/2 top-0 h-40 w-64 -translate-x-1/2 rounded-full blur-3xl"
+              className="absolute left-1/2 top-0 h-40 w-64 -translate-x-1/2 rounded-full blur-3xl z-10"
               style={{ background: "var(--glow)" }}
             />
-            <figcaption className="microlabel relative">
-              Portrait — est. 2004
+            <figcaption className="microlabel relative text-white/80 z-20">
+              {ui.sections.about.portrait}
             </figcaption>
-            <div className="relative">
+            <div className="relative text-white z-20">
               <p className="font-display text-xl font-bold">{profile.name}</p>
-              <p className="microlabel mt-1">{profile.role}</p>
+              <p className="microlabel mt-1 text-white/80">{profile.role}</p>
             </div>
           </motion.figure>
         </div>
 
         {/* Experience timeline */}
         <div>
-          <p className="microlabel mb-2">Timeline</p>
+          <p className="microlabel mb-2">{ui.sections.about.timeline}</p>
           <ol>
             {experience.map((entry, i) => (
               <motion.li

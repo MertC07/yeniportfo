@@ -9,6 +9,8 @@ import {
   type MotionValue,
 } from "motion/react";
 import type { Project } from "@/lib/data";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
+import { localePath } from "@/lib/content";
 import { Magnetic } from "@/components/ui/magnetic-button";
 
 type ProjectCardProps = {
@@ -33,6 +35,8 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const scale = useTransform(progress, range, [1, targetScale]);
   const { palette } = project;
+  const locale = useLocale();
+  const { ui } = useContent();
 
   // Subtle pointer-driven 3D tilt (mouse only)
   const tiltX = useMotionValue(0);
@@ -96,8 +100,32 @@ export function ProjectCard({
           className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/35"
         />
 
+        {/* Floating project mockup window */}
+        {project.image && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none md:left-1/3 z-10 flex items-end justify-end">
+            <div className="relative w-full h-[60%] md:h-[70%] max-w-[480px] mr-[-5%] mb-[-4%] translate-y-[8%] rotate-[-4deg] group-hover:translate-y-[3%] group-hover:rotate-[-2deg] transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] opacity-75 group-hover:opacity-95">
+              {/* Browser frame mockup wrapper */}
+              <div className="w-full h-full rounded-tl-xl border border-white/15 bg-[#141416]/90 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col">
+                {/* Browser address bar */}
+                <div className="flex items-center gap-1.5 px-4 py-2 border-b border-white/10 bg-white/5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                  <div className="ml-3 flex-1 h-3 rounded bg-white/10 max-w-[200px]" />
+                </div>
+                {/* Project screenshot */}
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover object-left-top"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Top meta row */}
-        <div className="relative flex items-baseline justify-between p-6 sm:p-10 lg:p-12">
+        <div className="relative flex items-baseline justify-between p-6 sm:p-10 lg:p-12 z-20">
           <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/70">
             <span className="text-white">{String(index + 1).padStart(2, "0")}</span>
             <span className="mx-3" aria-hidden>
@@ -111,7 +139,7 @@ export function ProjectCard({
         </div>
 
         {/* Bottom content */}
-        <div className="relative p-6 sm:p-10 lg:p-12">
+        <div className="relative p-6 sm:p-10 lg:p-12 z-20">
           <h3 className="font-display text-display-lg font-extrabold uppercase leading-none tracking-tight text-white">
             {project.title}
           </h3>
@@ -131,11 +159,11 @@ export function ProjectCard({
             </ul>
             <Magnetic>
               <Link
-                href={`/work/${project.slug}`}
-                aria-label={`View case study: ${project.title}`}
+                href={localePath(locale, `/work/${project.slug}`)}
+                aria-label={`${ui.projectCard.ctaAria} ${project.title}`}
                 className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
               >
-                View case
+                {ui.projectCard.cta}
                 <span aria-hidden className="text-sm leading-none">
                   ↗
                 </span>

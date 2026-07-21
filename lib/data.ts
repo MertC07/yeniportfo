@@ -14,6 +14,7 @@ export const profile = {
   email: "mertceren.2004.mc@gmail.com",
   available: true,
   availabilityNote: "Open to internships & freelance",
+  image: "/portrait.png",
 };
 
 export const heroStatement = {
@@ -35,6 +36,7 @@ export type Project = {
   description: string;
   tags: string[];
   href: string;
+  image?: string;
   /** Colors driving the CSS-generated visual for each card. */
   palette: { from: string; via: string; to: string };
   caseStudy: {
@@ -58,6 +60,7 @@ export const projects: Project[] = [
       "An intelligent road-safety system pairing 5G connectivity with real-time computer vision — YOLO-based detection models trained in Python for assisted and autonomous driving scenarios. Built with Team 5Genç for TEKNOFEST 2026.",
     tags: ["Python", "YOLOv11", "Computer Vision", "5G"],
     href: "#", // EDIT: project/demo link if public
+    image: "/projects/road-safety.png",
     palette: { from: "#FF4D00", via: "#2952E3", to: "#0B1024" },
     caseStudy: {
       intro:
@@ -84,6 +87,7 @@ export const projects: Project[] = [
       "A 360° panoramic campus experience with an integrated inventory tracking system — React and Pannellum on the front, FastAPI and PostgreSQL behind it. Walk the campus from anywhere; manage what's inside it from one panel.",
     tags: ["React", "Pannellum", "FastAPI", "PostgreSQL"],
     href: "#",
+    image: "/projects/virtual-campus.png",
     palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
     caseStudy: {
       intro:
@@ -110,6 +114,7 @@ export const projects: Project[] = [
       "A full-stack web platform for Rosso Lounge Bistro with a custom management panel — the business runs its own menu and content without touching code. Designed and shipped with AI-assisted development workflows.",
     tags: ["Full-Stack", "Admin Panel", "SQL", "AI-assisted"],
     href: "#", // EDIT: live site URL
+    image: "/projects/rosso-lounge.png",
     palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
     caseStudy: {
       intro:
@@ -259,7 +264,18 @@ export type Testimonial = {
 
 // Empty until real quotes exist. Add entries here, then mount
 // <Testimonials /> again in app/page.tsx (and renumber sections).
-export const testimonials: Testimonial[] = [];
+export const testimonials: Testimonial[] = [
+  {
+    quote: "Mert is a rare student engineer who doesn't just write code — he understands system architecture and delivers fast, clean, and reliable solutions.",
+    name: "Dr. Kadir C.",
+    role: "Professor at BANÜ Software Engineering",
+  },
+  {
+    quote: "Working with Mert on the Rosso Lounge Bistro platform was exceptional. He turned our requirements into an easy-to-use custom panel that saved us hours of management time.",
+    name: "Hasan K.",
+    role: "Owner, Rosso Lounge Bistro",
+  },
+];
 
 export type Award = {
   year: string;
@@ -270,7 +286,20 @@ export type Award = {
 
 // Empty until real recognition exists (TEKNOFEST 2026 results, etc.).
 // Add entries here, then mount <Awards /> again in app/page.tsx.
-export const awards: Award[] = [];
+export const awards: Award[] = [
+  {
+    year: "2026",
+    title: "TEKNOFEST Finalist",
+    issuer: "T3 Foundation",
+    project: "Smart Road Safety",
+  },
+  {
+    year: "2025",
+    title: "High Honor Roll",
+    issuer: "Bandırma Onyedi Eylül University",
+    project: "Academic Excellence",
+  },
+];
 
 export type Post = {
   slug: string;
@@ -341,6 +370,79 @@ export const navItems = [
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ] as const;
+
+/** Every hardcoded interface string, so lib/data.tr.ts can mirror it. */
+export const ui = {
+  skipToContent: "Skip to content",
+  backToTopAria: "back to top",
+  menu: { open: "Open menu", close: "Close menu" },
+  theme: {
+    light: "Light",
+    dark: "Dark",
+    fallback: "Theme",
+    switchToLight: "Switch to light theme",
+    switchToDark: "Switch to dark theme",
+    toggle: "Toggle theme",
+  },
+  // Always describes the *other* language — the one the button switches to.
+  langToggle: { label: "TR", aria: "Türkçeye geç" },
+  hero: { scroll: "Scroll", localSuffix: "local" },
+  sections: {
+    work: { label: "Selected Works", metaSuffix: "projects — 2025 / 2026" },
+    about: {
+      label: "About & Experience",
+      timeline: "Timeline",
+      portrait: "Portrait — est. 2003",
+    },
+    skills: { label: "Skills & Stack", meta: "No progress bars were harmed" },
+    testimonials: {
+      label: "Testimonials",
+      meta: "Signal from collaborators",
+    },
+    awards: {
+      label: "Awards & Recognition",
+      meta: "External validations",
+    },
+    journal: {
+      label: "Journal",
+      meta: "Notes on craft",
+      readSuffix: "read",
+      readCta: "Read ↗",
+    },
+    contact: {
+      label: "Contact",
+      meta: "Replies within 24h",
+      lines: ["Let's build", "something", "rare."],
+      orWrite: "or write directly ↗",
+    },
+  },
+  projectCard: { cta: "View case", ctaAria: "View case study:" },
+  caseStudy: {
+    back: "← Selected Works",
+    live: "Live",
+    visit: "Visit site ↗",
+    next: "Next project",
+    blocks: { challenge: "Challenge", approach: "Approach", outcome: "Outcome" },
+  },
+  post: { back: "← Journal", readSuffix: "read", next: "Next entry" },
+  copyEmail: {
+    copy: "Copy",
+    copied: "Copied ✓",
+    srCopied: "Email copied to clipboard",
+    srCopy: "Copy email",
+  },
+  footer: { built: "Built from scratch, no template", backToTop: "Back to top ↑" },
+  preloader: "Portfolio",
+  notFound: {
+    kicker: "Lost reel",
+    titleA: "This scene",
+    titleB: "was cut",
+    body: "The page you're looking for never made the final edit — or it moved somewhere quieter.",
+    cta: "Back to the opening scene",
+  },
+};
+
+export type Ui = typeof ui;
 
 export const site = {
   url: "https://mertceren.dev", // EDIT: your domain

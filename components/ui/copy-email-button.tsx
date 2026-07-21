@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Magnetic } from "@/components/ui/magnetic-button";
-import { profile } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 
 export function CopyEmailButton() {
   const [copied, setCopied] = useState(false);
+  const { profile, ui } = useContent();
 
   const copy = async () => {
     try {
@@ -27,7 +28,7 @@ export function CopyEmailButton() {
         className="group relative overflow-hidden rounded-full border hairline bg-surface px-8 py-5 transition-colors duration-300 hover:border-accent sm:px-12 sm:py-6"
       >
         <span className="sr-only" aria-live="polite">
-          {copied ? "Email copied to clipboard" : `Copy email ${profile.email}`}
+          {copied ? ui.copyEmail.srCopied : `${ui.copyEmail.srCopy} ${profile.email}`}
         </span>
         <span aria-hidden className="block h-6 sm:h-7">
           <AnimatePresence mode="popLayout" initial={false}>
@@ -40,7 +41,7 @@ export function CopyEmailButton() {
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.14em] text-accent sm:text-base"
               >
-                Copied ✓
+                {ui.copyEmail.copied}
               </motion.span>
             ) : (
               <motion.span
@@ -53,7 +54,7 @@ export function CopyEmailButton() {
               >
                 {profile.email}
                 <span className="microlabel rounded-full border hairline px-2.5 py-1 transition-colors duration-300 group-hover:border-accent group-hover:text-accent">
-                  Copy
+                  {ui.copyEmail.copy}
                 </span>
               </motion.span>
             )}

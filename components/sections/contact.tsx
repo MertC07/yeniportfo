@@ -1,20 +1,26 @@
 "use client";
 
 import { motion } from "motion/react";
-import { profile, socials } from "@/lib/data";
+import { socials } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealText } from "@/components/ui/reveal-text";
 import { CopyEmailButton } from "@/components/ui/copy-email-button";
 
 export function Contact() {
+  const { profile, ui } = useContent();
   return (
     <section id="contact" className="px-5 py-28 sm:px-8 sm:py-40 lg:px-12">
-      <SectionHeading index="05" label="Contact" meta="Replies within 24h" />
+      <SectionHeading
+        index="07"
+        label={ui.sections.contact.label}
+        meta={ui.sections.contact.meta}
+      />
 
       <div className="mt-20 flex flex-col items-center text-center">
         <RevealText
           as="h2"
-          lines={["Let's build", "something", "rare."]}
+          lines={ui.sections.contact.lines}
           className="font-display text-display-xl font-extrabold uppercase leading-[0.95] tracking-tight"
         />
 
@@ -30,7 +36,7 @@ export function Contact() {
             href={`mailto:${profile.email}`}
             className="microlabel transition-colors duration-300 hover:text-accent"
           >
-            or write directly ↗
+            {ui.sections.contact.orWrite}
           </a>
         </motion.div>
 

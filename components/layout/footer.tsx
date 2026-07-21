@@ -1,11 +1,13 @@
 "use client";
 
 import { useLenis } from "lenis/react";
-import { profile, socials } from "@/lib/data";
+import { socials } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { useLocalTime } from "@/lib/hooks/use-local-time";
 
 export function Footer() {
   const lenis = useLenis();
+  const { profile, ui } = useContent();
   const time = useLocalTime(profile.timezone);
 
   const backToTop = () => {
@@ -17,7 +19,7 @@ export function Footer() {
     <footer className="border-t hairline px-5 pt-10 sm:px-8 lg:px-12">
       <div className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-4">
         <p className="microlabel">
-          © {new Date().getFullYear()} {profile.name} — Built from scratch, no template
+          © {new Date().getFullYear()} {profile.name} — {ui.footer.built}
         </p>
         <p className="microlabel tabular-nums" suppressHydrationWarning>
           {profile.location}
@@ -42,7 +44,7 @@ export function Footer() {
           onClick={backToTop}
           className="microlabel transition-colors duration-300 hover:text-accent"
         >
-          Back to top ↑
+          {ui.footer.backToTop}
         </button>
       </div>
 

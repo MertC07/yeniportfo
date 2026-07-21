@@ -1,7 +1,17 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/header";
+import { defaultLocale, getContent, isLocale, localePath } from "@/lib/content";
 
-export default function NotFound() {
+// not-found receives no params, so the locale comes from the x-locale
+// header the proxy sets. Server-rendered on purpose: a client 404 would
+// CSR the whole document and lose the pre-rendered markup.
+export default async function NotFound() {
+  const headerList = await headers();
+  const headerLocale = headerList.get("x-locale") ?? "";
+  const locale = isLocale(headerLocale) ? headerLocale : defaultLocale;
+  const { ui } = getContent(locale);
+
   return (
     <>
       <Header />
@@ -14,22 +24,21 @@ export default function NotFound() {
           <span className="mx-3 select-none" aria-hidden>
             —
           </span>
-          Lost reel
+          {ui.notFound.kicker}
         </p>
         <h1 className="mt-6 font-display text-display-xl font-extrabold uppercase leading-[0.95] tracking-tight">
-          This scene
+          {ui.notFound.titleA}
           <br />
-          was cut<span className="text-accent">.</span>
+          {ui.notFound.titleB}<span className="text-accent">.</span>
         </h1>
         <p className="mt-6 max-w-md text-sm leading-relaxed text-muted sm:text-base">
-          The page you&apos;re looking for never made the final edit — or it
-          moved somewhere quieter.
+          {ui.notFound.body}
         </p>
         <Link
-          href="/"
+          href={localePath(locale, "/")}
           className="mt-10 inline-flex items-center gap-2 rounded-full border hairline px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
         >
-          Back to the opening scene
+          {ui.notFound.cta}
         </Link>
       </main>
     </>

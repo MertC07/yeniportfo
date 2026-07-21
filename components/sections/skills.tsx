@@ -8,7 +8,8 @@ import {
   useTransform,
   useVelocity,
 } from "motion/react";
-import { skillTiers, techMarquee, type Skill } from "@/lib/data";
+import { techMarquee, type Skill } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Marquee } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ const DISCIPLINES: Array<Skill["discipline"]> = [
 
 export function Skills() {
   const [active, setActive] = useState<Skill["discipline"] | null>(null);
+  const { skillTiers, ui } = useContent();
 
   // Marquee leans with scroll velocity — texture that reacts to the reader
   const { scrollY } = useScroll();
@@ -35,8 +37,8 @@ export function Skills() {
       <div className="px-5 sm:px-8 lg:px-12">
         <SectionHeading
           index="03"
-          label="Skills & Stack"
-          meta="No progress bars were harmed"
+          label={ui.sections.skills.label}
+          meta={ui.sections.skills.meta}
         />
 
         {/* Discipline filter — hover to highlight, click/tap to pin */}

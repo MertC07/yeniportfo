@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { heroStatement, profile } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { useLocalTime } from "@/lib/hooks/use-local-time";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { heroStatement, profile, ui } = useContent();
   const time = useLocalTime(profile.timezone);
 
   const glowX = useMotionValue(0);
@@ -98,7 +99,7 @@ export function Hero() {
         transition={{ duration: 1, delay: 1.4 }}
         className="relative mt-14 flex items-center gap-3 sm:mt-20"
       >
-        <span className="microlabel">Scroll</span>
+        <span className="microlabel">{ui.hero.scroll}</span>
         <motion.span
           className="block h-px w-10 origin-left bg-accent"
           animate={{ scaleX: [0.3, 1, 0.3] }}
@@ -122,7 +123,7 @@ export function Hero() {
         <div className="flex flex-col gap-2 sm:items-end">
           <p className="microlabel">{profile.location}</p>
           <p className="microlabel tabular-nums" suppressHydrationWarning>
-            {time ? `${time} — local` : " "}
+            {time ? `${time} — ${ui.hero.localSuffix}` : " "}
           </p>
           {profile.available && (
             <p className="microlabel flex items-center gap-2 text-foreground">

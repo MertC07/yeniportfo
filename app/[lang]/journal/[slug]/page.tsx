@@ -4,11 +4,12 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { RevealText } from "@/components/ui/reveal-text";
-import { posts, profile } from "@/lib/data";
+import { getContent, isLocale, localePath } from "@/lib/content";
+import { posts } from "@/lib/data";
 
-type Params = { slug: string };
+type Params = { lang: string; slug: string };
 
-export function generateStaticParams(): Params[] {
+export function generateStaticParams(): Array<Pick<Params, "slug">> {
   return posts.map(({ slug }) => ({ slug }));
 }
 
@@ -17,12 +18,18 @@ export async function generateMetadata({
 }: {
   params: Promise<Params>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) return {};
+  const { posts: localizedPosts, profile } = getContent(lang);
+  const post = localizedPosts.find((p) => p.slug === slug);
   if (!post) return {};
   return {
     title: `${post.title} — ${profile.name}`,
     description: post.excerpt,
+    alternates: {
+      canonical: localePath(lang, `/journal/${slug}`),
+      languages: { en: `/journal/${slug}`, tr: `/tr/journal/${slug}` },
+    },
   };
 }
 
@@ -31,11 +38,13 @@ export default async function JournalPostPage({
 }: {
   params: Promise<Params>;
 }) {
-  const { slug } = await params;
-  const index = posts.findIndex((p) => p.slug === slug);
+  const { lang, slug } = await params;
+  if (!isLocale(lang)) notFound();
+  const { posts: localizedPosts, profile, ui } = getContent(lang);
+  const index = localizedPosts.findIndex((p) => p.slug === slug);
   if (index === -1) notFound();
-  const post = posts[index];
-  const next = posts[(index + 1) % posts.length];
+  const post = localizedPosts[index];
+  const next = localizedPosts[(index + 1) % localizedPosts.length];
 
   return (
     <>
@@ -45,17 +54,17 @@ export default async function JournalPostPage({
           {/* Breadcrumb + meta */}
           <div className="flex items-baseline justify-between border-t hairline pt-4">
             <Link
-              href="/#journal"
+              href={`${localePath(lang, "/")}#journal`}
               className="microlabel transition-colors duration-300 hover:text-accent"
             >
-              ← Journal
+              {ui.post.back}
             </Link>
             <p className="microlabel">
               <span className="text-accent">{post.tag}</span>
               <span className="mx-3 select-none" aria-hidden>
                 —
               </span>
-              {post.date} · {post.readingTime} read
+              {post.date} · {post.readingTime} {ui.post.readSuffix}
             </p>
           </div>
 
@@ -89,9 +98,9 @@ export default async function JournalPostPage({
 
           {/* Next post */}
           <div className="mt-20 border-t hairline pt-8">
-            <p className="microlabel">Next entry</p>
+            <p className="microlabel">{ui.post.next}</p>
             <Link
-              href={`/journal/${next.slug}`}
+              href={localePath(lang, `/journal/${next.slug}`)}
               className="group mt-3 inline-flex items-baseline gap-4 font-display text-display-md font-bold tracking-tight transition-colors duration-300 hover:text-accent"
             >
               {next.title}

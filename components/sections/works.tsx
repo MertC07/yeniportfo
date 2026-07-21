@@ -2,12 +2,13 @@
 
 import { useRef } from "react";
 import { useScroll } from "motion/react";
-import { projects } from "@/lib/data";
+import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectCard } from "@/components/ui/project-card";
 
 export function Works() {
   const stackRef = useRef<HTMLDivElement>(null);
+  const { projects, ui } = useContent();
   const { scrollYProgress } = useScroll({
     target: stackRef,
     offset: ["start start", "end end"],
@@ -17,8 +18,8 @@ export function Works() {
     <section id="work" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
         index="01"
-        label="Selected Works"
-        meta={`${projects.length} projects — 2025 / 2026`}
+        label={ui.sections.work.label}
+        meta={`${projects.length} ${ui.sections.work.metaSuffix}`}
       />
       <div ref={stackRef} className="mt-8">
         {projects.map((project, i) => (

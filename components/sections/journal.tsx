@@ -2,22 +2,29 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { posts } from "@/lib/data";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
+import { localePath } from "@/lib/content";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const MotionLink = motion.create(Link);
 
 export function Journal() {
+  const locale = useLocale();
+  const { posts, ui } = useContent();
   return (
     <section id="journal" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
-      <SectionHeading index="04" label="Journal" meta="Notes on craft" />
+      <SectionHeading
+        index="06"
+        label={ui.sections.journal.label}
+        meta={ui.sections.journal.meta}
+      />
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {posts.map((post, i) => (
           <MotionLink
             key={post.slug}
-            href={`/journal/${post.slug}`}
+            href={localePath(locale, `/journal/${post.slug}`)}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10% 0px" }}
@@ -37,9 +44,11 @@ export function Journal() {
               </p>
             </div>
             <div className="microlabel mt-9 flex items-center justify-between">
-              <span>{post.readingTime} read</span>
+              <span>
+                {post.readingTime} {ui.sections.journal.readSuffix}
+              </span>
               <span className="text-foreground transition-colors duration-300 group-hover:text-accent">
-                Read ↗
+                {ui.sections.journal.readCta}
               </span>
             </div>
           </MotionLink>
