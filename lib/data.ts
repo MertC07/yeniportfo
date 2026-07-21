@@ -151,7 +151,6 @@ export type ExperienceEntry = {
   detail: string;
 };
 
-// EDIT: confirm the start dates — they're best guesses.
 export const experience: ExperienceEntry[] = [
   {
     period: "Jun 2026 — Now",
@@ -170,12 +169,20 @@ export const experience: ExperienceEntry[] = [
       "Supported the university's IT Department through an İŞKUR-backed student program, handling user queries, computer/printer installation, and IT inventory tracking.",
   },
   {
-    period: "2025 — Now",
+    period: "Nov 2024 — Mar 2025",
     title: "Campus Representative",
-    place: "Etkin Kampüs",
+    place: "Etkin Kampüs (Part-time)",
     summary: "The bridge between a platform and its campus.",
     detail:
-      "Representing Etkin Kampüs at BANÜ — community building, outreach, and being the local face of a national student platform.",
+      "Represented Etkin Kampüs at BANÜ — community building, outreach, and being the local face of a national student platform.",
+  },
+  {
+    period: "2024 — 2028",
+    title: "B.Sc. Software Engineering",
+    place: "Bandırma Onyedi Eylül University",
+    summary: "Where the fundamentals click.",
+    detail:
+      "Algorithms, software architecture, systems, and engineering fundamentals. Putting theoretical knowledge into practice through real projects.",
   },
   {
     period: "2024 — Now",
@@ -183,15 +190,22 @@ export const experience: ExperienceEntry[] = [
     place: "BANÜ Software Engineering",
     summary: "Elected voice of the software engineering class.",
     detail:
-      "Representing my classmates to the department — coordination, communication, and learning that shipping decisions with people is harder than shipping code.",
+      "Representing my classmates to the department — coordination, communication, and student leadership.",
   },
   {
-    period: "2024",
-    title: "B.Sc. Software Engineering",
+    period: "2023 — 2024",
+    title: "English Preparatory Program",
     place: "Bandırma Onyedi Eylül University",
-    summary: "Where the fundamentals clicked.",
+    summary: "Intensive English language training.",
     detail:
-      "Algorithms, systems, and the habit of asking why something works — not just how. Now in my second year, with the GPA competing against the side projects for attention.",
+      "Completed a 1-year English prep program prior to starting the B.Sc. program in Software Engineering.",
+  },
+  {
+    period: "Sep 2018 — Jun 2022",
+    title: "High School Diploma",
+    place: "Eyüpsultan Anatolian High School",
+    summary: "Science and mathematics track.",
+    detail: "Completed secondary education focusing on mathematics and natural sciences.",
   },
 ];
 

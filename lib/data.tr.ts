@@ -137,12 +137,20 @@ export const experience: ExperienceEntry[] = [
       "İŞKUR destekli kısmi zamanlı öğrenci programı kapsamında üniversitenin Bilgi İşlem Daire Başkanlığı bünyesinde teknik destek, kullanıcı desteği, bilgisayar/yazıcı kurulumu ve envanter takibi süreçlerinde görev aldım.",
   },
   {
-    period: "2025 — Şu an",
+    period: "Kas 2024 — Mar 2025",
     title: "Kampüs Temsilcisi",
-    place: "Etkin Kampüs",
+    place: "Etkin Kampüs (Yarı Zamanlı)",
     summary: "Bir platformla kampüsü arasındaki köprü.",
     detail:
-      "Etkin Kampüs'ü BANÜ'de temsil ediyorum — topluluk kurma, iletişim ve ulusal bir öğrenci platformunun yereldeki yüzü olmak.",
+      "Etkin Kampüs'ü BANÜ'de temsil ettim — topluluk kurma, iletişim ve ulusal bir öğrenci platformunun yereldeki yüzü olmak.",
+  },
+  {
+    period: "2024 — 2028",
+    title: "Yazılım Mühendisliği Lisansı",
+    place: "Bandırma Onyedi Eylül Üniversitesi",
+    summary: "Temellerin oturduğu yer.",
+    detail:
+      "Algoritmalar, yazılım mimarisi, sistemler ve mühendislik prensipleri. Teorik bilgileri gerçek projeler üreterek pratiğe döküyorum.",
   },
   {
     period: "2024 — Şu an",
@@ -150,15 +158,22 @@ export const experience: ExperienceEntry[] = [
     place: "BANÜ Yazılım Mühendisliği",
     summary: "Yazılım mühendisliği sınıfının seçilmiş sesi.",
     detail:
-      "Sınıf arkadaşlarımı bölüme karşı temsil ediyorum — koordinasyon, iletişim ve kararları insanlarla birlikte hayata geçirmenin kod yazmaktan zor olduğunu öğrenmek.",
+      "Sınıf arkadaşlarımı bölüme karşı temsil ediyorum — koordinasyon, iletişim ve öğrenci liderliği.",
   },
   {
-    period: "2024",
-    title: "Yazılım Mühendisliği Lisansı",
+    period: "2023 — 2024",
+    title: "İngilizce Hazırlık Eğitimi",
     place: "Bandırma Onyedi Eylül Üniversitesi",
-    summary: "Temellerin oturduğu yer.",
+    summary: "Yoğun İngilizce dil eğitimi.",
     detail:
-      "Algoritmalar, sistemler ve bir şeyin neden çalıştığını sorma alışkanlığı — sadece nasıl değil. Şu an ikinci sınıftayım; not ortalaması yan projelerle ilgi yarışında.",
+      "Yazılım mühendisliği lisans eğitimi öncesinde 1 yıllık zorunlu İngilizce hazırlık programını tamamladım.",
+  },
+  {
+    period: "Eyl 2018 — Haz 2022",
+    title: "Lise Eğitimi",
+    place: "Eyüpsultan Anadolu Lisesi",
+    summary: "Sayısal ağırlıklı lise eğitimi.",
+    detail: "Lise öğrenimi döneminde sayısal ve fen bilimleri odaklı eğitim aldım.",
   },
 ];
 
