@@ -445,7 +445,7 @@ export const ui = {
 export type Ui = typeof ui;
 
 export const site = {
-  url: "https://mertceren.dev", // EDIT: your domain
+  url: "https://mertceren.com", // EDIT: your domain
   title: "Mert Ceren — AI & Full-Stack Developer",
   description:
     "Portfolio of Mert Ceren — software engineering student building AI-powered systems: real-time computer vision, 5G-connected road safety, and full-stack web platforms.",

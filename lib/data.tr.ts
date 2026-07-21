@@ -253,7 +253,7 @@ export const navItems = [
 ] as const;
 
 export const site = {
-  url: "https://mertceren.dev",
+  url: "https://mertceren.com",
   title: "Mert Ceren — Yapay Zekâ & Full-Stack Geliştirici",
   description:
     "Mert Ceren'in portfolyosu — yapay zekâ destekli sistemler geliştiren yazılım mühendisliği öğrencisi: gerçek zamanlı bilgisayarlı görü, 5G bağlantılı yol güvenliği ve full-stack web platformları.",
