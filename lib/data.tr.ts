@@ -305,6 +305,13 @@ export const ui: Ui = {
       label: "Ödüller & Başarılar",
       meta: "Dış onaylar",
     },
+    github: {
+      label: "GitHub & Kod Aktivitesi",
+      meta: "@MertC07 hesabından canlı veriler",
+      viewProfile: "GitHub Profilini Gör ↗",
+      reposTitle: "Aktif Depolar & Projeler",
+      commitsNote: "Düzenli commit'ler ve aktif kod geliştirme süreci",
+    },
     journal: {
       label: "Günlük",
       meta: "Zanaat üzerine notlar",

@@ -409,6 +409,13 @@ export const ui = {
       label: "Awards & Recognition",
       meta: "External validations",
     },
+    github: {
+      label: "GitHub & Code Activity",
+      meta: "Live metrics from @MertC07",
+      viewProfile: "View GitHub Profile ↗",
+      reposTitle: "Active Repositories",
+      commitsNote: "Continuous commits & active development activity",
+    },
     journal: {
       label: "Journal",
       meta: "Notes on craft",
