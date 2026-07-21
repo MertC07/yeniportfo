@@ -23,9 +23,8 @@ export const heroStatement = {
 };
 
 export const socials = [
-  { label: "GitHub", href: "https://github.com/mertceren" }, // EDIT: your GitHub
-  { label: "LinkedIn", href: "https://linkedin.com/in/mertceren" }, // EDIT: your LinkedIn
-  { label: "X", href: "https://x.com/mertceren" }, // EDIT: your X
+  { label: "GitHub", href: "https://github.com/MertC07" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/mert-ceren-1a7b10297" },
 ] as const;
 
 export type Project = {
