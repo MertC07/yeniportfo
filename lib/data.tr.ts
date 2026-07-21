@@ -156,17 +156,17 @@ export const experience: ExperienceEntry[] = [
     period: "2024 — Şu an",
     title: "Sınıf Temsilcisi",
     place: "BANÜ Yazılım Mühendisliği",
-    summary: "Yazılım mühendisliği sınıfının seçilmiş sesi.",
+    summary: "Akademisyenler ve öğrenciler arası iletişim köprüsü.",
     detail:
-      "Sınıf arkadaşlarımı bölüme karşı temsil ediyorum — koordinasyon, iletişim ve öğrenci liderliği.",
+      "Akademisyenlerimiz ile öğrenci arkadaşlarım arasındaki iletişimi, bilgi akışını ve ders/bölüm süreçlerindeki koordinasyonu sağlıyorum.",
   },
   {
     period: "2023 — 2024",
-    title: "İngilizce Hazırlık Eğitimi",
+    title: "İngilizce Hazırlık Eğitimi (İsteğe Bağlı)",
     place: "Bandırma Onyedi Eylül Üniversitesi",
-    summary: "Yoğun İngilizce dil eğitimi.",
+    summary: "İsteğe bağlı 1 yıllık İngilizce hazırlık programı.",
     detail:
-      "Yazılım mühendisliği lisans eğitimi öncesinde 1 yıllık zorunlu İngilizce hazırlık programını tamamladım.",
+      "Yazılım mühendisliği lisans eğitimi öncesinde 1 yıllık isteğe bağlı İngilizce hazırlık eğitimini başarıyla tamamladım.",
   },
   {
     period: "Eyl 2018 — Haz 2022",

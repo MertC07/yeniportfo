@@ -188,17 +188,17 @@ export const experience: ExperienceEntry[] = [
     period: "2024 — Now",
     title: "Class Representative",
     place: "BANÜ Software Engineering",
-    summary: "Elected voice of the software engineering class.",
+    summary: "Communication bridge between faculty and students.",
     detail:
-      "Representing my classmates to the department — coordination, communication, and student leadership.",
+      "Facilitating communication, information flow, and coordination between faculty members and fellow student classmates.",
   },
   {
     period: "2023 — 2024",
-    title: "English Preparatory Program",
+    title: "Optional English Preparatory Program",
     place: "Bandırma Onyedi Eylül University",
-    summary: "Intensive English language training.",
+    summary: "Voluntary 1-year English language training.",
     detail:
-      "Completed a 1-year English prep program prior to starting the B.Sc. program in Software Engineering.",
+      "Completed a 1-year optional English prep program prior to starting the B.Sc. program in Software Engineering.",
   },
   {
     period: "Sep 2018 — Jun 2022",
