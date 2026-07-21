@@ -17,6 +17,40 @@ export function GithubStats() {
     commitsNote: "Düzenli commit'ler ve aktif kod geliştirme süreci",
   };
 
+  const languages = [
+    { name: "Python", percentage: 45, note: "YOLOv8, Computer Vision & AI Models", color: "bg-accent" },
+    { name: "C# / .NET Core", percentage: 30, note: "ASP.NET Core & Enterprise APIs", color: "bg-blue-500" },
+    { name: "TypeScript / React", percentage: 20, note: "Next.js 16 & Modern Web Applications", color: "bg-amber-400" },
+    { name: "SQL & PostgreSQL", percentage: 5, note: "Relational Schemas & Query Optimization", color: "bg-emerald-400" },
+  ];
+
+  const featuredRepos = [
+    {
+      name: "yeniportfo",
+      badge: "TypeScript",
+      description: "Next.js 16, TypeScript ve TailwindCSS ile sıfırdan geliştirilmiş kişisel web portfolyosu.",
+      url: "https://github.com/MertC07/yeniportfo",
+      language: "TypeScript",
+      updated: "2026",
+    },
+    {
+      name: "smart-road-safety-5g",
+      badge: "Python",
+      description: "TEKNOFEST 2026 — 5G bağlantılı ve YOLOv8 tabanlı gerçek zamanlı otonom yol güvenliği sistemi.",
+      url: "https://github.com/MertC07",
+      language: "Python / YOLO",
+      updated: "2026",
+    },
+    {
+      name: "virtual-campus-360",
+      badge: "C# / React",
+      description: "Envanter takip entegrasyonlu 360° panoramik sanal tur platformu.",
+      url: "https://github.com/MertC07",
+      language: "C# / React",
+      updated: "2026",
+    },
+  ];
+
   return (
     <section id="github" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
@@ -63,59 +97,88 @@ export function GithubStats() {
           </div>
         </motion.div>
 
-        {/* Dynamic Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* GitHub Stats Card */}
+        {/* Code Stack Breakdown & Repos Grid */}
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Left: Language Stack Metrics */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10% 0px" }}
             transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
-            className="flex items-center justify-center rounded-2xl border hairline bg-surface/40 p-6 transition-all duration-300 hover:border-accent/30 overflow-x-auto"
+            className="flex flex-col justify-between rounded-2xl border hairline bg-surface/40 p-6 sm:p-8 lg:col-span-5"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://github-readme-stats.vercel.app/api?username=MertC07&show_icons=true&theme=transparent&title_color=f97316&text_color=e4e4e7&icon_color=f97316&border_color=27272a&hide_border=true"
-              alt="Mert Ceren GitHub Stats"
-              className="w-full max-w-md h-auto"
-              loading="lazy"
-            />
+            <div>
+              <h4 className="font-display text-lg font-bold">Kodlama Dağılımı & Teknolojiler</h4>
+              <p className="mt-1 text-xs text-muted">Aktif geliştirilen projelere göre dil ağırlıkları</p>
+
+              <div className="mt-6 space-y-5">
+                {languages.map((lang) => (
+                  <div key={lang.name} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-medium">{lang.name}</span>
+                      <span className="font-mono text-accent">{lang.percentage}%</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-surface">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${lang.percentage}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: EASE }}
+                        className={`h-full ${lang.color}`}
+                      />
+                    </div>
+                    <p className="microlabel text-[0.65rem] text-muted">{lang.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
-          {/* Top Languages Card */}
+          {/* Right: Featured GitHub Repositories */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10% 0px" }}
             transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
-            className="flex items-center justify-center rounded-2xl border hairline bg-surface/40 p-6 transition-all duration-300 hover:border-accent/30 overflow-x-auto"
+            className="flex flex-col gap-4 lg:col-span-7"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://github-readme-stats.vercel.app/api/top-langs/?username=MertC07&layout=compact&theme=transparent&title_color=f97316&text_color=e4e4e7&icon_color=f97316&border_color=27272a&hide_border=true"
-              alt="Mert Ceren Top Languages"
-              className="w-full max-w-md h-auto"
-              loading="lazy"
-            />
+            <div className="flex items-center justify-between px-1">
+              <h4 className="font-display text-lg font-bold">{githubSection.reposTitle}</h4>
+              <span className="microlabel text-accent">public repos</span>
+            </div>
+
+            <div className="space-y-3">
+              {featuredRepos.map((repo) => (
+                <a
+                  key={repo.name}
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col justify-between gap-3 rounded-xl border hairline bg-surface/40 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/60 hover:bg-surface/70"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-accent font-bold">/</span>
+                      <h5 className="font-display text-base font-bold group-hover:text-accent transition-colors">
+                        {repo.name}
+                      </h5>
+                    </div>
+                    <span className="rounded-full border hairline px-2.5 py-0.5 font-mono text-[0.65rem] text-muted group-hover:border-accent/40 group-hover:text-foreground transition-colors">
+                      {repo.badge}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-muted line-clamp-2">{repo.description}</p>
+
+                  <div className="flex items-center justify-between pt-1 border-t hairline text-[0.65rem] text-muted">
+                    <span>{repo.language}</span>
+                    <span className="group-hover:text-accent transition-colors">GitHub'da Gör ↗</span>
+                  </div>
+                </a>
+              ))}
+            </div>
           </motion.div>
         </div>
-
-        {/* Streak Stats Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border hairline bg-surface/40 p-6 transition-all duration-300 hover:border-accent/30 overflow-x-auto"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://github-readme-streak-stats.herokuapp.com/?user=MertC07&theme=dark&background=0a0a0c&ring=f97316&fire=f97316&currStreakLabel=f3f3f3&border=27272a"
-            alt="Mert Ceren GitHub Commit Streak"
-            className="w-full max-w-2xl h-auto"
-            loading="lazy"
-          />
-        </motion.div>
       </div>
     </section>
   );
