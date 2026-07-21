@@ -8,8 +8,8 @@ import type { Certificate } from "@/lib/data";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** How many cards show before the reveal button. */
-const VISIBLE = 5;
+/** How many cards show initially, and how many each click adds. */
+const BATCH = 5;
 
 const STOPWORDS = new Set(["ve", "and", "of", "the", "for"]);
 
@@ -118,13 +118,16 @@ function CertificateCard({ certificate, index, revealOnMount, viewLabel }: CardP
 
 export function Certificates() {
   const { certificates, ui } = useContent();
-  const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(BATCH);
 
   if (!certificates.length) return null;
 
   const copy = ui.sections.certificates;
-  const hiddenCount = Math.max(certificates.length - VISIBLE, 0);
-  const shown = expanded ? certificates : certificates.slice(0, VISIBLE);
+  const total = certificates.length;
+  const shown = certificates.slice(0, visible);
+  const allShown = visible >= total;
+  // Next click reveals up to BATCH more, capped at what's left.
+  const nextCount = Math.min(BATCH, total - visible);
 
   return (
     <section id="certificates" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
@@ -135,25 +138,26 @@ export function Certificates() {
           <CertificateCard
             key={`${certificate.issued}-${certificate.title}`}
             certificate={certificate}
-            index={i < VISIBLE ? i : i - VISIBLE}
-            revealOnMount={i >= VISIBLE}
+            // Cards in the newest batch stagger from 0; earlier ones sit still.
+            index={i % BATCH}
+            revealOnMount={i >= BATCH}
             viewLabel={copy.view}
           />
         ))}
       </ul>
 
-      {hiddenCount > 0 && (
+      {total > BATCH && (
         <div className="mt-10 flex justify-center">
           <button
             type="button"
-            onClick={() => setExpanded((open) => !open)}
-            aria-expanded={expanded}
+            onClick={() => setVisible(allShown ? BATCH : visible + BATCH)}
+            aria-expanded={allShown}
             aria-controls="certificates"
             className="microlabel rounded-full border hairline px-6 py-3 text-foreground transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
           >
-            {expanded
+            {allShown
               ? copy.showLess
-              : copy.showMore.replace("{n}", String(hiddenCount))}
+              : copy.showMore.replace("{n}", String(nextCount))}
           </button>
         </div>
       )}
