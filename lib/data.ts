@@ -18,8 +18,8 @@ export const profile = {
 };
 
 export const heroStatement = {
-  lines: ["Code with", "intent.", "Design with", "restraint."],
-  sub: "Software engineering student building AI-powered systems — real-time computer vision, full-stack platforms, and products that meet the physical world.",
+  lines: ["Mert", "Ceren", "Software", "Engineer"],
+  sub: "I am a software engineering student at Bandırma Onyedi Eylül University. I build computer vision systems using YOLO and Python, and develop web platforms with React and .NET Core.",
 };
 
 export const socials = [
@@ -136,10 +136,10 @@ export const projects: Project[] = [
 
 export const about = {
   manifesto:
-    "I believe the best technology disappears — what remains is a safer road, a smoother campus, a business that simply works.",
+    "I focus on building clean, high-performance software that solves real problems and works reliably in production.",
   paragraphs: [
-    "I'm a second-year software engineering student at Bandırma Onyedi Eylül University, and the kind of engineer who learns by shipping: a computer-vision system that watches roads in real time, a 360° platform you can walk a campus through, a restaurant site the owners run themselves.",
-    "My center of gravity is where AI meets production software — YOLO models and Python pipelines on one side, .NET and React platforms on the other. Currently interning at İSKİ in Istanbul, working part-time in my university's IT department, and representing my class along the way.",
+    "I am a software engineering student who learns by building projects. I have developed a computer vision road safety system for autonomous driving, a 360° virtual tour platform with inventory tracking, and custom management panels for local businesses.",
+    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am gaining experience as an intern at İSKİ and working as a part-time student developer at my university's IT department.",
   ],
 };
 
@@ -412,7 +412,7 @@ export const ui = {
     contact: {
       label: "Contact",
       meta: "Replies within 24h",
-      lines: ["Let's build", "something", "rare."],
+      lines: ["Let's work", "together."],
       orWrite: "or write directly ↗",
     },
   },

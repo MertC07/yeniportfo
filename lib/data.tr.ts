@@ -21,8 +21,8 @@ export const profile = {
 };
 
 export const heroStatement = {
-  lines: ["Niyetle", "kodla.", "Ölçüyle", "tasarla."],
-  sub: "Yapay zekâ destekli sistemler geliştiren yazılım mühendisliği öğrencisi — gerçek zamanlı bilgisayarlı görü, full-stack platformlar ve fiziksel dünyayla buluşan ürünler.",
+  lines: ["Mert", "Ceren", "Yazılım", "Mühendisi"],
+  sub: "Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisiyim. YOLO ve Python ile bilgisayarlı görü sistemleri geliştiriyor, React ve .NET Core ile web platformları inşa ediyorum.",
 };
 
 export const projects: Project[] = [
@@ -111,10 +111,10 @@ export const projects: Project[] = [
 
 export const about = {
   manifesto:
-    "En iyi teknolojinin görünmez olduğuna inanıyorum — geriye kalan daha güvenli bir yol, daha akıcı bir kampüs, sorunsuz işleyen bir işletmedir.",
+    "Gerçek problemleri çözen, temiz, yüksek performanslı ve güvenilir çalışan yazılımlar geliştirmeye odaklanıyorum.",
   paragraphs: [
-    "Bandırma Onyedi Eylül Üniversitesi'nde ikinci sınıf yazılım mühendisliği öğrencisiyim ve yayına alarak öğrenen türden bir mühendisim: yolları gerçek zamanlı izleyen bir bilgisayarlı görü sistemi, kampüsü içinde yürüyebildiğin bir 360° platform, sahiplerinin kendi yönettiği bir restoran sitesi.",
-    "Ağırlık merkezim, yapay zekânın üretim yazılımıyla kesiştiği yer — bir yanda YOLO modelleri ve Python hatları, diğer yanda .NET ve React platformları. Şu sıralar İstanbul'da İSKİ'de staj yapıyor, üniversitemin bilgi işlem dairesinde yarı zamanlı çalışıyor ve bu arada sınıfımı temsil ediyorum.",
+    "Projeler üreterek öğrenen bir yazılım mühendisliği öğrencisiyim. Otonom sürüş için bilgisayarlı görü tabanlı yol güvenliği sistemi, envanter takip entegrasyonlu 360° sanal tur platformu ve yerel işletmeler için özel yönetim panelleri geliştirdim.",
+    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ'de stajyer, üniversitemin bilgi işlem dairesinde ise yarı zamanlı geliştirici olarak deneyim kazanıyorum.",
   ],
 };
 
@@ -298,7 +298,7 @@ export const ui: Ui = {
     contact: {
       label: "İletişim",
       meta: "24 saat içinde yanıt",
-      lines: ["Birlikte", "nadir bir şey", "inşa edelim."],
+      lines: ["Birlikte", "çalışalım."],
       orWrite: "ya da doğrudan yaz ↗",
     },
   },
