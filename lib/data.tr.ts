@@ -115,7 +115,7 @@ export const about = {
     "Gerçek problemleri çözen, temiz, yüksek performanslı ve güvenilir çalışan yazılımlar geliştirmeye odaklanıyorum.",
   paragraphs: [
     "Projeler üreterek öğrenen bir yazılım mühendisliği öğrencisiyim. Otonom sürüş için bilgisayarlı görü tabanlı yol güvenliği sistemi, geliştirmekte olduğum envanter takip entegrasyonlu 360° sanal tur platformu ve yerel işletmeler için özel yönetim panelleri üzerinde çalışıyorum.",
-    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ'de yazılım mühendisliği stajyeri olarak deneyim kazanıyorum.",
+    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ Yazılım Şube Müdürlüğü'nde 20 günlük zorunlu stajımı gerçekleştiriyorum.",
   ],
 };
 
@@ -123,10 +123,10 @@ export const experience: ExperienceEntry[] = [
   {
     period: "Haz 2026 — Şu an",
     title: "Yazılım Mühendisliği Stajyeri",
-    place: "İSKİ, İstanbul",
-    summary: "İstanbul'un su idaresinde mühendislik stajı.",
+    place: "İSKİ (Yazılım Şube Müdürlüğü)",
+    summary: "20 günlük zorunlu yazılım mühendisliği stajı.",
     detail:
-      "Şehrin su ve kanalizasyon idaresinin BT organizasyonunda staj — gerçek kullanıcıları ve gerçek sorumluluğu olan kurumsal ölçekli sistemler ve yazılımın kritik altyapıyı nasıl çalıştırdığına ilk bakış.",
+      "İSKİ Bilgi İşlem Dairesi Başkanlığı Yazılım Şube Müdürlüğü bünyesinde 20 günlük zorunlu yazılım mühendisliği stajımı gerçekleştiriyorum.",
   },
   {
     period: "Ara 2025 — Haz 2026",

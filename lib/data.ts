@@ -139,7 +139,7 @@ export const about = {
     "I focus on building clean, high-performance software that solves real problems and works reliably in production.",
   paragraphs: [
     "I am a software engineering student who learns by building projects. I have developed a computer vision road safety system for autonomous driving, an ongoing 360° virtual tour platform with inventory tracking, and custom management panels for local businesses.",
-    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am gaining experience as a software engineering intern at İSKİ.",
+    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am completing my 20-day mandatory software engineering internship at İSKİ Software Branch Directorate.",
   ],
 };
 
@@ -155,10 +155,10 @@ export const experience: ExperienceEntry[] = [
   {
     period: "Jun 2026 — Now",
     title: "Software Engineering Intern",
-    place: "İSKİ, Istanbul",
-    summary: "Engineering internship at Istanbul's water utility.",
+    place: "İSKİ (Software Branch Directorate)",
+    summary: "20-day mandatory software engineering internship.",
     detail:
-      "Internship inside the IT organization of the city's water and sewerage administration — enterprise-scale systems with real users and real stakes, and a first look at how software runs critical infrastructure.",
+      "Completing a 20-day mandatory engineering internship within the Software Branch Directorate under İSKİ IT Department.",
   },
   {
     period: "Dec 2025 — Jun 2026",
