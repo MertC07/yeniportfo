@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -9,32 +8,6 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function GithubStats() {
   const { ui } = useContent();
-  const [svgContent, setSvgContent] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    fetch("https://ghchart.rshah.org/MertC07")
-      .then((res) => res.text())
-      .then((data) => {
-        const cleaned = data
-          .replace(/fill:#EEEEEE/g, "fill:#161b22")
-          .replace(/fill:#d6e685/g, "fill:#0e4429")
-          .replace(/fill:#8cc665/g, "fill:#006d32")
-          .replace(/fill:#44a340/g, "fill:#26a641")
-          .replace(/fill:#1e6823/g, "fill:#39d353")
-          .replace(/fill="#EEEEEE"/g, 'fill="#161b22"')
-          .replace(/fill="#d6e685"/g, 'fill="#0e4429"')
-          .replace(/fill="#8cc665"/g, 'fill="#006d32"')
-          .replace(/fill="#44a340"/g, 'fill="#26a641"')
-          .replace(/fill="#1e6823"/g, 'fill="#39d353"')
-          .replace(/fill:#767676/g, "fill:#8b949e")
-          .replace(/fill="#767676"/g, 'fill="#8b949e"');
-
-        setSvgContent(cleaned);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
 
   const githubSection = ui.sections.github || {
     label: "GitHub & Kod Aktivitesi",
@@ -203,63 +176,6 @@ export function GithubStats() {
             </div>
           </motion.div>
         </div>
-
-        {/* 100% Identical GitHub Official Dark Mode Contribution Graph Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
-          className="rounded-xl border border-[#30363d] bg-[#0d1117] p-4 sm:p-6 text-[#c9d1d9]"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="font-sans text-sm font-semibold text-[#f0f6fc]">
-              Contribution Activity
-            </h4>
-            <a
-              href="https://github.com/MertC07"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-[#58a6ff] hover:underline"
-            >
-              @MertC07 on GitHub ↗
-            </a>
-          </div>
-
-          <div className="overflow-x-auto py-2">
-            {loading ? (
-              <div className="flex h-32 items-center justify-center text-xs text-[#8b949e]">
-                GitHub katı haritası yükleniyor...
-              </div>
-            ) : (
-              <div
-                className="min-w-[660px] flex justify-center [&_text]:fill-[#8b949e] [&_text]:text-[9px] [&_text]:font-sans"
-                dangerouslySetInnerHTML={{ __html: svgContent }}
-              />
-            )}
-          </div>
-
-          {/* Official GitHub Legend Footer */}
-          <div className="mt-3 flex items-center justify-between text-[11px] text-[#8b949e]">
-            <a
-              href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-graphs-on-your-profile/managing-how-contributions-are-shown-on-your-profile"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#58a6ff] hover:underline"
-            >
-              Learn how we count contributions
-            </a>
-            <div className="flex items-center gap-1.5">
-              <span>Less</span>
-              <span className="h-2.5 w-2.5 rounded-[2px] bg-[#161b22] border border-[rgba(240,246,252,0.1)]" />
-              <span className="h-2.5 w-2.5 rounded-[2px] bg-[#0e4429]" />
-              <span className="h-2.5 w-2.5 rounded-[2px] bg-[#006d32]" />
-              <span className="h-2.5 w-2.5 rounded-[2px] bg-[#26a641]" />
-              <span className="h-2.5 w-2.5 rounded-[2px] bg-[#39d353]" />
-              <span>More</span>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
