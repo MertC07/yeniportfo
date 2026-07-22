@@ -375,15 +375,15 @@ export function Certificates() {
               </div>
 
               {/* Footer Actions */}
-              <div className="flex items-center justify-between gap-4 border-t hairline pt-4">
-                <span className="text-xs text-muted">ESC tuşu ile kapatabilirsiniz</span>
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t hairline pt-4">
+                <span className="text-xs text-muted text-center sm:text-left">ESC veya dokunarak kapatabilirsiniz</span>
+                <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                   {selectedCert.href && selectedCert.href !== "#" && (
                     <a
                       href={selectedCert.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="microlabel inline-flex items-center gap-2 rounded-full border hairline px-5 py-2.5 text-xs text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-ink"
+                      className="microlabel inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-[0.7rem] text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-ink"
                     >
                       Resmi Doğrulama Bağlantısı ↗
                     </a>
@@ -393,7 +393,7 @@ export function Certificates() {
                       href={selectedCert.image}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="microlabel inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-xs text-accent-ink transition-opacity hover:opacity-90 font-semibold"
+                      className="microlabel inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[0.7rem] text-accent-ink transition-opacity hover:opacity-90 font-semibold"
                     >
                       Tam Boyut İncele ↗
                     </a>
