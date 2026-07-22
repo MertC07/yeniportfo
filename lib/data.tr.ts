@@ -273,7 +273,7 @@ export const posts: Post[] = [
 ];
 
 export const navItems = [
-  { label: "İşler", href: "#work" },
+  { label: "Projeler", href: "#work" },
   { label: "Hakkımda", href: "#about" },
   { label: "Yetenekler", href: "#skills" },
   { label: "GitHub", href: "#github" },
@@ -304,7 +304,7 @@ export const ui: Ui = {
   langToggle: { label: "EN", aria: "Switch to English" },
   hero: { scroll: "Kaydır", localSuffix: "yerel" },
   sections: {
-    work: { label: "Seçilmiş İşler", metaSuffix: "proje — 2025 / 2026" },
+    work: { label: "Seçilmiş Projeler", metaSuffix: "proje — 2025 / 2026" },
     about: {
       label: "Hakkımda & Deneyim",
       timeline: "Zaman çizelgesi",
@@ -348,7 +348,7 @@ export const ui: Ui = {
   },
   projectCard: { cta: "Projeyi incele", ctaAria: "Vaka incelemesini gör:" },
   caseStudy: {
-    back: "← Seçilmiş İşler",
+    back: "← Seçilmiş Projeler",
     live: "Canlı",
     visit: "Siteye git ↗",
     next: "Sıradaki proje",
