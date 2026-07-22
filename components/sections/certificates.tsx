@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -8,8 +8,8 @@ import type { Certificate } from "@/lib/data";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** How many cards show initially, and how many each click adds. */
-const BATCH = 6;
+/** How many featured cards show on the main page. */
+const FEATURED_COUNT = 6;
 
 const STOPWORDS = new Set(["ve", "and", "of", "the", "for"]);
 
@@ -34,25 +34,17 @@ function initials(issuer: string) {
 type CardProps = {
   certificate: Certificate;
   index: number;
-  revealOnMount: boolean;
   viewLabel: string;
   onSelect: (cert: Certificate) => void;
 };
 
-function CertificateCard({ certificate, index, revealOnMount, viewLabel, onSelect }: CardProps) {
-  const entrance = { opacity: 1, y: 0 };
-  const transition = { duration: 0.6, delay: index * 0.06, ease: EASE };
-
+function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps) {
   return (
     <motion.li
       initial={{ opacity: 0, y: 24 }}
-      {...(revealOnMount
-        ? { animate: entrance }
-        : {
-            whileInView: entrance,
-            viewport: { once: true, margin: "-10% 0px" },
-          })}
-      transition={transition}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10% 0px" }}
+      transition={{ duration: 0.5, delay: index * 0.05, ease: EASE }}
       onClick={() => onSelect(certificate)}
       className="group relative flex cursor-pointer flex-col justify-between gap-4 rounded-2xl border hairline bg-surface/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:shadow-lg hover:shadow-accent/5"
     >
@@ -121,66 +113,201 @@ function CertificateCard({ certificate, index, revealOnMount, viewLabel, onSelec
 
 export function Certificates() {
   const { certificates, ui } = useContent();
-  const [visible, setVisible] = useState(BATCH);
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
+  const [isAllModalOpen, setIsAllModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedCert(null);
+      if (e.key === "Escape") {
+        if (selectedCert) {
+          setSelectedCert(null);
+        } else if (isAllModalOpen) {
+          setIsAllModalOpen(false);
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [selectedCert, isAllModalOpen]);
+
+  const filteredCertificates = useMemo(() => {
+    if (!searchQuery.trim()) return certificates;
+    const query = searchQuery.toLowerCase().trim();
+    return certificates.filter(
+      (cert) =>
+        cert.title.toLowerCase().includes(query) ||
+        cert.issuer.toLowerCase().includes(query) ||
+        cert.issued.toLowerCase().includes(query)
+    );
+  }, [certificates, searchQuery]);
 
   if (!certificates.length) return null;
 
   const copy = ui.sections.certificates;
-  const total = certificates.length;
-  const shown = certificates.slice(0, visible);
-  const allShown = visible >= total;
+  const featured = certificates.slice(0, FEATURED_COUNT);
 
   return (
     <section id="certificates" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading index="05" label={copy.label} meta={copy.meta} />
 
       <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {shown.map((certificate, i) => (
+        {featured.map((certificate, i) => (
           <CertificateCard
             key={`${certificate.issued}-${certificate.title}`}
             certificate={certificate}
-            index={i % BATCH}
-            revealOnMount={i >= BATCH}
+            index={i}
             viewLabel={copy.view}
             onSelect={setSelectedCert}
           />
         ))}
       </ul>
 
-      {total > BATCH && (
+      {certificates.length > FEATURED_COUNT && (
         <div className="mt-10 flex justify-center">
           <button
             type="button"
-            onClick={() => setVisible(allShown ? BATCH : visible + BATCH)}
-            aria-expanded={allShown}
-            aria-controls="certificates"
-            className="microlabel rounded-full border hairline px-6 py-3 text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
+            onClick={() => setIsAllModalOpen(true)}
+            className="microlabel group relative inline-flex items-center gap-2 rounded-full border hairline px-8 py-3.5 text-sm font-semibold text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/10"
           >
-            {allShown ? copy.showLess : `${copy.showMore} (${total - visible})`}
+            <span>Tüm Sertifikaları İncele ({certificates.length})</span>
+            <svg
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </button>
         </div>
       )}
 
-      {/* Certificate Preview Modal */}
+      {/* ALL CERTIFICATES MODAL */}
+      <AnimatePresence>
+        {isAllModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAllModalOpen(false)}
+              className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            />
+
+            {/* Main Modal Dialog */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              transition={{ duration: 0.3, ease: EASE }}
+              className="relative z-10 flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-xl"
+            >
+              {/* Modal Header */}
+              <div className="flex flex-col gap-4 border-b hairline p-5 sm:p-6 bg-surface/80">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h2 className="font-display text-2xl font-bold sm:text-3xl">
+                      Tüm Sertifikalar & Uzmanlık Belgeleri
+                    </h2>
+                    <p className="mt-1 text-sm text-muted">
+                      Toplam {certificates.length} adet onaylı sertifika ve başarı belgesi
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsAllModalOpen(false)}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-surface/90 text-foreground transition-colors hover:border-accent hover:text-accent"
+                    aria-label="Kapat"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative mt-1">
+                  <svg
+                    className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Sertifika veya kurum adı ile filtrele (örn. BTK Akademi, C#, Claude, edX, Python...)"
+                    className="w-full rounded-2xl border hairline bg-surface/60 py-3 pl-11 pr-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-muted hover:text-foreground"
+                    >
+                      Temizle
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Modal Body - Scrollable Certificate Grid */}
+              <div className="flex-1 overflow-y-auto p-5 sm:p-6 md:p-8">
+                {filteredCertificates.length > 0 ? (
+                  <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {filteredCertificates.map((certificate, i) => (
+                      <CertificateCard
+                        key={`all-${certificate.issued}-${certificate.title}`}
+                        certificate={certificate}
+                        index={i % 6}
+                        viewLabel={copy.view}
+                        onSelect={setSelectedCert}
+                      />
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="flex h-64 flex-col items-center justify-center text-center">
+                    <p className="text-lg font-semibold text-muted">Aramanızla eşleşen sertifika bulunamadı</p>
+                    <p className="mt-1 text-sm text-muted">Farklı bir arama terimi deneyebilirsiniz.</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-between border-t hairline px-6 py-4 bg-surface/80 text-xs text-muted">
+                <span>ESC tuşuna basarak veya dışarıya tıklayarak kapatabilirsiniz</span>
+                <button
+                  type="button"
+                  onClick={() => setIsAllModalOpen(false)}
+                  className="microlabel rounded-full border hairline px-5 py-2 text-foreground transition-colors hover:border-accent hover:text-accent"
+                >
+                  Kapat
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* SINGLE CERTIFICATE DETAIL PREVIEW MODAL */}
       <AnimatePresence>
         {selectedCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-10">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCert(null)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              className="absolute inset-0 bg-black/85 backdrop-blur-md"
             />
 
             {/* Modal Dialog */}
@@ -189,7 +316,7 @@ export function Certificates() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border hairline bg-surface/95 p-6 shadow-2xl backdrop-blur-xl"
+              className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 p-6 shadow-2xl backdrop-blur-xl"
             >
               {/* Header */}
               <div className="flex items-start justify-between gap-4 border-b hairline pb-4">
@@ -212,7 +339,7 @@ export function Certificates() {
               </div>
 
               {/* Certificate Image View */}
-              <div className="my-4 flex-1 overflow-auto rounded-xl border hairline bg-black/60 p-2 flex items-center justify-center min-h-[300px]">
+              <div className="my-4 flex-1 overflow-auto rounded-2xl border hairline bg-black/60 p-2 flex items-center justify-center min-h-[300px]">
                 {selectedCert.image ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -258,4 +385,5 @@ export function Certificates() {
     </section>
   );
 }
+
 
