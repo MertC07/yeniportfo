@@ -190,34 +190,36 @@ export const experience: ExperienceEntry[] = [
 
 export const skillTiers: SkillTier[] = [
   {
-    tier: "Çekirdek",
-    blurb: "Her gün kullandıklarım. İçinde düşündüğüm araçlar.",
+    tier: "Ana Yetenekler & Uzmanlık",
+    blurb: "Projelerimde aktif olarak geliştirdiğim temel programlama dilleri ve yapay zekâ mimarileri.",
     skills: [
-      { name: "Python", discipline: "AI / ML", note: "Görü hatları ve model eğitimi" },
+      { name: "Python", discipline: "AI / ML", note: "Bilgisayarlı görü & model eğitimi" },
       { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Gerçek zamanlı nesne tespiti" },
-      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core servisleri" },
-      { name: "React", discipline: "Frontend", note: "Modern JS framework'leri" },
-      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Şema tasarımı ve sorgular" },
+      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core servisleri & API" },
+      { name: "React / Next.js", discipline: "Frontend", note: "Modern web uygulamaları" },
+      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Veritabanı tasarımı ve sorgular" },
     ],
   },
   {
-    tier: "Akıcı",
-    blurb: "Üretim derinliğinde rahatım.",
+    tier: "Framework & Kütüphaneler",
+    blurb: "Uygulamalarımın backend, frontend ve yapay zekâ altyapısında kullandığım araçlar.",
     skills: [
       { name: "Node.js / Express", discipline: "Backend", note: "Prisma ORM ile REST API'ler" },
-      { name: "SignalR", discipline: "Backend", note: "Gerçek zamanlı bildirimler" },
-      { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "Canlı görüntü analizi" },
-      { name: "Sistem Tasarımı", discipline: "Tooling", note: "Koddan önce mimari" },
-      { name: "Prompt Mühendisliği", discipline: "Tooling", note: "AI destekli mimari taslakları" },
+      { name: "SignalR", discipline: "Backend", note: "Gerçek zamanlı veri akışı & bildirimler" },
+      { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "OpenCV & canlı görüntü analizi" },
+      { name: "Sistem Mimarisi", discipline: "Tooling", note: "Modüler ve ölçeklenebilir tasarım" },
+      { name: "Prompt Mühendisliği", discipline: "Tooling", note: "AI destekli geliştirme süreçleri" },
     ],
   },
   {
-    tier: "Keşif",
-    blurb: "Güncel meraklar, hızla büyüyor.",
+    tier: "Geliştirme Araçları & Teknolojiler",
+    blurb: "Kodlama, versiyon kontrolü ve yayına alma süreçlerinde yararlandığım ekosistem.",
     skills: [
-      { name: "5G & Edge", discipline: "Tooling", note: "TEKNOFEST akıllı ulaşım" },
-      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramik web deneyimleri" },
-      { name: "Model Optimizasyonu", discipline: "AI / ML", note: "Daha hızlı çıkarım, aynı gözler" },
+      { name: "5G & Edge Computing", discipline: "Tooling", note: "TEKNOFEST akıllı ulaşım altyapısı" },
+      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramik sanal tur deneyimleri" },
+      { name: "Model Optimizasyonu", discipline: "AI / ML", note: "Düşük gecikmeli nesne tespiti" },
+      { name: "Git & GitHub", discipline: "Tooling", note: "Versiyon kontrolü & proje yönetimi" },
+      { name: "Docker & Linux", discipline: "Tooling", note: "Konteynerleştirme ve sunucu ortamı" },
     ],
   },
 ];

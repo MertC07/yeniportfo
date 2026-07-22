@@ -237,34 +237,36 @@ export type SkillTier = {
 
 export const skillTiers: SkillTier[] = [
   {
-    tier: "Core",
-    blurb: "Daily drivers. The tools I think in.",
+    tier: "Core Skills & AI",
+    blurb: "Primary programming languages and core artificial intelligence architectures.",
     skills: [
-      { name: "Python", discipline: "AI / ML", note: "CV pipelines & model training" },
+      { name: "Python", discipline: "AI / ML", note: "Computer vision & model training" },
       { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Real-time object detection" },
-      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core services" },
-      { name: "React", discipline: "Frontend", note: "Modern JS frameworks" },
-      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Schema design & queries" },
+      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core APIs & services" },
+      { name: "React / Next.js", discipline: "Frontend", note: "Modern web applications" },
+      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Database design & queries" },
     ],
   },
   {
-    tier: "Fluent",
-    blurb: "Comfortable at production depth.",
+    tier: "Frameworks & Libraries",
+    blurb: "Frameworks, ORMs, and backend/frontend libraries powering my applications.",
     skills: [
       { name: "Node.js / Express", discipline: "Backend", note: "REST APIs with Prisma ORM" },
-      { name: "SignalR", discipline: "Backend", note: "Real-time notifications" },
-      { name: "Computer Vision", discipline: "AI / ML", note: "Live image analysis" },
-      { name: "System Design", discipline: "Tooling", note: "Architecture before code" },
-      { name: "Prompt Engineering", discipline: "Tooling", note: "AI-driven architecture drafts" },
+      { name: "SignalR", discipline: "Backend", note: "Real-time notifications & streaming" },
+      { name: "Computer Vision", discipline: "AI / ML", note: "OpenCV & live video analysis" },
+      { name: "System Architecture", discipline: "Tooling", note: "Modular and scalable design" },
+      { name: "Prompt Engineering", discipline: "Tooling", note: "AI-assisted development workflows" },
     ],
   },
   {
-    tier: "Exploring",
-    blurb: "Current curiosities, growing fast.",
+    tier: "Tools & Ecosystem",
+    blurb: "Development tools, version control systems, and deployment infrastructure.",
     skills: [
-      { name: "5G & Edge", discipline: "Tooling", note: "TEKNOFEST smart mobility" },
-      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramic web experiences" },
-      { name: "Model Optimization", discipline: "AI / ML", note: "Faster inference, same eyes" },
+      { name: "5G & Edge Computing", discipline: "Tooling", note: "TEKNOFEST smart mobility infrastructure" },
+      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramic virtual tour experiences" },
+      { name: "Model Optimization", discipline: "AI / ML", note: "Low-latency detection inference" },
+      { name: "Git & GitHub", discipline: "Tooling", note: "Version control & project management" },
+      { name: "Docker & Linux", discipline: "Tooling", note: "Containerization & server environment" },
     ],
   },
 ];
@@ -578,7 +580,7 @@ export const ui = {
       timeline: "Timeline",
       portrait: "Portrait — est. 2003",
     },
-    skills: { label: "Skills & Stack", meta: "No progress bars were harmed" },
+    skills: { label: "Skills & Stack", meta: "Technologies, frameworks, and development tools I work with" },
     testimonials: {
       label: "Testimonials",
       meta: "Signal from collaborators",
