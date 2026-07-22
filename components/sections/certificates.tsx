@@ -131,6 +131,17 @@ export function Certificates() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedCert, isAllModalOpen]);
 
+  useEffect(() => {
+    if (isAllModalOpen || selectedCert) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isAllModalOpen, selectedCert]);
+
   const filteredCertificates = useMemo(() => {
     if (!searchQuery.trim()) return certificates;
     const query = searchQuery.toLowerCase().trim();
@@ -260,7 +271,7 @@ export function Certificates() {
               </div>
 
               {/* Modal Body - Scrollable Certificate Grid */}
-              <div className="flex-1 overflow-y-auto p-5 sm:p-6 md:p-8">
+              <div className="flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6 md:p-8">
                 {filteredCertificates.length > 0 ? (
                   <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredCertificates.map((certificate, i) => (
