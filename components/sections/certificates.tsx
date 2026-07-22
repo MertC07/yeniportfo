@@ -133,11 +133,14 @@ export function Certificates() {
 
   useEffect(() => {
     if (isAllModalOpen || selectedCert) {
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     } else {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     }
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
   }, [isAllModalOpen, selectedCert]);
@@ -197,7 +200,11 @@ export function Certificates() {
       {/* ALL CERTIFICATES MODAL */}
       <AnimatePresence>
         {isAllModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+          >
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -311,7 +318,11 @@ export function Certificates() {
       {/* SINGLE CERTIFICATE DETAIL PREVIEW MODAL */}
       <AnimatePresence>
         {selectedCert && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-10">
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-10"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+          >
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
