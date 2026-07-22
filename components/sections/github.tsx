@@ -37,15 +37,6 @@ export function GithubStats() {
       language: "C# / AI Engine",
     },
     {
-      name: "bwai-Tatil-Secimi",
-      badge: "C# / AI",
-      description: isTr
-        ? "Kullanıcı tercihlerine göre kişiselleştirilmiş tatil, konaklama ve rota öneri sistemi."
-        : "Personalized vacation, accommodation, and route recommendation AI system.",
-      url: "https://github.com/MertC07/bwai-Tatil-Secimi",
-      language: "C# / Recommendation AI",
-    },
-    {
       name: "RossoLoungeWeb",
       badge: "JavaScript",
       description: isTr
