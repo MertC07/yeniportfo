@@ -68,14 +68,14 @@ export const projects: Project[] = [
       intro:
         "Road accidents are a data problem before they are a hardware problem. We asked what a camera could prevent if it never blinked — and never lagged.",
       facts: [
-        { label: "Role", value: "Project Coordinator & AI/ML Engineer" },
+        { label: "Role", value: "Team Captain, Project Coordinator & AI/ML Engineer" },
         { label: "Team", value: "5Genç" },
         { label: "Stage", value: "In Development (TEKNOFEST 2026)" },
       ],
       challenge:
         "Assisted and autonomous driving systems need to see hazards — vehicles, pedestrians, unexpected obstacles — in real time, and a detection that arrives late is a detection that never happened. The system had to combine low-latency 5G transport with vision models fast enough to matter at road speed.",
       approach:
-        "We built the perception layer on YOLO-family models (YOLOv8, then YOLOv11), trained and iterated in Python on scenario-specific datasets. 5G network integration carries detections with minimal latency, so alerts can reach vehicles and infrastructure while they are still actionable. As coordinator, I own the architecture end to end — from model training loops to how the pieces talk over the network.",
+        "We built the perception layer on YOLO-family models (YOLOv8, then YOLOv11), trained and iterated in Python on scenario-specific datasets. 5G network integration carries detections with minimal latency, so alerts can reach vehicles and infrastructure while they are still actionable. As team captain and coordinator, I own the architecture end to end — from model training loops to how the pieces talk over the network.",
       outcome:
         "Active development is ongoing, focusing on training models and integrating low-latency 5G pipelines for the TEKNOFEST 2026 season. We are continuously testing new road scenarios to improve real-time detection accuracy.",
     },

@@ -42,14 +42,14 @@ export const projects: Project[] = [
       intro:
         "Trafik kazaları donanım probleminden önce bir veri problemidir. Hiç göz kırpmayan — ve hiç gecikmeyen — bir kameranın neleri önleyebileceğini sorduk.",
       facts: [
-        { label: "Rol", value: "Proje Koordinatörü & AI/ML Mühendisi" },
+        { label: "Rol", value: "Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi" },
         { label: "Takım", value: "5Genç" },
         { label: "Aşama", value: "Geliştirme Aşamasında (TEKNOFEST 2026)" },
       ],
       challenge:
         "Destekli ve otonom sürüş sistemlerinin tehlikeleri — araçları, yayaları, beklenmedik engelleri — gerçek zamanlı görmesi gerekir; geç gelen bir tespit, hiç gelmemiş bir tespittir. Sistem, düşük gecikmeli 5G iletimini yol hızında anlam taşıyacak kadar hızlı görü modelleriyle birleştirmek zorundaydı.",
       approach:
-        "Algı katmanını YOLO ailesi modeller (önce YOLOv8, sonra YOLOv11) üzerine kurduk; senaryoya özel veri setleriyle Python'da eğitip yineledik. 5G ağ entegrasyonu tespitleri minimum gecikmeyle taşıyor; böylece uyarılar araçlara ve altyapıya hâlâ işe yarar durumdayken ulaşabiliyor. Koordinatör olarak mimariyi uçtan uca ben üstleniyorum — model eğitim döngülerinden parçaların ağ üzerinde nasıl konuştuğuna kadar.",
+        "Algı katmanını YOLO ailesi modeller (önce YOLOv8, sonra YOLOv11) üzerine kurduk; senaryoya özel veri setleriyle Python'da eğitip yineledik. 5G ağ entegrasyonu tespitleri minimum gecikmeyle taşıyor; böylece uyarılar araçlara ve altyapıya hâlâ işe yarar durumdayken ulaşabiliyor. Takım kaptanı ve koordinatör olarak mimariyi uçtan uca ben üstleniyorum — model eğitim döngülerinden parçaların ağ üzerinde nasıl konuştuğuna kadar.",
       outcome:
         "Sistem üzerinde aktif geliştirme süreci devam etmekte olup, model eğitimleri ve 5G entegrasyonu aşamaları 5Genç takımıyla TEKNOFEST 2026 sezonu için hazırlanmaktadır. Gerçek zamanlı tespit başarım oranlarını artırmak için yeni senaryolar üzerinde çalışmaya devam ediyoruz.",
     },
