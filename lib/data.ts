@@ -331,10 +331,11 @@ export type Certificate = {
   logo?: string;
   /**
    * Credential link — omit (or "#") to hide it. Either a verification URL
-   * or a file you dropped in /public/certificates, e.g.
-   * "/certificates/csharp.pdf". Clicking anywhere on the card opens it.
+   * or a file you dropped in /public/certificates.
    */
   href?: string;
+  /** High-resolution image of the certificate in /public/certificates/ */
+  image?: string;
 };
 
 // Mirrors the LinkedIn "Licenses & certifications" list, newest first.
@@ -342,116 +343,142 @@ export type Certificate = {
 export const certificates: Certificate[] = [
   {
     title: "Generative AI for Games Development",
-    issuer: "edX",
-    logo: "/logos/edx.svg",
+    issuer: "HP & edX",
     issued: "Jul 2026",
     href: "https://courses.edx.org/certificates/9716406a25684da384f57cea96bdfeee",
+    image: "/certificates/edx-hp-hpgg04-en-sertifikasi.jpg",
   },
   {
     title: "Generative AI in Research",
     issuer: "BTK Akademi",
     issued: "Jun 2026",
+    image: "/certificates/arastirmada-uretken-yapay-zek-kullanimi-sertifika.jpg",
   },
   {
     title: "Anthropic Claude",
     issuer: "BTK Akademi",
     issued: "Jun 2026",
+    image: "/certificates/anthropic-claude-sertifika-1.jpg",
+  },
+  {
+    title: "AI-Driven Digital Marketing on Social Media",
+    issuer: "BTK Akademi & ASBÜ",
+    issued: "Jun 2026",
+    image: "/certificates/sosyal-medyada-yapay-zeka-ile-dijital-pazarlama-sertifika.jpg",
   },
   {
     title: "ChatGPT 2026: Prompt Engineering, Content & Image Generation",
     issuer: "Academy Club",
     issued: "Jan 2026",
+    image: "/certificates/chatgpt-2026-prompt-muhendisligi-icerik-ve-gorsel-uretme.jpg",
   },
   {
     title: "C# Programming",
     issuer: "BTK Akademi",
     issued: "Sep 2025",
+    image: "/certificates/c-programlama-sertifika.jpg",
   },
   {
     title: "Introduction to Artificial Intelligence and Its Algorithms",
     issuer: "BTK Akademi",
     issued: "Oct 2024",
+    image: "/certificates/yapay-zeka-ve-algoritmalarina-giris-sertifika.jpg",
   },
   {
     title: "In-Depth Coding 101 with C# and Software Career Training",
     issuer: "Bahçeşehir Wissen Akademie",
     issued: "Oct 2024",
+    image: "/certificates/c-ile-derinlemesine-kodlama-101-ve-yazilimda-kariyer-egitimi.jpg",
   },
   {
     title: "PESNERGY Career Summit",
     issuer: "IEEE BANÜ Student Branch",
-    logo: "/logos/ieee.svg",
     issued: "Jun 2024",
+    image: "/certificates/pesnergy-kariyer-zirvesi-1-haziran-2024.png",
   },
   {
     title: "MII (Management Informatics Innovation) Summit",
-    issuer: "BANÜ Management Information Systems Society",
+    issuer: "BANÜ MIS Society",
     issued: "May 2024",
+    image: "/certificates/mii-management-informatics-innovation.jpg",
   },
   {
     title: "Career Horizons of a Successful Engineer",
-    issuer: "BANÜ Informatics and Technology Society",
+    issuer: "BANÜ Technology Society",
     issued: "Apr 2024",
+    image: "/certificates/basarili-bir-muhendisin-kariyer-ufuklari-1-nisan-2024.png",
   },
   {
-    title: "What Are React's Contributions to Web & Mobile App Development?",
+    title: "React's Contributions to Web & Mobile App Development",
     issuer: "BANÜ Software Engineering Society",
     issued: "Mar 2024",
-  },
-  {
-    title: "Software Testing",
-    issuer: "BANÜ Informatics and Technology Society",
-    issued: "Mar 2024",
+    image: "/certificates/web-ve-mobil-uygulama-gelistirmede-react-in-katkilari-30-mart-2024.jpg",
   },
   {
     title: "The Most-Used Excel Functions in Business Life",
-    issuer: "BANÜ Management Information Systems Society",
+    issuer: "BANÜ MIS Society",
     issued: "Mar 2024",
+    image: "/certificates/is-hayatinda-en-cok-kullanilan-excel-fonksiyonlari-25-mart-2024.jpg",
   },
   {
     title: "School's Over — What Now?",
     issuer: "BANÜ Software Engineering Society",
     issued: "Mar 2024",
+    image: "/certificates/okul-bitti-ya-sonra-7-mart-2024.jpg",
   },
   {
     title: "Fundamentals of Networking",
     issuer: "BANÜ Cyber",
     issued: "Dec 2023",
+    image: "/certificates/temel-network-egitimi.png",
   },
   {
     title: "Python Programming for Beginners",
     issuer: "BTK Akademi",
     issued: "Dec 2023",
+    image: "/certificates/yeni-baslayanlar-icin-python-programlama-sertifika-1.png",
   },
   {
     title: "Healthy Living & the Importance of Supplements",
     issuer: "BANÜ Software Engineering Society",
     issued: "Dec 2023",
+    image: "/certificates/saglikli-yasam-ve-ek-gidalarin-onemi.jpg",
   },
   {
     title: "Interview 101 (kariyer.net)",
     issuer: "BANÜ Software Engineering Society",
     issued: "Dec 2023",
+    image: "/certificates/mulakat-101-kariyer-net-11-aralik-2023.png",
   },
   {
     title: "Software Summit",
-    issuer: "BANÜ Informatics and Technology Society",
+    issuer: "BANÜ Technology Society",
     issued: "Dec 2023",
+    image: "/certificates/yazilimzirvesi.png",
   },
   {
     title: "Kariyer.net: First Step into Working Life",
     issuer: "BANÜ Software Engineering Society",
     issued: "Dec 2023",
+    image: "/certificates/kariyer-net-is-hayatina-ilk-adim-4-aralik-2023-1.png",
   },
   {
     title: "Career Path in Software 5",
     issuer: "BANÜ Software Engineering Society",
     issued: "Nov 2023",
+    image: "/certificates/yazilimda-kariyer-yolu-5-6-kasim-2023.jpg",
   },
   {
-    title: "Cybersecurity",
-    issuer: "BANÜ Software Engineering Society",
+    title: "Cybersecurity Fundamentals",
+    issuer: "BANÜ Cyber / BTK Akademi",
     issued: "Nov 2023",
+    image: "/certificates/siber-guvenlik-5-kasim-2023.png",
+  },
+  {
+    title: "Udemy Software Engineering Credential",
+    issuer: "Udemy",
+    issued: "2024",
+    image: "/certificates/uc-e1fa22eb-86d3-4ebc-94b6-1b3f6d638308.jpg",
   },
 ];
 
