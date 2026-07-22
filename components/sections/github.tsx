@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useContent } from "@/components/providers/locale-provider";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -24,27 +24,44 @@ export function GithubStats() {
     { name: "SQL & PostgreSQL", percentage: 5, note: "Relational Schemas & Query Optimization", color: "bg-emerald-400" },
   ];
 
+  const isTr = useLocale() === "tr";
+
   const featuredRepos = [
+    {
+      name: "bwai-IK-Karar-Motoru",
+      badge: "C# / .NET",
+      description: isTr
+        ? "Yapay zekâ destekli İnsan Kaynakları aday değerlendirme ve yetkinlik karar motoru."
+        : "AI-supported HR candidate evaluation and competence decision engine.",
+      url: "https://github.com/MertC07/bwai-IK-Karar-Motoru",
+      language: "C# / AI Engine",
+    },
+    {
+      name: "bwai-Tatil-Secimi",
+      badge: "C# / AI",
+      description: isTr
+        ? "Kullanıcı tercihlerine göre kişiselleştirilmiş tatil, konaklama ve rota öneri sistemi."
+        : "Personalized vacation, accommodation, and route recommendation AI system.",
+      url: "https://github.com/MertC07/bwai-Tatil-Secimi",
+      language: "C# / Recommendation AI",
+    },
+    {
+      name: "RossoLoungeWeb",
+      badge: "JavaScript",
+      description: isTr
+        ? "Rosso Lounge Bistro için özel geliştirilmiş dinamik menü ve yönetim panelli web platformu."
+        : "Custom dynamic web platform with management panel built for Rosso Lounge Bistro.",
+      url: "https://github.com/MertC07/RossoLoungeWeb",
+      language: "JavaScript / Full-Stack",
+    },
     {
       name: "yeniportfo",
       badge: "TypeScript",
-      description: "Next.js 16, TypeScript ve TailwindCSS ile sıfırdan geliştirilmiş kişisel web portfolyosu.",
+      description: isTr
+        ? "Next.js 16, TypeScript ve TailwindCSS ile sıfırdan geliştirilmiş kişisel web portfolyosu."
+        : "Personal web portfolio built from scratch with Next.js 16, TypeScript & TailwindCSS.",
       url: "https://github.com/MertC07/yeniportfo",
-      language: "TypeScript",
-    },
-    {
-      name: "smart-road-safety-5g",
-      badge: "Python",
-      description: "TEKNOFEST 2026 — 5G bağlantılı ve YOLOv8 tabanlı gerçek zamanlı otonom yol güvenliği sistemi.",
-      url: "https://github.com/MertC07",
-      language: "Python / YOLO",
-    },
-    {
-      name: "virtual-campus-360",
-      badge: "C# / React",
-      description: "Envanter takip entegrasyonlu 360° panoramik sanal tur platformu.",
-      url: "https://github.com/MertC07",
-      language: "C# / React",
+      language: "Next.js / TypeScript",
     },
   ];
 
