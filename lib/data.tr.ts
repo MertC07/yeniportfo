@@ -10,7 +10,7 @@ export const profile = {
   name: "Mert Ceren",
   monogram: "MC",
   wordmark: "mertceren",
-  role: "Yapay Zekâ & Full-Stack Geliştirici",
+  role: "Yapay Zekâ & Yazılım Mühendisliği Öğrencisi",
   tagline:
     "Yazılımın fiziksel dünyayla buluştuğu akıllı sistemler geliştiriyorum.",
   location: "İstanbul, Türkiye",
@@ -284,9 +284,9 @@ export const navItems = [
 
 export const site = {
   url: "https://mertceren.com",
-  title: "Mert Ceren — Yapay Zekâ & Full-Stack Geliştirici",
+  title: "Mert Ceren — Yapay Zekâ & Yazılım Mühendisliği Öğrencisi",
   description:
-    "Mert Ceren'in portfolyosu — yapay zekâ destekli sistemler geliştiren yazılım mühendisliği öğrencisi: gerçek zamanlı bilgisayarlı görü, 5G bağlantılı yol güvenliği ve full-stack web platformları.",
+    "Mert Ceren'in kişisel portfolyosu — Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisi. YOLO tabanlı bilgisayarlı görü, 5G akıllı yol güvenliği ve web platformları geliştiriyor.",
 };
 
 export const ui: Ui = {
