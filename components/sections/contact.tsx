@@ -62,31 +62,7 @@ export function Contact() {
           transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
           className="mt-12 flex flex-col items-center gap-6"
         >
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <CopyEmailButton />
-            
-            {/* CV PREVIEW & DOWNLOAD BUTTON */}
-            <button
-              type="button"
-              onClick={() => setIsCvModalOpen(true)}
-              className="group relative inline-flex items-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer"
-            >
-              <svg
-                className="h-4 w-4 text-accent group-hover:text-accent-ink transition-colors duration-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <span>{isTr ? "Özgeçmişi İncele & İndir (PDF)" : "Preview & Download Resume (PDF)"}</span>
-            </button>
-          </div>
+          <CopyEmailButton />
 
           <a
             href={`mailto:${profile.email}`}
@@ -94,6 +70,28 @@ export function Contact() {
           >
             {ui.sections.contact.orWrite}
           </a>
+
+          {/* CV PREVIEW & DOWNLOAD BUTTON */}
+          <button
+            type="button"
+            onClick={() => setIsCvModalOpen(true)}
+            className="group relative mt-2 inline-flex items-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer"
+          >
+            <svg
+              className="h-4 w-4 text-accent group-hover:text-accent-ink transition-colors duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <span>{isTr ? "Özgeçmişi İncele & İndir (PDF)" : "Preview & Download Resume (PDF)"}</span>
+          </button>
         </motion.div>
 
         <motion.ul
