@@ -143,18 +143,19 @@ export function AiAssistant() {
   };
 
   const handleActionClick = (link: ActionLink) => {
+    // Close chatbot drawer so user can view the target section/page clearly
+    updateIsOpen(false);
+
     if (link.isAnchor && link.href.startsWith("#")) {
       const element = document.querySelector(link.href);
       if (element) {
-        // Smooth scroll background page without closing chatbot
+        // Smooth scroll background page to target section
         element.scrollIntoView({ behavior: "smooth" });
       } else {
         // Navigating from a subpage back to main page section (e.g. /tr#work)
-        updateIsOpen(true);
         window.location.href = `/${locale}${link.href}`;
       }
     } else {
-      updateIsOpen(true);
       if (link.href.startsWith("/")) {
         const cleanHref = link.href.replace(/^\/(tr|en)/, "");
         window.location.href = `/${locale}${cleanHref}`;
