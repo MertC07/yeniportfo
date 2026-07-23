@@ -198,19 +198,28 @@ export function Cursor() {
         className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
       />
 
-      {/* 2. Silky Smooth Trailing Ring */}
+      {/* 2. Silky Smooth Trailing Ring.
+          Position and scale live on separate elements on purpose: `scale` is
+          applied after `transform` in the CSS chain, so scaling this element
+          directly would multiply its translation too and fling the ring away
+          from the cursor. The outer element only positions (never
+          transitioned — the lerp loop does the smoothing), the inner one only
+          grows and recolours. */}
       <div
         style={{
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
         }}
-        className={cn(
-          // Only opacity is transitioned — the position comes from the lerp
-          // loop, and transitioning transform would fight it. On interactive
-          // elements the ring fades out and just the dot remains.
-          "absolute left-0 top-0 size-8 rounded-full border border-foreground/35 transition-opacity duration-200 ease-out",
-          hovering ? "opacity-0" : "opacity-100"
-        )}
-      />
+        className="absolute left-0 top-0"
+      >
+        <div
+          className={cn(
+            "size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
+            hovering
+              ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
+              : "scale-100 border-foreground/35"
+          )}
+        />
+      </div>
 
       {/* 3. Playful Speech Bubble on Idle (Centered comfortably above cursor dot) */}
       <AnimatePresence>
