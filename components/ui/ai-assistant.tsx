@@ -35,6 +35,45 @@ export function AiAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Load chat history & open state from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const savedMessages = sessionStorage.getItem("mert_ai_chat_history");
+      if (savedMessages) {
+        const parsed = JSON.parse(savedMessages);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+        }
+      }
+      const savedIsOpen = sessionStorage.getItem("mert_ai_chat_open");
+      if (savedIsOpen === "true") {
+        setIsOpen(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // Save chat history to sessionStorage on update
+  useEffect(() => {
+    try {
+      if (messages.length > 0) {
+        sessionStorage.setItem("mert_ai_chat_history", JSON.stringify(messages));
+      }
+    } catch {
+      // ignore
+    }
+  }, [messages]);
+
+  const updateIsOpen = (val: boolean) => {
+    setIsOpen(val);
+    try {
+      sessionStorage.setItem("mert_ai_chat_open", val ? "true" : "false");
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
@@ -43,7 +82,7 @@ export function AiAssistant() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
+        updateIsOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -111,11 +150,11 @@ export function AiAssistant() {
         element.scrollIntoView({ behavior: "smooth" });
       } else {
         // Navigating from a subpage back to main page section (e.g. /tr#work)
-        setIsOpen(false);
+        updateIsOpen(true);
         window.location.href = `/${locale}${link.href}`;
       }
     } else {
-      setIsOpen(false);
+      updateIsOpen(true);
       if (link.href.startsWith("/")) {
         const cleanHref = link.href.replace(/^\/(tr|en)/, "");
         window.location.href = `/${locale}${cleanHref}`;
@@ -146,7 +185,7 @@ export function AiAssistant() {
         <motion.button
           type="button"
           onClick={() => {
-            setIsOpen(!isOpen);
+            updateIsOpen(!isOpen);
             setHasUnread(false);
           }}
           whileHover={{ scale: 1.05 }}
@@ -211,7 +250,12 @@ export function AiAssistant() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() =>
+                  onClick={() => {
+                    try {
+                      sessionStorage.removeItem("mert_ai_chat_history");
+                    } catch {
+                      // ignore
+                    }
                     setMessages([
                       {
                         id: "welcome-1",
@@ -224,8 +268,8 @@ export function AiAssistant() {
                         ],
                         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
                       },
-                    ])
-                  }
+                    ]);
+                  }}
                   className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors"
                   title={isTr ? "Sohbeti Temizle" : "Clear Chat"}
                 >
@@ -235,7 +279,7 @@ export function AiAssistant() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => updateIsOpen(false)}
                   className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors"
                 >
                   ✕
