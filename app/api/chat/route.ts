@@ -13,11 +13,21 @@ export async function GET() {
     });
   }
 
-  const models = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest", "gemini-pro", "gemini-1.5-flash"];
+  const endpoints = [
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+    "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent",
+  ];
 
-  for (const model of models) {
+  const debugResults = [];
+
+  for (const ep of endpoints) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
+      const url = `${ep}?key=${apiKey.trim()}`;
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -35,22 +45,25 @@ export async function GET() {
         // ignore
       }
 
+      debugResults.push({ endpoint: ep, status, response: parsed || text });
+
       if (res.ok) {
         return NextResponse.json({
           status: "ok",
-          workingModel: model,
+          workingEndpoint: ep,
           keyPrefix: apiKey.substring(0, 6) + "...",
           response: parsed || text,
         });
       }
-    } catch {
-      // try next
+    } catch (err: any) {
+      debugResults.push({ endpoint: ep, error: err?.message });
     }
   }
 
   return NextResponse.json({
-    status: "all_models_failed",
+    status: "all_endpoints_failed",
     keyPrefix: apiKey.substring(0, 6) + "...",
+    debugResults,
   });
 }
 
@@ -89,12 +102,20 @@ KURALLAR & KİŞİLİK:
 3. Bilmediğin kişisel bilgileri veya gerçek dışı verileri uydurma.
 4. Yanıtı çok uzun tutma (maksimum 2-3 cümle).`;
 
-        const models = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest", "gemini-pro", "gemini-1.5-flash"];
+        const endpoints = [
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+          "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent",
+        ];
 
-        for (const model of models) {
+        for (const ep of endpoints) {
           try {
             const response = await fetch(
-              `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
+              `${ep}?key=${apiKey.trim()}`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -131,10 +152,10 @@ KURALLAR & KİŞİLİK:
               }
             } else {
               const errText = await response.text();
-              console.warn(`Gemini API HTTP Error (${model}):`, response.status, errText);
+              console.warn(`Gemini API HTTP Error (${ep}):`, response.status, errText);
             }
           } catch (modelErr) {
-            console.warn(`Gemini model ${model} failed:`, modelErr);
+            console.warn(`Gemini endpoint ${ep} failed:`, modelErr);
           }
         }
       } catch (geminiError) {
