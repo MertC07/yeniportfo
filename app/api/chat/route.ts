@@ -77,12 +77,10 @@ export async function POST(req: Request) {
       );
     }
 
+    const groqKey = process.env.GROQ_API_KEY || process.env.NEXT_PUBLIC_GROQ_API_KEY;
     const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-    // If Gemini API Key is available, attempt Google Gemini Flash API call
-    if (apiKey && apiKey.trim().length > 5) {
-      try {
-        const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
+    const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
 Mert Ceren hakkında sorulan sorulara kısa, yardımsever, nazik ve doğru cevaplar vermelisin. 
 
 MERT CEREN BİLGİ TABANI:
@@ -101,6 +99,47 @@ KURALLAR & KİŞİLİK:
 3. Bilmediğin kişisel bilgileri veya gerçek dışı verileri uydurma.
 4. Yanıtı çok uzun tutma (maksimum 2-3 cümle).`;
 
+    // 1. Attempt Groq API (Llama 3.3 70B) if Groq key exists
+    if (groqKey && groqKey.trim().length > 5) {
+      try {
+        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${groqKey.trim()}`
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: message }
+            ],
+            max_tokens: 350,
+            temperature: 0.5
+          })
+        });
+
+        if (groqRes.ok) {
+          const groqData = await groqRes.json();
+          const groqText = groqData?.choices?.[0]?.message?.content;
+          if (groqText) {
+            const localResult = getLocalAiResponse(message, locale);
+            return NextResponse.json({
+              text: groqText,
+              actionLinks: localResult.actionLinks || []
+            });
+          }
+        } else {
+          console.warn("Groq API error:", groqRes.status, await groqRes.text());
+        }
+      } catch (groqErr) {
+        console.warn("Groq API failed:", groqErr);
+      }
+    }
+
+    // 2. Attempt Google Gemini Flash API call
+    if (apiKey && apiKey.trim().length > 5) {
+      try {
         const endpoints = [
           "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent",
           "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
