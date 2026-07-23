@@ -66,19 +66,25 @@ export function Cursor() {
   const mouseRef = useRef({ x: -100, y: -100 });
   const ringRef = useRef({ x: -100, y: -100 });
   const activeRef = useRef(false);
+  const hoveringRef = useRef(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
+  const queueRef = useRef<number[]>([]);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
     if (!fine) return;
 
+    const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
+
     // Smooth animation loop using lerp (0 overshoot guarantee)
     const updateRingPosition = () => {
       if (activeRef.current) {
-        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.25;
-        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.25;
+        // Snap tighter (0.4) on hover so ring stays locked to the dot
+        const factor = hoveringRef.current ? 0.4 : 0.25;
+        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
+        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
 
         setRingPos({
           x: Math.round(ringRef.current.x * 100) / 100,
@@ -89,9 +95,6 @@ export function Cursor() {
     };
 
     animFrameRef.current = requestAnimationFrame(updateRingPosition);
-
-    const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
-    const queueRef = { current: [] as number[] };
 
     const getNextIndex = () => {
       if (queueRef.current.length === 0) {
@@ -151,7 +154,9 @@ export function Cursor() {
 
     const onOver = (e: Event) => {
       const target = e.target as Element | null;
-      setHovering(!!target?.closest?.("a, button, [role='button']"));
+      const isHover = !!target?.closest?.("a, button, [role='button']");
+      hoveringRef.current = isHover;
+      setHovering(isHover);
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -167,7 +172,7 @@ export function Cursor() {
       document.removeEventListener("mouseleave", onLeave);
       document.documentElement.classList.remove("custom-cursor");
     };
-  }, []);
+  }, [isEnglish]);
 
   if (!active) return null;
 
@@ -190,8 +195,10 @@ export function Cursor() {
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
         }}
         className={cn(
-          "absolute left-0 top-0 size-8 rounded-full border border-foreground/35 transition-transform duration-150 ease-out",
-          hovering ? "scale-[1.8] border-accent/70 bg-accent/10" : "scale-100"
+          "absolute left-0 top-0 size-8 rounded-full border transition-all duration-200 ease-out",
+          hovering
+            ? "scale-125 border-accent/80 bg-accent/5 shadow-sm"
+            : "scale-100 border-foreground/35"
         )}
       />
 
