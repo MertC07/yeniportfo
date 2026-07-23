@@ -224,55 +224,7 @@ export const skillTiers: SkillTier[] = [
   },
 ];
 
-export const posts: Post[] = [
-  {
-    slug: "the-last-10-percent",
-    title: "Son %10 ürünün ta kendisidir",
-    date: "Haz 2026",
-    readingTime: "6 dk",
-    tag: "Zanaat",
-    excerpt:
-      "Cila neden süsleme değildir — insanların kullandığı yazılımla hatırladığı yazılım arasındaki fark budur.",
-    body: [
-      "Her projenin teknik olarak çalıştığı bir an vardır. Veri yüklenir, düğmeler etiketlerinin vaat ettiğini yapar, testler yeşildir. Çoğu ekip burada yayına alır. Oysa asıl ürün işinin başladığı an da tam olarak budur.",
-      "Son %10 görsel süsleme değildir. Bir paneli ışınlanmış değil fiziksel hissettiren 80 milisaniyelik yumuşatmadır. Özür dilemek yerine açıklayan boş durumdur. Denetim zorlamadan önce birinin klavye kullanıcısını hayal ettiğini kanıtlayan odak halkasıdır.",
-      "Kullanıcılar bu detayları adlandıramaz — mesele de bu. Kimse yorumda interpolasyon eğrini övmez. Ama birikimi hissederler ve bunu 'sağlam', 'hızlı', 'hoş' gibi kelimelerle anlatırlar — ürünleri tavsiye ettiren kelimeler de bunlardır.",
-      "Rahatsız edici çıkarım: cila, yol haritasının sonunda bir faz olamaz; çünkü boya katmanı değil, taşıyıcı kolondur. En çok gurur duyduğum projeler son %10'un bütçesini ilk haftadan ayırdı. Pişman olduklarım ise onu, teslim tarihi bağırmaya başlayınca geri alınacak bir pay gibi gördü.",
-      "Artık kuralım basit. Biri ne kaldı diye sorduğunda 'çalışıyor, bir cila kaldı' demiyorum. Ürün henüz bitmedi diyorum. Çünkü eksik olan kısım, insanların gerçekten hatırlayacağı kısım.",
-    ],
-  },
-  {
-    slug: "detection-is-a-latency-budget",
-    title: "Tespit bir gecikme bütçesidir",
-    date: "Nis 2026",
-    readingTime: "7 dk",
-    tag: "AI / ML",
-    excerpt:
-      "Geç gelen kusursuz bir tespit, hiç olmayan tespitten farksızdır — gerçek zamanlı bilgisayarlı görü geliştirmekten dersler.",
-    body: [
-      "Not defterinde bir bilgisayarlı görü modeli mAP skoruyla yargılanır. Yolda ise kronometreyle. Gerçek zamanlı görü projelerinin çoğu, bu iki yargı arasındaki boşlukta sessizce başarısız olur.",
-      "Yol güvenliği tespiti üzerinde çalışmak bana gecikmeyi kalemleri olan bir bütçe gibi görmeyi öğretti: yakalama, ön işleme, çıkarım, iletim, karar. Her kalem payından fazlasını ister. Model daha büyük girdi çözünürlüğü ister. Ağ bir yeniden deneme ister. Hat bir filtre geçişi daha ister.",
-      "Disiplin, daha hiçbir şey eğitmeden toplam bütçenin ne olduğuna karar vermektir — bir tehlikenin belirmesiyle uyarının işe yarar olması arasındaki süre — ve sonra her bileşene dilimini gerekçelendirtmektir. İki puan düşük skorlayan ama iki kat hızlı çalışan bir YOLO varyantı taviz değildir; yol hızında o, daha iyi modeldir.",
-      "5G bütçenin şeklini değiştirir, varlığını değil. Daha düşük iletim gecikmesi yavaş bir hattı mazur göstermez — ifşa eder. Ağ darboğazın olmaktan çıktığında, herkesin gözünü diktiği şey senin ön işlemen olur.",
-      "Artık başladığım her görü projesi aynı soruyla açılıyor ve bu soru 'hangi model?' değil. Şu: gerçekte kaç milisaniyemiz var — ve onları kim harcıyor?",
-    ],
-  },
-  {
-    slug: "one-platform-two-audiences",
-    title: "Tek platform, iki kitle",
-    date: "Şub 2026",
-    readingTime: "5 dk",
-    tag: "Sistemler",
-    excerpt:
-      "Ziyaretçiler için 360° kampüs turu, idare için envanter sistemi — ikisini tek backend üzerinde kurmanın veri tasarımı üzerine öğrettikleri.",
-    body: [
-      "Sanal Kampüs ayrı ayrı gelen iki taleple başladı: aday öğrenciler kampüsü evden görmek istiyordu, idare ise ekipmanı tablolarda takip etmeyi bırakmak. Bariz hamle iki araçtı. Daha iyi hamle tek şemaydı.",
-      "Panoramik tur ile envanter sistemi, ortak bir omurgaları olduğunu fark edene kadar alakasız görünür: odalar. Her 360° sahne bir odadır; takip edilen her demirbaş bir odada yaşar. Odayı bir kez düzgün modelle — PostgreSQL'de, önünde FastAPI ile — iki ürün de aynı doğrunun üzerinde birer görünüm hâline gelir.",
-      "Kazanç, tasarruf edilen emekten fazlası. Tur ile envanter bir oda hakkında anlaşamadığında ikisinden biri yanlıştır ve sistem artık bunu bilir. Kopuk araçlar bu tartışmayı yapamaz; sessizce birbirinden uzaklaşırlar ve veri böyle ölür.",
-      "Aklımda tuttuğum ders: iki proje bir ismi paylaşıyorsa muhtemelen bir şemayı da paylaşıyordur. Önce ismi inşa et. Alttaki veri yalan söylemeyi reddettikten sonra ön yüzler — bir kitle için React ve Pannellum, diğeri için yönetim paneli — işin kolay kısmı.",
-    ],
-  },
-];
+export const posts: Post[] = [];
 
 export const navItems = [
   { label: "Projeler", href: "#work" },

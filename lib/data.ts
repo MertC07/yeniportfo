@@ -497,55 +497,7 @@ export type Post = {
 
 // EDIT: these three essays were drafted for you — rewrite them in your
 // own voice or replace them with your own posts.
-export const posts: Post[] = [
-  {
-    slug: "the-last-10-percent",
-    title: "The last 10% is the product",
-    date: "Jun 2026",
-    readingTime: "6 min",
-    tag: "Craft",
-    excerpt:
-      "Why polish isn't decoration — it's the difference between software people use and software people remember.",
-    body: [
-      "Every project has a moment where it technically works. The data loads, the buttons do what the labels promise, the tests are green. Most teams ship here. It's also the exact moment the real product work begins.",
-      "The last 10% is not visual garnish. It's the 80ms of easing that makes a panel feel physical instead of teleported. It's the empty state that explains instead of apologizes. It's the focus ring that proves someone imagined a keyboard user before the audit forced them to.",
-      "Users can't name these details — that's the point. Nobody leaves a review praising your interpolation curve. But they feel the accumulation, and they describe it with words like 'solid' and 'fast' and 'nice', which are the words that get products recommended.",
-      "The uncomfortable implication: polish can't be a phase at the end of the roadmap, because it isn't a coat of paint — it's load-bearing. The projects I'm proudest of budgeted the last 10% from the first week. The ones I regret treated it as slack to be reclaimed when the deadline got loud.",
-      "So my rule now is simple. When someone asks what's left, I don't say 'it works, just needs polish.' I say the product isn't built yet. Because the part that's missing is the part people will actually remember.",
-    ],
-  },
-  {
-    slug: "detection-is-a-latency-budget",
-    title: "Detection is a latency budget",
-    date: "Apr 2026",
-    readingTime: "7 min",
-    tag: "AI / ML",
-    excerpt:
-      "A perfect detection that arrives late is indistinguishable from no detection at all — lessons from building real-time computer vision.",
-    body: [
-      "In a notebook, a computer vision model is judged by its mAP score. On a road, it's judged by a stopwatch. The gap between those two judgments is where most real-time vision projects quietly fail.",
-      "Working on road-safety detection taught me to treat latency as a budget with line items: capture, preprocessing, inference, transport, decision. Every line item wants more than its share. The model wants a bigger input resolution. The network wants a retry. The pipeline wants one more filter pass.",
-      "The discipline is deciding, before training anything, what the total budget is — the time between a hazard appearing and an alert being actionable — and then making every component justify its slice. A YOLO variant that scores two points lower but runs twice as fast is not a compromise; at road speed, it's the better model.",
-      "5G changes the shape of the budget, not the existence of it. Lower transport latency doesn't excuse a slow pipeline — it exposes it. When the network stops being your bottleneck, your preprocessing becomes the thing everyone stares at.",
-      "So now every vision project I start begins with the same question, and it isn't 'which model?' It's: how many milliseconds do we actually have — and who's spending them?",
-    ],
-  },
-  {
-    slug: "one-platform-two-audiences",
-    title: "One platform, two audiences",
-    date: "Feb 2026",
-    readingTime: "5 min",
-    tag: "Systems",
-    excerpt:
-      "A 360° campus tour for visitors and an inventory system for administration — what building both on one backend taught me about data design.",
-    body: [
-      "Virtual Campus started as two requests that arrived separately: prospective students wanted to see the campus from home, and administration wanted to stop tracking equipment in spreadsheets. The obvious move was two tools. The better move was one schema.",
-      "A panoramic tour and an inventory system sound unrelated until you notice they share a spine: rooms. Every 360° scene is a room; every tracked asset lives in a room. Model the room properly once — in PostgreSQL, with FastAPI in front of it — and both products become views over the same truth.",
-      "The payoff is more than saved effort. When the tour and the inventory disagree about a room, one of them is wrong, and now the system knows it. Disconnected tools can't have that argument; they just drift apart silently, and drift is how data dies.",
-      "The lesson I keep: when two projects share a noun, they probably share a schema. Build the noun first. The frontends — React and Pannellum for one audience, an admin panel for the other — are the easy part once the data underneath refuses to lie.",
-    ],
-  },
-];
+export const posts: Post[] = [];
 
 export const navItems = [
   { label: "Work", href: "#work" },

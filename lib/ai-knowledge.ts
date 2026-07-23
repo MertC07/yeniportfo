@@ -81,11 +81,6 @@ export const MERT_KNOWLEDGE = {
     { name: "Dr. Kadir C.", role: "BANÜ Yazılım Mühendisliği Öğretim Üyesi", text: "Mert, teorik yazılım prensiplerini gerçek dünya problemlerine aktarmada ve yapay zekâ uygulamalarında olağanüstü bir pratik zekaya sahip." },
     { name: "Hasan K.", role: "İşletme Sahibi, Rosso Lounge Bistro", text: "Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarımızı yönetimi kolaylaştıran özel bir panele dönüştürerek bize saatlerce zaman kazandırdı." },
   ],
-  journalPosts: [
-    { title: "The last 10% is the product", tag: "Craft", summary: "Ürün geliştirmede son %10'luk cilalama ve detay işçiliğinin önemi." },
-    { title: "Detection is a latency budget", tag: "AI / ML", summary: "Gerçek zamanlı bilgisayarlı görüde gecikme bütçesi ve YOLO optimizasyonu." },
-    { title: "One platform, two audiences", tag: "Systems", summary: "Sanal Kampüs projesinde tek PostgreSQL veri şemasıyla 360° tur ve envanter yönetimini birleştirme." },
-  ],
 };
 
 /**
@@ -153,34 +148,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 3. YAZILAR / GÜNLÜK / BLOG (Journal & Articles)
-  if (
-    q.includes("yazı") ||
-    q.includes("günlük") ||
-    q.includes("blog") ||
-    q.includes("makale") ||
-    q.includes("journal") ||
-    q.includes("post") ||
-    q.includes("okuma")
-  ) {
-    if (locale === "tr") {
-      return {
-        text: "✍️ **Günlük & Teknik Yazılar Özet Bilgisi**:\n\nMert Ceren'in kaleme aldığı öne çıkan teknik yazıları:\n\n1. 🎯 **The last 10% is the product** — Ürün geliştirmede son %10'luk cilalama ve detay işçiliğinin önemi.\n2. ⏱️ **Detection is a latency budget** — Gerçek zamanlı bilgisayarlı görüde gecikme bütçesi ve YOLO optimizasyonu.\n3. 🏗️ **One platform, two audiences** — Sanal Kampüs projesinde tek PostgreSQL veri şemasıyla iki farklı kitleye hizmet verme tecrübesi.",
-        actionLinks: [
-          { label: "Günlük / Yazılar Bölümüne Git ✍️", href: "#journal", isAnchor: true },
-        ],
-      };
-    } else {
-      return {
-        text: "✍️ **Journal & Technical Articles**:\n\n1. 🎯 **The last 10% is the product** — Why polish is load-bearing.\n2. ⏱️ **Detection is a latency budget** — Lessons from real-time YOLO computer vision.\n3. 🏗️ **One platform, two audiences** — Dual-architecture design on PostgreSQL.",
-        actionLinks: [
-          { label: "Jump to Journal Section ✍️", href: "#journal", isAnchor: true },
-        ],
-      };
-    }
-  }
-
-  // 4. REFERANSLAR & TAVSİYELER (Testimonials)
+  // 3. REFERANSLAR & TAVSİYELER (Testimonials)
   if (
     q.includes("referans") ||
     q.includes("tavsiye") ||
