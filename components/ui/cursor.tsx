@@ -48,8 +48,8 @@ const IDLE_MESSAGES_EN = [
 ];
 
 /**
- * Custom cursor: an accent dot that tracks instantly plus a smooth, snappy ring.
- * Uses GPU lerp math to guarantee zero off-screen overshoot and buttery smooth tracking.
+ * Custom cursor: an accent dot plus a smooth ring locked in a single unified container.
+ * Zero separation, zero lag, 100% perfectly centered at all times.
  * Displays a playful speech bubble when the cursor remains idle for a few seconds.
  */
 export function Cursor() {
@@ -60,15 +60,10 @@ export function Cursor() {
   const [hovering, setHovering] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
 
-  const [dotPos, setDotPos] = useState({ x: -100, y: -100 });
-  const [ringPos, setRingPos] = useState({ x: -100, y: -100 });
+  const [pos, setPos] = useState({ x: -100, y: -100 });
 
-  const mouseRef = useRef({ x: -100, y: -100 });
-  const ringRef = useRef({ x: -100, y: -100 });
   const activeRef = useRef(false);
-  const hoveringRef = useRef(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
 
@@ -78,33 +73,13 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth animation loop using lerp (0 overshoot guarantee)
-    const updateRingPosition = () => {
-      if (activeRef.current) {
-        // Snap tighter (0.4) on hover so ring stays locked to the dot
-        const factor = hoveringRef.current ? 0.4 : 0.25;
-        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
-        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
-
-        setRingPos({
-          x: Math.round(ringRef.current.x * 100) / 100,
-          y: Math.round(ringRef.current.y * 100) / 100,
-        });
-      }
-      animFrameRef.current = requestAnimationFrame(updateRingPosition);
-    };
-
-    animFrameRef.current = requestAnimationFrame(updateRingPosition);
-
     const getNextIndex = () => {
       if (queueRef.current.length === 0) {
-        // Fisher-Yates Shuffle all indices [0...messages.length-1]
         const deck = Array.from({ length: messages.length }, (_, i) => i);
         for (let i = deck.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [deck[i], deck[j]] = [deck[j], deck[i]];
         }
-        // Avoid consecutive overlap across reshuffles
         if (deck[deck.length - 1] === lastIndexRef.current && deck.length > 1) {
           [deck[deck.length - 1], deck[0]] = [deck[0], deck[deck.length - 1]];
         }
@@ -132,12 +107,9 @@ export function Cursor() {
       const clientX = e.clientX;
       const clientY = e.clientY;
 
-      mouseRef.current = { x: clientX, y: clientY };
-      setDotPos({ x: clientX, y: clientY });
+      setPos({ x: clientX, y: clientY });
 
       if (!activeRef.current) {
-        ringRef.current = { x: clientX, y: clientY };
-        setRingPos({ x: clientX, y: clientY });
         activeRef.current = true;
         setActive(true);
       }
@@ -154,9 +126,7 @@ export function Cursor() {
 
     const onOver = (e: Event) => {
       const target = e.target as Element | null;
-      const isHover = !!target?.closest?.("a, button, [role='button']");
-      hoveringRef.current = isHover;
-      setHovering(isHover);
+      setHovering(!!target?.closest?.("a, button, [role='button']"));
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -165,7 +135,6 @@ export function Cursor() {
     document.documentElement.classList.add("custom-cursor");
 
     return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
@@ -181,49 +150,45 @@ export function Cursor() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-120 hidden md:block"
     >
-      {/* Pointer center dot */}
+      {/* Single Unified Container for Ring & Dot */}
       <div
         style={{
-          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
+          transform: `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`,
         }}
-        className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
-      />
+        className="absolute left-0 top-0 size-8 flex items-center justify-center pointer-events-none"
+      >
+        {/* Ring centered around dot */}
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full border transition-all duration-200 ease-out",
+            hovering
+              ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
+              : "scale-100 border-foreground/35"
+          )}
+        />
 
-      {/* Smooth tracking ring */}
-      <div
-        style={{
-          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
-        }}
-        className={cn(
-          "absolute left-0 top-0 size-8 rounded-full border transition-all duration-200 ease-out",
-          hovering
-            ? "scale-125 border-accent/80 bg-accent/5 shadow-sm"
-            : "scale-100 border-foreground/35"
-        )}
-      />
+        {/* Center Accent Dot */}
+        <div className="size-1.5 rounded-full bg-accent" />
 
-      {/* Playful Speech Bubble on Idle */}
-      <AnimatePresence>
-        {idleMessage && (
-          <motion.div
-            style={{
-              left: `${ringPos.x}px`,
-              top: `${ringPos.y}px`,
-            }}
-            initial={{ opacity: 0, scale: 0.8, y: 12, x: 16 }}
-            animate={{ opacity: 1, scale: 1, y: -45, x: 16 }}
-            exit={{ opacity: 0, scale: 0.8, y: 5 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className="absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
-          >
-            <div className="relative flex items-center gap-1.5">
-              <span>{idleMessage}</span>
-            </div>
-            {/* Speech bubble tail pointer */}
-            <div className="absolute -bottom-1 left-3 size-2 rotate-45 border-b border-r border-accent/30 bg-background/90" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Playful Speech Bubble on Idle */}
+        <AnimatePresence>
+          {idleMessage && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 12, x: 16 }}
+              animate={{ opacity: 1, scale: 1, y: -45, x: 16 }}
+              exit={{ opacity: 0, scale: 0.8, y: 5 }}
+              transition={{ type: "spring", stiffness: 500, damping: 28 }}
+              className="absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+            >
+              <div className="relative flex items-center gap-1.5">
+                <span>{idleMessage}</span>
+              </div>
+              {/* Speech bubble tail pointer */}
+              <div className="absolute -bottom-1 left-3 size-2 rotate-45 border-b border-r border-accent/30 bg-background/90" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
