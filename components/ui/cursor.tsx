@@ -65,6 +65,7 @@ export function Cursor() {
   const mouseRef = useRef({ x: -100, y: -100 });
   const ringRef = useRef({ x: -100, y: -100 });
   const activeRef = useRef(false);
+  const hoveringRef = useRef(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
@@ -76,11 +77,12 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth Lerp loop for trailing ring (factor = 0.12 for distinct, silky trailing lag)
+    // Smooth Lerp loop for trailing ring (0.12 on normal space, 0.50 on buttons to prevent drift)
     const updateRingPosition = () => {
       if (activeRef.current) {
-        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.12;
-        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.12;
+        const factor = hoveringRef.current ? 0.5 : 0.12;
+        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
+        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
 
         setRingPos({
           x: Math.round(ringRef.current.x * 10) / 10,
@@ -148,7 +150,9 @@ export function Cursor() {
 
     const onOver = (e: Event) => {
       const target = e.target as Element | null;
-      setHovering(!!target?.closest?.("a, button, [role='button']"));
+      const isHover = !!target?.closest?.("a, button, [role='button']");
+      hoveringRef.current = isHover;
+      setHovering(isHover);
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -194,7 +198,7 @@ export function Cursor() {
         )}
       />
 
-      {/* 3. Playful Speech Bubble on Idle (Centered above cursor dot) */}
+      {/* 3. Playful Speech Bubble on Idle (Centered comfortably above cursor dot) */}
       <AnimatePresence>
         {idleMessage && (
           <motion.div
@@ -203,7 +207,7 @@ export function Cursor() {
               top: `${dotPos.y}px`,
             }}
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: -48 }}
+            animate={{ opacity: 1, scale: 1, y: -60 }}
             exit={{ opacity: 0, scale: 0.8, y: 5 }}
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
             className="absolute -translate-x-1/2 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
