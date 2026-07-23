@@ -48,9 +48,8 @@ const IDLE_MESSAGES_EN = [
 ];
 
 /**
- * Custom cursor: an accent dot plus a smooth ring locked in a single unified container.
- * Zero separation, zero lag, 100% perfectly centered at all times.
- * Displays a playful speech bubble when the cursor remains idle for a few seconds.
+ * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
+ * Displays a playful speech bubble centered above the cursor on idle.
  */
 export function Cursor() {
   const pathname = usePathname() ?? "/";
@@ -60,10 +59,14 @@ export function Cursor() {
   const [hovering, setHovering] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
 
-  const [pos, setPos] = useState({ x: -100, y: -100 });
+  const [dotPos, setDotPos] = useState({ x: -100, y: -100 });
+  const [ringPos, setRingPos] = useState({ x: -100, y: -100 });
 
+  const mouseRef = useRef({ x: -100, y: -100 });
+  const ringRef = useRef({ x: -100, y: -100 });
   const activeRef = useRef(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
 
@@ -72,6 +75,22 @@ export function Cursor() {
     if (!fine) return;
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
+
+    // Smooth Lerp loop for trailing ring (factor = 0.18 for silky smooth delay)
+    const updateRingPosition = () => {
+      if (activeRef.current) {
+        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.18;
+        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.18;
+
+        setRingPos({
+          x: Math.round(ringRef.current.x * 100) / 100,
+          y: Math.round(ringRef.current.y * 100) / 100,
+        });
+      }
+      animFrameRef.current = requestAnimationFrame(updateRingPosition);
+    };
+
+    animFrameRef.current = requestAnimationFrame(updateRingPosition);
 
     const getNextIndex = () => {
       if (queueRef.current.length === 0) {
@@ -107,9 +126,12 @@ export function Cursor() {
       const clientX = e.clientX;
       const clientY = e.clientY;
 
-      setPos({ x: clientX, y: clientY });
+      mouseRef.current = { x: clientX, y: clientY };
+      setDotPos({ x: clientX, y: clientY });
 
       if (!activeRef.current) {
+        ringRef.current = { x: clientX, y: clientY };
+        setRingPos({ x: clientX, y: clientY });
         activeRef.current = true;
         setActive(true);
       }
@@ -135,6 +157,7 @@ export function Cursor() {
     document.documentElement.classList.add("custom-cursor");
 
     return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
@@ -150,45 +173,49 @@ export function Cursor() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-120 hidden md:block"
     >
-      {/* Single Unified Container for Ring & Dot */}
+      {/* 1. Instant Center Accent Dot */}
       <div
         style={{
-          transform: `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`,
+          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
         }}
-        className="absolute left-0 top-0 size-8 flex items-center justify-center pointer-events-none"
-      >
-        {/* Ring centered around dot */}
-        <div
-          className={cn(
-            "absolute inset-0 rounded-full border transition-all duration-200 ease-out",
-            hovering
-              ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
-              : "scale-100 border-foreground/35"
-          )}
-        />
+        className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
+      />
 
-        {/* Center Accent Dot */}
-        <div className="size-1.5 rounded-full bg-accent" />
+      {/* 2. Silky Smooth Trailing Ring */}
+      <div
+        style={{
+          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
+        }}
+        className={cn(
+          "absolute left-0 top-0 size-8 rounded-full border transition-all duration-200 ease-out",
+          hovering
+            ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
+            : "scale-100 border-foreground/35"
+        )}
+      />
 
-        {/* Playful Speech Bubble on Idle - Perfectly Centered Above Cursor Dot */}
-        <AnimatePresence>
-          {idleMessage && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: -48 }}
-              exit={{ opacity: 0, scale: 0.8, y: 5 }}
-              transition={{ type: "spring", stiffness: 500, damping: 28 }}
-              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
-            >
-              <div className="relative flex items-center gap-1.5">
-                <span>{idleMessage}</span>
-              </div>
-              {/* Speech bubble tail pointer centered at bottom pointing at cursor */}
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* 3. Playful Speech Bubble on Idle (Centered above cursor dot) */}
+      <AnimatePresence>
+        {idleMessage && (
+          <motion.div
+            style={{
+              left: `${dotPos.x}px`,
+              top: `${dotPos.y}px`,
+            }}
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: -48 }}
+            exit={{ opacity: 0, scale: 0.8, y: 5 }}
+            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+            className="absolute -translate-x-1/2 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+          >
+            <div className="relative flex items-center gap-1.5">
+              <span>{idleMessage}</span>
+            </div>
+            {/* Speech bubble tail pointer centered at bottom pointing at cursor */}
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
