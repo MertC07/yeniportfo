@@ -104,16 +104,18 @@ export function AiAssistant() {
   };
 
   const handleActionClick = (link: ActionLink) => {
-    setIsOpen(false);
     if (link.isAnchor && link.href.startsWith("#")) {
       const element = document.querySelector(link.href);
       if (element) {
+        // Smooth scroll background page without closing chatbot
         element.scrollIntoView({ behavior: "smooth" });
       } else {
         // Navigating from a subpage back to main page section (e.g. /tr#work)
+        setIsOpen(false);
         window.location.href = `/${locale}${link.href}`;
       }
     } else {
+      setIsOpen(false);
       if (link.href.startsWith("/")) {
         const cleanHref = link.href.replace(/^\/(tr|en)/, "");
         window.location.href = `/${locale}${cleanHref}`;

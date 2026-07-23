@@ -77,13 +77,14 @@ export const MERT_KNOWLEDGE = {
     "BTK Akademi Bilgisayarlı Görü ve Nesne Tespiti (YOLO)",
     "edX HP AI & Data Science Professional Certificate",
     "Udemy C# & .NET Core Yazılım Uzmanlık Sertifikası",
+    "Udemy ChatGPT Prompt Mühendisliği, İçerik ve Görsel Üretme",
     "Siber Güvenlik Sertifikası",
-    "Toplam 22+ Doğrulanmış Sertifika",
+    "Toplam 22 Onaylı Sertifika",
   ],
 };
 
 /**
- * Fast Local Response Engine with comprehensive phrase matching
+ * Fast Local Response Engine providing detailed summary answers first, plus optional jump buttons
  */
 export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): { text: string; actionLinks?: ActionLink[] } {
   const q = query.toLowerCase().trim();
@@ -92,15 +93,16 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("merhaba") || q.includes("selam") || q.includes("sa") || q.includes("hey") || q.includes("günaydın") || q.includes("iyi günler")) {
     if (locale === "tr") {
       return {
-        text: "Merhaba! 👋 Size Mert Ceren'in **5Genç** takımıyla geliştirdiği TEKNOFEST 2026 projesi, 22 onaylı sertifikası, yetenekleri veya üniversite eğitimi hakkında nasıl yardımcı olabilirim?",
+        text: "Merhaba! 👋 Ben Mert Ceren'in yapay zekâ asistanıyım.\n\nMert Ceren; Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisi, TEKNOFEST 2026 **5Genç** Takım Kaptanı ve yapay zekâ geliştiricisidir.\n\nSize projeleri, yetenekleri, 22 onaylı sertifikası veya iletişimi hakkında özet bilgi verebilirim. Ne öğrenmek istersiniz?",
         actionLinks: [
           { label: "TEKNOFEST Projesi 🚀", href: "/work/smart-road-safety" },
           { label: "Sertifikaları Gör 📜", href: "#certificates", isAnchor: true },
+          { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Hello! 👋 How can I help you regarding Mert Ceren's TEKNOFEST 2026 project with Team 5Genç, his 22 certifications, skills, or education?",
+        text: "Hello! 👋 I am Mert Ceren's AI assistant.\n\nMert is a Software Engineering Student at BANÜ, Team Captain for TEKNOFEST 2026 (Team 5Genç), and an AI developer.\n\nHow can I help you regarding his projects, skills, certifications, or contact details?",
         actionLinks: [
           { label: "TEKNOFEST Project 🚀", href: "/work/smart-road-safety" },
           { label: "Certificates 📜", href: "#certificates", isAnchor: true },
@@ -113,17 +115,17 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("kimdir") || q.includes("kim") || q.includes("hakkında") || q.includes("tanıt") || q.includes("biyografi")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisidir.\n\nTEKNOFEST 2026 'Akıllı Ulaşım & Yol Güvenliği' yarışmasında **5Genç** takımının **Takım Kaptanı** olup, Python ve YOLOv11 ile gerçek zamanlı bilgisayarlı görü ve yapay zekâ sistemleri geliştirmektedir.",
+        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** lisans öğrencisidir (2024 - 2028).\n\nTEKNOFEST 2026 'Akıllı Ulaşım & Yol Güvenliği' kategorisinde **5Genç** takımının **Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisidir**.\n\nYapay zekâ, bilgisayarlı görü (YOLOv11), C#/.NET Core ve modern web platformları üzerine odaklanmaktadır.",
         actionLinks: [
-          { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
-          { label: "TEKNOFEST Projesi 🚀", href: "/work/smart-road-safety" },
+          { label: "Zaman Çizelgesinde Detaylı Gör ↗", href: "#about", isAnchor: true },
+          { label: "TEKNOFEST Projesini İncele 🚀", href: "/work/smart-road-safety" },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren is a B.Sc. **Software Engineering Student at Bandırma Onyedi Eylül University** and Team Captain of **5Genç** for TEKNOFEST 2026.",
+        text: "Mert Ceren is a B.Sc. **Software Engineering Student at Bandırma Onyedi Eylül University** (2024 - 2028) and Team Captain of **5Genç** for TEKNOFEST 2026.",
         actionLinks: [
-          { label: "About & Timeline ↗", href: "#about", isAnchor: true },
+          { label: "View About & Timeline ↗", href: "#about", isAnchor: true },
         ],
       };
     }
@@ -147,15 +149,15 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   ) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren ile doğrudan e-posta adresi (**mertceren.2003.mc@gmail.com**) üzerinden veya LinkedIn hesabı üzerinden iletişime geçebilirsiniz.\n\nAyrıca sitedeki **İletişim** bölümüne giderek e-postayı tek tıkla kopyalayabilir veya Özgeçmişini (CV) önizleyip PDF olarak indirebilirsiniz.",
+        text: "Mert Ceren ile doğrudan iletişime geçmek için:\n\n• **E-posta**: `mertceren.2003.mc@gmail.com`\n• **Konum**: İstanbul / Bandırma, Türkiye\n• **İş Birlikleri**: Staj ve freelance proje davetlerine açık!\n\nAşağıdaki butonlara tıklayarak sayfadaki İletişim bölümünden e-postayı tek tıkla kopyalayabilir veya Özgeçmişini (CV) önizleyip PDF olarak indirebilirsiniz.",
         actionLinks: [
           { label: "Özgeçmişi İncele & İndir (PDF) 📄", href: "#contact", isAnchor: true },
-          { label: "İletişim Bölümüne Git ✉️", href: "#contact", isAnchor: true },
+          { label: "Sayfadaki İletişim Bölümüne Git ✉️", href: "#contact", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "You can get in touch with Mert Ceren via email at **mertceren.2003.mc@gmail.com** or through LinkedIn.\n\nYou can also preview and download his resume (PDF) in the Contact section.",
+        text: "You can reach out to Mert Ceren via email at **mertceren.2003.mc@gmail.com** or through LinkedIn.\n\nHe is open for internships and freelance opportunities. Click below to preview and download his CV (PDF).",
         actionLinks: [
           { label: "Preview & Download Resume (PDF) 📄", href: "#contact", isAnchor: true },
         ],
@@ -167,17 +169,17 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("teknofest") || q.includes("yol güvenliği") || q.includes("5genç") || q.includes("yolo") || q.includes("kaptan")) {
     if (locale === "tr") {
       return {
-        text: "TEKNOFEST 2026 'Akıllı Ulaşım & Yol Güvenliği' yarışmasında Mert Ceren, **5Genç** takımının **Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisidir**.\n\nTakımıyla birlikte 5G haberleşme altyapısıyla entegre çalışan, Python ve YOLOv11 tabanlı gerçek zamanlı nesne tespit modelleri geliştirmektedirler.",
+        text: "🚀 **TEKNOFEST 2026 Akıllı Yol Güvenliği Projesi Özet Bilgisi**:\n\n• **Takım**: 5Genç\n• **Mert'in Rolü**: Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi\n• **Kategori**: Yapay Zekâ & 5G Haberleşme\n• **Teknolojiler**: Python, YOLOv11, OpenCV, 5G Edge Computing\n\nProjede 5G haberleşme altyapısıyla entegre çalışan, otonom ve destekli sürüş senaryoları için Python'da eğitilen YOLO tabanlı gerçek zamanlı nesne tespit modelleri geliştirilmektedir.",
         actionLinks: [
-          { label: "TEKNOFEST Projesini İncele ↗", href: "/work/smart-road-safety" },
+          { label: "Detaylı Vaka İncelemesini Oku ↗", href: "/work/smart-road-safety" },
           { label: "Seçilmiş Projeler Bölümüne Git ↗", href: "#work", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "In TEKNOFEST 2026 Smart Road Safety, Mert Ceren is the **Team Captain, Project Coordinator & AI/ML Engineer** of Team **5Genç**.\n\nThey are developing real-time YOLOv11 object detection models integrated with 5G edge communication.",
+        text: "🚀 **TEKNOFEST 2026 Smart Road Safety Project Summary**:\n\n• **Team**: 5Genç\n• **Mert's Role**: Team Captain, Project Coordinator & AI/ML Engineer\n• **Tech**: Python, YOLOv11, Computer Vision, 5G Edge\n\nDeveloping real-time YOLOv11 object detection models integrated with 5G edge communication for assisted and autonomous driving scenarios.",
         actionLinks: [
-          { label: "View TEKNOFEST Project ↗", href: "/work/smart-road-safety" },
+          { label: "Read Case Study ↗", href: "/work/smart-road-safety" },
           { label: "Jump to Projects ↗", href: "#work", isAnchor: true },
         ],
       };
@@ -188,16 +190,16 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("sertifika") || q.includes("certificate") || q.includes("btk") || q.includes("edx") || q.includes("udemy") || q.includes("belge")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren'in yapay zekâ, bilgisayarlı görü ve yazılım alanında **22 adet onaylı sertifikası** bulunmaktadır.\n\nÖne çıkan sertifikalar arasında **Google & BTK Akademi Uygulamalı Yapay Zekâ**, **BTK YOLO Bilgisayarlı Görü**, **edX HP AI & Data Science** ve **Udemy C#/.NET Uzmanlığı** yer almaktadır.",
+        text: "📜 **Sertifikalar & Belgeler Özeti**:\n\nMert Ceren'in yapay zekâ, bilgisayarlı görü ve yazılım alanında **22 adet onaylı sertifikası** bulunmaktadır.\n\nÖne çıkan bazı sertifikaları:\n• **Google & BTK Akademi**: Uygulamalı Yapay Zekâ Eğitimi\n• **BTK Akademi**: Bilgisayarlı Görü ve Nesne Tespiti (YOLO)\n• **edX & HP**: Generative AI for Games Development\n• **Udemy**: C#/.NET Uzmanlığı & ChatGPT Prompt Mühendisliği",
         actionLinks: [
-          { label: "Tüm Sertifikaları Gör (22) 📜", href: "#certificates", isAnchor: true },
+          { label: "Sertifikalar Galerisini Aç (22) 📜", href: "#certificates", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren holds **22 verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey certifications include **Google & BTK Applied AI**, **BTK YOLO Computer Vision**, and **edX HP AI & Data Science**.",
+        text: "📜 **Certificates Summary**:\n\nMert Ceren holds **22 verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey credentials include Google & BTK Applied AI, BTK YOLO Computer Vision, and edX HP AI & Data Science.",
         actionLinks: [
-          { label: "View All Certificates (22) 📜", href: "#certificates", isAnchor: true },
+          { label: "Open Certificates Gallery (22) 📜", href: "#certificates", isAnchor: true },
         ],
       };
     }
@@ -207,17 +209,17 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("proje") || q.includes("project") || q.includes("sanal kampüs") || q.includes("rosso") || q.includes("ik karar")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren'in öne çıkan projeleri:\n\n1. 🚦 **Akıllı Yol Güvenliği (TEKNOFEST 2026)** — 5G & YOLOv11 (5Genç Takım Kaptanı)\n2. 🏫 **Sanal Kampüs** — 360° Panoramik Tur & İdare Envanter Yönetimi\n3. 🍷 **Rosso Lounge Bistro** — Özel Yönetim Panelli Web Platformu\n4. 🤖 **bwai İK Karar Motoru** — Açık kaynak yapay zekâ İK karar destek sistemi",
+        text: "💻 **Mert Ceren'in Öne Çıkan Projeleri Özet Bilgisi**:\n\n1. 🚦 **Akıllı Yol Güvenliği (TEKNOFEST 2026)** — 5G & YOLOv11 ile Otonom Sürüş Desteği (5Genç Takım Kaptanı)\n2. 🏫 **Sanal Kampüs** — 360° Panoramik Sanal Tur & İdare Envanter Yönetim Platformu\n3. 🍷 **Rosso Lounge Bistro** — Özel Yönetim Panelli Web Platformu & Menü Sistemi\n4. 🤖 **bwai İK Karar Motoru** — Açık kaynak yapay zekâ İK karar motoru",
         actionLinks: [
-          { label: "Seçilmiş Projeleri İncele ↗", href: "#work", isAnchor: true },
-          { label: "GitHub Repolarına Bak ↗", href: "#github", isAnchor: true },
+          { label: "Seçilmiş Projeler Bölümünü Gör 🚀", href: "#work", isAnchor: true },
+          { label: "GitHub Repolarını İncele ↗", href: "#github", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren's featured projects:\n\n1. 🚦 **Smart Road Safety (TEKNOFEST 2026)** — 5G & YOLOv11 (Team 5Genç Captain)\n2. 🏫 **Virtual Campus** — 360° Panoramic Tour & Inventory Platform\n3. 🍷 **Rosso Lounge Bistro** — Web platform & custom management panel",
+        text: "💻 **Featured Projects Summary**:\n\n1. 🚦 **Smart Road Safety (TEKNOFEST 2026)** — 5G & YOLOv11 (Team 5Genç Captain)\n2. 🏫 **Virtual Campus** — 360° Panoramic Tour & Inventory Platform\n3. 🍷 **Rosso Lounge Bistro** — Web platform & custom management panel",
         actionLinks: [
-          { label: "Explore Projects ↗", href: "#work", isAnchor: true },
+          { label: "Jump to Projects Section 🚀", href: "#work", isAnchor: true },
         ],
       };
     }
@@ -227,16 +229,16 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("yetenek") || q.includes("skill") || q.includes("dil") || q.includes("tech") || q.includes("python") || q.includes("c#") || q.includes("react") || q.includes("stack")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren'in kullandığı ana teknoloji yığını:\n\n• **Yapay Zekâ & Görü**: Python, YOLOv8/v11, OpenCV, PyTorch, Model Optimizasyonu\n• **Backend**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend**: React, Next.js, TypeScript, TailwindCSS, Photo Sphere Viewer (360°)\n• **Araçlar**: Git, Docker, Linux, 5G & Edge Computing",
+        text: "🛠️ **Teknoloji & Stack Özeti**:\n\n• **Yapay Zekâ & Görü**: Python, YOLOv8/v11, OpenCV, PyTorch, Model Optimizasyonu\n• **Backend Servisleri**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend & Web**: React, Next.js, TypeScript, TailwindCSS, Photo Sphere Viewer (360°)\n• **Geliştirme Araçları**: Git & GitHub, Docker, Linux, 5G & Edge Computing",
         actionLinks: [
-          { label: "Yetenekler & Stack Bölümüne Git ↗", href: "#skills", isAnchor: true },
+          { label: "Yetenekler & Stack Bölümünü Gör 🛠️", href: "#skills", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren's core tech stack:\n\n• **AI & Computer Vision**: Python, YOLOv8/v11, OpenCV, PyTorch\n• **Backend**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend**: React, Next.js, TypeScript, TailwindCSS\n• **Tools**: Git, Docker, Linux, 5G & Edge",
+        text: "🛠️ **Tech Stack Summary**:\n\n• **AI & Computer Vision**: Python, YOLOv8/v11, OpenCV, PyTorch\n• **Backend**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend**: React, Next.js, TypeScript, TailwindCSS\n• **Tools**: Git, Docker, Linux, 5G & Edge",
         actionLinks: [
-          { label: "Jump to Skills Section ↗", href: "#skills", isAnchor: true },
+          { label: "Jump to Skills Section 🛠️", href: "#skills", isAnchor: true },
         ],
       };
     }
@@ -246,14 +248,14 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("okul") || q.includes("üniversite") || q.includes("öğrenci") || q.includes("banü") || q.includes("bandırma") || q.includes("lise") || q.includes("hazırlık")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** lisans öğrencisidir (2024 - 2028).\n\nÖncesinde isteğe bağlı 1 yıllık İngilizce Hazırlık Programını tamamlamıştır.",
+        text: "🎓 **Eğitim Özeti**:\n\n• **Lisans**: Bandırma Onyedi Eylül Üniversitesi (BANÜ) — Yazılım Mühendisliği (2024 - 2028)\n• **Hazırlık**: BANÜ İsteğe Bağlı 1 Yıllık İngilizce Hazırlık Programı (2023 - 2024)\n• **Lise**: Eyüpsultan Anadolu Lisesi — Sayısal Bölüm (2018 - 2022)",
         actionLinks: [
-          { label: "Zaman Çizelgesini İncele ↗", href: "#about", isAnchor: true },
+          { label: "Zaman Çizelgesinde Detaylı Gör ↗", href: "#about", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren is a B.Sc. **Software Engineering student at Bandırma Onyedi Eylül University (BANÜ)** (2024 - 2028).",
+        text: "🎓 **Education Summary**:\n\n• **Degree**: Bandırma Onyedi Eylül University (BANÜ) — B.Sc. Software Engineering (2024 - 2028)\n• **Prep School**: 1-Year Optional English Prep Program (2023 - 2024)",
         actionLinks: [
           { label: "View Timeline ↗", href: "#about", isAnchor: true },
         ],
@@ -261,22 +263,22 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // Intelligent General Response Fallback (No repeating welcome text!)
+  // Intelligent Response Fallback for Unrecognized Questions
   if (locale === "tr") {
     return {
-      text: "Bu konu hakkında Mert Ceren ile doğrudan e-posta (**mertceren.2003.mc@gmail.com**) üzerinden iletişime geçebilir veya aşağıdaki bağlantılardan detayları inceleyebilirsiniz:",
+      text: `Sorduğunuz konuda Mert Ceren ile doğrudan e-posta (**${MERT_KNOWLEDGE.profile.email}**) üzerinden iletişime geçebilir veya aşağıdaki öne çıkan bölümleri inceleyebilirsiniz:`,
       actionLinks: [
-        { label: "Projeleri Gör 🚀", href: "#work", isAnchor: true },
-        { label: "Sertifikaları Gör 📜", href: "#certificates", isAnchor: true },
+        { label: "Projeleri İncele 🚀", href: "#work", isAnchor: true },
+        { label: "Sertifikaları Gör (22) 📜", href: "#certificates", isAnchor: true },
         { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
       ],
     };
   } else {
     return {
-      text: "For this question, you can contact Mert Ceren directly via email at **mertceren.2003.mc@gmail.com** or explore the links below:",
+      text: `Regarding your question, feel free to contact Mert Ceren directly via email at **${MERT_KNOWLEDGE.profile.email}** or check out the sections below:`,
       actionLinks: [
-        { label: "View Projects 🚀", href: "#work", isAnchor: true },
-        { label: "View Certificates 📜", href: "#certificates", isAnchor: true },
+        { label: "Explore Projects 🚀", href: "#work", isAnchor: true },
+        { label: "View Certificates (22) 📜", href: "#certificates", isAnchor: true },
         { label: "Contact ✉️", href: "#contact", isAnchor: true },
       ],
     };
