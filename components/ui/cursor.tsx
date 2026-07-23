@@ -91,6 +91,26 @@ export function Cursor() {
     animFrameRef.current = requestAnimationFrame(updateRingPosition);
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
+    const queueRef = { current: [] as number[] };
+
+    const getNextIndex = () => {
+      if (queueRef.current.length === 0) {
+        // Fisher-Yates Shuffle all indices [0...messages.length-1]
+        const deck = Array.from({ length: messages.length }, (_, i) => i);
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        // Avoid consecutive overlap across reshuffles
+        if (deck[deck.length - 1] === lastIndexRef.current && deck.length > 1) {
+          [deck[deck.length - 1], deck[0]] = [deck[0], deck[deck.length - 1]];
+        }
+        queueRef.current = deck;
+      }
+      const nextIndex = queueRef.current.pop()!;
+      lastIndexRef.current = nextIndex;
+      return nextIndex;
+    };
 
     const resetIdleTimer = () => {
       setIdleMessage(null);
@@ -100,11 +120,7 @@ export function Cursor() {
       }
 
       idleTimerRef.current = setTimeout(() => {
-        let nextIndex = Math.floor(Math.random() * messages.length);
-        if (nextIndex === lastIndexRef.current) {
-          nextIndex = (nextIndex + 1) % messages.length;
-        }
-        lastIndexRef.current = nextIndex;
+        const nextIndex = getNextIndex();
         setIdleMessage(messages[nextIndex]);
       }, 2500); // 2.5 seconds idle trigger
     };
