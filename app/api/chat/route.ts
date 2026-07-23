@@ -4,6 +4,48 @@ import { MERT_KNOWLEDGE, getLocalAiResponse } from "@/lib/ai-knowledge";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+export async function GET() {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GROQ_API_KEY;
+  if (!apiKey || apiKey.trim().length < 5) {
+    return NextResponse.json({
+      status: "missing_key",
+      message: "GEMINI_API_KEY environment variable is missing on Vercel.",
+    });
+  }
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: "Hello" }] }],
+      }),
+    });
+
+    const status = res.status;
+    const text = await res.text();
+    let parsed = null;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      // ignore
+    }
+
+    return NextResponse.json({
+      status: res.ok ? "ok" : "google_error",
+      httpStatus: status,
+      keyPrefix: apiKey.substring(0, 6) + "...",
+      rawResponse: parsed || text,
+    });
+  } catch (err: any) {
+    return NextResponse.json({
+      status: "network_exception",
+      error: err?.message || String(err),
+    });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { message, locale = "tr" } = await req.json();
@@ -17,8 +59,8 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-    // If Gemini API Key is available, attempt Google Gemini 1.5/2.0 Flash API call
-    if (apiKey && apiKey.trim().length > 10) {
+    // If Gemini API Key is available, attempt Google Gemini Flash API call
+    if (apiKey && apiKey.trim().length > 5) {
       try {
         const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
 Mert Ceren hakkında sorulan sorulara kısa, yardımsever, nazik ve doğru cevaplar vermelisin. 
