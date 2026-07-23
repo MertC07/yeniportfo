@@ -19,6 +19,10 @@ const IDLE_MESSAGES = [
   "Kaydırma tekerleğin yorulmadı mı? 🖱️",
   "Hâlâ buradaysan bir çay söyle ☕",
   "Projeleri beğendin mi? 🚀",
+  "Aşağıdaki butonlar tıklanmak için var 🚀",
+  "Bana mı bakıyorsun, projelere mi? 👀",
+  "Piksel piksel inceledin valla 🔍",
+  "Sayfada kaybolursan ses et! 📍",
 ];
 
 /**
