@@ -39,53 +39,59 @@ KURALLAR & KİŞİLİK:
 3. Bilmediğin kişisel bilgileri veya gerçek dışı verileri uydurma.
 4. Yanıtı çok uzun tutma (maksimum 2-3 cümle).`;
 
-        const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest"];
+        const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"];
 
         for (const model of models) {
-          const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                systemInstruction: {
-                  parts: [{ text: systemPrompt }],
-                },
-                contents: [
-                  {
-                    role: "user",
-                    parts: [{ text: message }],
+          try {
+            const response = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      role: "user",
+                      parts: [
+                        { text: systemPrompt },
+                        { text: `Soru: ${message}` }
+                      ],
+                    },
+                  ],
+                  generationConfig: {
+                    maxOutputTokens: 350,
+                    temperature: 0.5,
                   },
-                ],
-                generationConfig: {
-                  maxOutputTokens: 350,
-                  temperature: 0.5,
-                },
-              }),
-            }
-          );
+                }),
+              }
+            );
 
-          if (response.ok) {
-            const data = await response.json();
-            const candidateText =
-              data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (response.ok) {
+              const data = await response.json();
+              const candidateText =
+                data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-            if (candidateText) {
-              // Get local action links matching the query
-              const localResult = getLocalAiResponse(message, locale);
-              return NextResponse.json({
-                text: candidateText,
-                actionLinks: localResult.actionLinks || [],
-              });
+              if (candidateText) {
+                // Get local action links matching the query
+                const localResult = getLocalAiResponse(message, locale);
+                return NextResponse.json({
+                  text: candidateText,
+                  actionLinks: localResult.actionLinks || [],
+                });
+              }
+            } else {
+              const errText = await response.text();
+              console.warn(`Gemini API HTTP Error (${model}):`, response.status, errText);
             }
-          } else {
-            const errText = await response.text();
-            console.warn(`Gemini API HTTP Error (${model}):`, response.status, errText);
+          } catch (modelErr) {
+            console.warn(`Gemini model ${model} failed:`, modelErr);
           }
         }
       } catch (geminiError) {
         console.warn("Gemini API call failed, falling back to local NLP engine:", geminiError);
       }
+    } else {
+      console.warn("GEMINI_API_KEY is not defined in environment variables.");
     }
 
     // Fallback to local intelligent response engine
