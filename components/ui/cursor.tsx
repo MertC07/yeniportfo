@@ -204,7 +204,11 @@ export function Cursor() {
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
         }}
         className={cn(
-          "absolute left-0 top-0 size-8 rounded-full border transition-[transform,border-color,background-color] duration-200 ease-out",
+          // Position (transform) must not be transitioned: the lerp loop already
+          // smooths it, and a transition would keep the ring lagging behind the
+          // cursor on hover. Scale is a separate CSS property, so the grow
+          // effect still animates.
+          "absolute left-0 top-0 size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
           hovering
             ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
             : "scale-100 border-foreground/35"
