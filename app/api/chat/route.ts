@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { MERT_KNOWLEDGE, getLocalAiResponse } from "@/lib/ai-knowledge";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(req: Request) {
   try {
     const { message, locale = "tr" } = await req.json();
@@ -12,10 +15,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-    // If Gemini API Key is available, attempt Google Gemini 1.5 Flash API call
-    if (apiKey) {
+    // If Gemini API Key is available, attempt Google Gemini 1.5/2.0 Flash API call
+    if (apiKey && apiKey.trim().length > 10) {
       try {
         const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
 Mert Ceren hakkında sorulan sorulara kısa, yardımsever, nazik ve doğru cevaplar vermelisin. 
@@ -36,45 +39,49 @@ KURALLAR & KİŞİLİK:
 3. Bilmediğin kişisel bilgileri veya gerçek dışı verileri uydurma.
 4. Yanıtı çok uzun tutma (maksimum 2-3 cümle).`;
 
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              systemInstruction: {
-                parts: [{ text: systemPrompt }],
-              },
-              contents: [
-                {
-                  role: "user",
-                  parts: [{ text: message }],
+        const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest"];
+
+        for (const model of models) {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                systemInstruction: {
+                  parts: [{ text: systemPrompt }],
                 },
-              ],
-              generationConfig: {
-                maxOutputTokens: 350,
-                temperature: 0.5,
-              },
-            }),
-          }
-        );
+                contents: [
+                  {
+                    role: "user",
+                    parts: [{ text: message }],
+                  },
+                ],
+                generationConfig: {
+                  maxOutputTokens: 350,
+                  temperature: 0.5,
+                },
+              }),
+            }
+          );
 
-        if (response.ok) {
-          const data = await response.json();
-          const candidateText =
-            data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (response.ok) {
+            const data = await response.json();
+            const candidateText =
+              data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-          if (candidateText) {
-            // Get local action links matching the query
-            const localResult = getLocalAiResponse(message, locale);
-            return NextResponse.json({
-              text: candidateText,
-              actionLinks: localResult.actionLinks || [],
-            });
+            if (candidateText) {
+              // Get local action links matching the query
+              const localResult = getLocalAiResponse(message, locale);
+              return NextResponse.json({
+                text: candidateText,
+                actionLinks: localResult.actionLinks || [],
+              });
+            }
+          } else {
+            const errText = await response.text();
+            console.warn(`Gemini API HTTP Error (${model}):`, response.status, errText);
           }
-        } else {
-          const errText = await response.text();
-          console.warn("Gemini API HTTP Error:", response.status, errText);
         }
       } catch (geminiError) {
         console.warn("Gemini API call failed, falling back to local NLP engine:", geminiError);
