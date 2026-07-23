@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const IDLE_MESSAGES = [
@@ -21,6 +21,7 @@ const IDLE_MESSAGES = [
 
 /**
  * Custom cursor: an accent dot that tracks instantly plus a smooth, snappy ring.
+ * Uses GPU lerp math to guarantee zero off-screen overshoot and buttery smooth tracking.
  * Displays a playful speech bubble when the cursor remains idle for a few seconds.
  */
 export function Cursor() {
@@ -28,19 +29,35 @@ export function Cursor() {
   const [hovering, setHovering] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
 
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
+  const [dotPos, setDotPos] = useState({ x: -100, y: -100 });
+  const [ringPos, setRingPos] = useState({ x: -100, y: -100 });
 
-  // Fast, snappy spring without sluggish lag
-  const ringX = useSpring(x, { stiffness: 850, damping: 42, mass: 0.1 });
-  const ringY = useSpring(y, { stiffness: 850, damping: 42, mass: 0.1 });
-
+  const mouseRef = useRef({ x: -100, y: -100 });
+  const ringRef = useRef({ x: -100, y: -100 });
+  const activeRef = useRef(false);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
     if (!fine) return;
+
+    // Smooth animation loop using lerp (0 overshoot guarantee)
+    const updateRingPosition = () => {
+      if (activeRef.current) {
+        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.25;
+        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.25;
+
+        setRingPos({
+          x: Math.round(ringRef.current.x * 100) / 100,
+          y: Math.round(ringRef.current.y * 100) / 100,
+        });
+      }
+      animFrameRef.current = requestAnimationFrame(updateRingPosition);
+    };
+
+    animFrameRef.current = requestAnimationFrame(updateRingPosition);
 
     const resetIdleTimer = () => {
       setIdleMessage(null);
@@ -60,10 +77,27 @@ export function Cursor() {
     };
 
     const onMove = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      setActive(true);
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      mouseRef.current = { x: clientX, y: clientY };
+      setDotPos({ x: clientX, y: clientY });
+
+      if (!activeRef.current) {
+        ringRef.current = { x: clientX, y: clientY };
+        setRingPos({ x: clientX, y: clientY });
+        activeRef.current = true;
+        setActive(true);
+      }
+
       resetIdleTimer();
+    };
+
+    const onLeave = () => {
+      activeRef.current = false;
+      setActive(false);
+      setIdleMessage(null);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
 
     const onOver = (e: Event) => {
@@ -73,35 +107,41 @@ export function Cursor() {
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
+    document.addEventListener("mouseleave", onLeave, { passive: true });
     document.documentElement.classList.add("custom-cursor");
 
     return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
+      document.removeEventListener("mouseleave", onLeave);
       document.documentElement.classList.remove("custom-cursor");
     };
-  }, [x, y]);
+  }, []);
+
+  if (!active) return null;
 
   return (
     <div
       aria-hidden
-      className={cn(
-        "pointer-events-none fixed inset-0 z-120 hidden transition-opacity duration-300 md:block",
-        active ? "opacity-100" : "opacity-0"
-      )}
+      className="pointer-events-none fixed inset-0 z-120 hidden md:block"
     >
       {/* Pointer center dot */}
-      <motion.div
-        style={{ x, y }}
-        className="absolute left-0 top-0 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent"
+      <div
+        style={{
+          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
+        }}
+        className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
       />
 
-      {/* Cursor tracking ring */}
-      <motion.div
-        style={{ x: ringX, y: ringY }}
+      {/* Smooth tracking ring */}
+      <div
+        style={{
+          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
+        }}
         className={cn(
-          "absolute left-0 top-0 size-8 -translate-x-1/2 -translate-y-1/2 rounded-full border border-foreground/35 transition-transform duration-200",
+          "absolute left-0 top-0 size-8 rounded-full border border-foreground/35 transition-transform duration-150 ease-out",
           hovering ? "scale-[1.8] border-accent/70 bg-accent/10" : "scale-100"
         )}
       />
@@ -110,12 +150,15 @@ export function Cursor() {
       <AnimatePresence>
         {idleMessage && (
           <motion.div
-            style={{ x: ringX, y: ringY }}
+            style={{
+              left: `${ringPos.x}px`,
+              top: `${ringPos.y}px`,
+            }}
             initial={{ opacity: 0, scale: 0.8, y: 12, x: 16 }}
             animate={{ opacity: 1, scale: 1, y: -45, x: 16 }}
             exit={{ opacity: 0, scale: 0.8, y: 5 }}
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className="absolute left-0 top-0 whitespace-nowrap rounded-xl border border-accent/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+            className="absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
           >
             <div className="relative flex items-center gap-1.5">
               <span>{idleMessage}</span>
