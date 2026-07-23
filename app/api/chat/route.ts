@@ -42,18 +42,18 @@ KURALLAR & KİŞİLİK:
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: systemPrompt }],
+              },
               contents: [
                 {
                   role: "user",
-                  parts: [
-                    { text: systemPrompt },
-                    { text: `Kullanıcı Sorusu: ${message}` },
-                  ],
+                  parts: [{ text: message }],
                 },
               ],
               generationConfig: {
                 maxOutputTokens: 350,
-                temperature: 0.6,
+                temperature: 0.5,
               },
             }),
           }
@@ -72,6 +72,9 @@ KURALLAR & KİŞİLİK:
               actionLinks: localResult.actionLinks || [],
             });
           }
+        } else {
+          const errText = await response.text();
+          console.warn("Gemini API HTTP Error:", response.status, errText);
         }
       } catch (geminiError) {
         console.warn("Gemini API call failed, falling back to local NLP engine:", geminiError);
