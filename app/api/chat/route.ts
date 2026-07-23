@@ -13,37 +13,45 @@ export async function GET() {
     });
   }
 
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: "Hello" }] }],
-      }),
-    });
+  const models = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest", "gemini-pro", "gemini-1.5-flash"];
 
-    const status = res.status;
-    const text = await res.text();
-    let parsed = null;
+  for (const model of models) {
     try {
-      parsed = JSON.parse(text);
-    } catch {
-      // ignore
-    }
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: "Hello" }] }],
+        }),
+      });
 
-    return NextResponse.json({
-      status: res.ok ? "ok" : "google_error",
-      httpStatus: status,
-      keyPrefix: apiKey.substring(0, 6) + "...",
-      rawResponse: parsed || text,
-    });
-  } catch (err: any) {
-    return NextResponse.json({
-      status: "network_exception",
-      error: err?.message || String(err),
-    });
+      const status = res.status;
+      const text = await res.text();
+      let parsed = null;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        // ignore
+      }
+
+      if (res.ok) {
+        return NextResponse.json({
+          status: "ok",
+          workingModel: model,
+          keyPrefix: apiKey.substring(0, 6) + "...",
+          response: parsed || text,
+        });
+      }
+    } catch {
+      // try next
+    }
   }
+
+  return NextResponse.json({
+    status: "all_models_failed",
+    keyPrefix: apiKey.substring(0, 6) + "...",
+  });
 }
 
 export async function POST(req: Request) {
@@ -81,7 +89,7 @@ KURALLAR & KİŞİLİK:
 3. Bilmediğin kişisel bilgileri veya gerçek dışı verileri uydurma.
 4. Yanıtı çok uzun tutma (maksimum 2-3 cümle).`;
 
-        const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"];
+        const models = ["gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro-latest", "gemini-pro", "gemini-1.5-flash"];
 
         for (const model of models) {
           try {
