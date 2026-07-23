@@ -23,6 +23,7 @@ const IDLE_MESSAGES = [
   "Bana mı bakıyorsun, projelere mi? 👀",
   "Piksel piksel inceledin valla 🔍",
   "Sayfada kaybolursan ses et! 📍",
+  "Tıklamaktan korkma, bozulmaz! 🖱️💥",
 ];
 
 /**
