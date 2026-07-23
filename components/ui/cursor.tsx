@@ -204,14 +204,11 @@ export function Cursor() {
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
         }}
         className={cn(
-          // Position (transform) must not be transitioned: the lerp loop already
-          // smooths it, and a transition would keep the ring lagging behind the
-          // cursor on hover. Scale is a separate CSS property, so the grow
-          // effect still animates.
-          "absolute left-0 top-0 size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
-          hovering
-            ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
-            : "scale-100 border-foreground/35"
+          // Only opacity is transitioned — the position comes from the lerp
+          // loop, and transitioning transform would fight it. On interactive
+          // elements the ring fades out and just the dot remains.
+          "absolute left-0 top-0 size-8 rounded-full border border-foreground/35 transition-opacity duration-200 ease-out",
+          hovering ? "opacity-0" : "opacity-100"
         )}
       />
 
