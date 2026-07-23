@@ -7,16 +7,19 @@ import { cn } from "@/lib/utils";
 const IDLE_MESSAGES = [
   "Hangi projeyi incelesek? 🤔",
   "Kod yazarken ben: ☕ + 💻",
-  "TEKNOFEST 2026 kaptanı çalışıyor! 🚀",
   "YOLOv11 kareleri sayıyor... 🤖",
   "Beni burada unuttun sanırım 😅",
-  "Sertifikaları gördün mü? Tam 22 tane! 📜",
-  "5G sinyali full çekiyor 📶",
   "Bug var mı diye bakıyorum... 🐛🔍",
   "Kahve molası mı versek? ☕",
-  "Bandırma Onyedi Eylül Üni 🎓",
-  "Derleme tamamlandı, bekleniyor... ⚡",
   "Buradayım, kaybolmadım! 👋",
+  "Yine mi aşağı kaydırıyorsun? 📜",
+  "Sayfayı aşındırdın valla 😅",
+  "Gözüm üzerinde 👀",
+  "Chatbot'a bir merhaba desene! 🤖",
+  "Kaydırma tekerleğin yorulmadı mı? 🖱️",
+  "Hâlâ buradaysan bir çay söyle ☕",
+  "Teknolojiye meraklıyız galiba 💡",
+  "Projeleri beğendin mi? 🚀",
 ];
 
 /**
