@@ -18,7 +18,6 @@ const IDLE_MESSAGES = [
   "Chatbot'a bir merhaba desene! 🤖",
   "Kaydırma tekerleğin yorulmadı mı? 🖱️",
   "Hâlâ buradaysan bir çay söyle ☕",
-  "Teknolojiye meraklıyız galiba 💡",
   "Projeleri beğendin mi? 🚀",
 ];
 
