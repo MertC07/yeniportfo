@@ -103,6 +103,24 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
+  const { site, profile } = getContent(lang);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": profile.name,
+    "jobTitle": profile.role,
+    "description": site.description,
+    "url": site.url,
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Bandırma Onyedi Eylül Üniversitesi",
+    },
+    "sameAs": [
+      "https://github.com/MertC07",
+      "https://www.linkedin.com/in/mert-ceren-1a7b10297",
+    ],
+  };
+
   return (
     <html
       lang={lang}
@@ -110,6 +128,12 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <LocaleProvider locale={lang}>
           <ThemeProvider>

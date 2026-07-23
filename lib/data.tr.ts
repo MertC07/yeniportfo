@@ -70,7 +70,7 @@ export const projects: Project[] = [
       intro:
         "Kampüs, daha varmadan gezebilmen gereken bir yerdir — ve birinin dürüst tutmak zorunda olduğu bir demirbaş listesidir. Sanal Kampüs ikisini de aynı platformdan yapıyor.",
       facts: [
-        { label: "Rol", value: "Full-Stack Geliştirici" },
+        { label: "Rol", value: "Yazılım Mühendisliği Öğrencisi" },
         { label: "Frontend", value: "React + Vite, Tailwind CSS" },
         { label: "360° & harita", value: "Photo Sphere Viewer + Leaflet" },
         { label: "Backend", value: "Node.js üzerinde Express + Prisma" },
@@ -89,10 +89,10 @@ export const projects: Project[] = [
     slug: "rosso-lounge",
     title: "Rosso Lounge",
     year: "2025",
-    category: "Yeme-İçme · Full-Stack",
+    category: "Yeme-İçme · Web Platformu",
     description:
-      "Rosso Lounge Bistro için özel yönetim panelli full-stack web platformu — işletme menüsünü ve içeriğini koda dokunmadan kendisi yönetiyor. Yapay zekâ destekli geliştirme akışlarıyla tasarlanıp yayına alındı.",
-    tags: ["Full-Stack", "Yönetim Paneli", "SQL", "AI destekli"],
+      "Rosso Lounge Bistro için özel yönetim panelli web platformu — işletme menüsünü ve içeriğini koda dokunmadan kendisi yönetiyor. Yapay zekâ destekli geliştirme akışlarıyla tasarlanıp yayına alındı.",
+    tags: ["Web Platformu", "Yönetim Paneli", "SQL", "AI destekli"],
     href: "#",
     image: "/projects/rosso-lounge.png",
     palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
@@ -100,7 +100,7 @@ export const projects: Project[] = [
       intro:
         "Bir restoranın sitesi, menü değiştiği ve kimsenin güncelleyemediği gün ölür. Rosso Lounge, ekibin kendi başına yönetebildiği bir site aldı.",
       facts: [
-        { label: "Rol", value: "Full-Stack Geliştirici" },
+        { label: "Rol", value: "Yazılım Mühendisliği Öğrencisi" },
         { label: "Müşteri", value: "Rosso Lounge Bistro" },
         { label: "Öne çıkan", value: "Özel yönetim paneli" },
       ],

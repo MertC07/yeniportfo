@@ -44,7 +44,7 @@ export const MERT_KNOWLEDGE = {
     },
     {
       title: "Sanal Kampüs (Virtual Campus)",
-      role: "Yazılım Mühendisliği Öğrencisi & Proje Geliştiricisi",
+      role: "Yazılım Mühendisliği Öğrencisi",
       category: "Eğitim Teknolojisi & 360° Web Platformu",
       tech: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
       summary:
@@ -53,7 +53,7 @@ export const MERT_KNOWLEDGE = {
     },
     {
       title: "Rosso Lounge Bistro Web Platformu",
-      role: "Yazılım Mühendisliği Öğrencisi & Web Geliştirici",
+      role: "Yazılım Mühendisliği Öğrencisi",
       category: "İşletme & Web Platformu",
       tech: ["React", ".NET Core", "SQL Server", "TailwindCSS"],
       summary:

@@ -96,7 +96,7 @@ export const projects: Project[] = [
       intro:
         "A campus is a place you should be able to visit before you arrive — and an asset list someone has to keep honest. Virtual Campus does both from the same platform.",
       facts: [
-        { label: "Role", value: "Full-Stack Developer" },
+        { label: "Role", value: "Software Engineering Student" },
         { label: "Frontend", value: "React + Vite, Tailwind CSS" },
         { label: "360° & maps", value: "Photo Sphere Viewer + Leaflet" },
         { label: "Backend", value: "Express + Prisma on Node.js" },
@@ -115,10 +115,10 @@ export const projects: Project[] = [
     slug: "rosso-lounge",
     title: "Rosso Lounge",
     year: "2025",
-    category: "Hospitality · Full-Stack",
+    category: "Hospitality · Web Platform",
     description:
-      "A full-stack web platform for Rosso Lounge Bistro with a custom management panel — the business runs its own menu and content without touching code. Designed and shipped with AI-assisted development workflows.",
-    tags: ["Full-Stack", "Admin Panel", "SQL", "AI-assisted"],
+      "A web platform for Rosso Lounge Bistro with a custom management panel — the business runs its own menu and content without touching code. Designed and shipped with AI-assisted development workflows.",
+    tags: ["Web Platform", "Admin Panel", "SQL", "AI-assisted"],
     href: "#", // EDIT: live site URL
     image: "/projects/rosso-lounge.png",
     palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
@@ -126,7 +126,7 @@ export const projects: Project[] = [
       intro:
         "A restaurant's website dies the day the menu changes and nobody can update it. Rosso Lounge got a site the staff can run themselves.",
       facts: [
-        { label: "Role", value: "Full-Stack Developer" },
+        { label: "Role", value: "Software Engineering Student" },
         { label: "Client", value: "Rosso Lounge Bistro" },
         { label: "Highlight", value: "Custom admin panel" },
       ],
@@ -648,5 +648,5 @@ export const site = {
   url: "https://mertceren.com",
   title: "Mert Ceren — AI & Software Engineering Student",
   description:
-    "Portfolio of Mert Ceren — software engineering student building AI-powered systems: real-time computer vision, 5G-connected road safety, and full-stack web platforms.",
+    "Portfolio of Mert Ceren — software engineering student building AI-powered systems: real-time computer vision, 5G-connected road safety, and modern web platforms.",
 };
