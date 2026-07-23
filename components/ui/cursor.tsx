@@ -77,10 +77,10 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth Lerp loop for trailing ring (0.12 on normal space, 0.50 on buttons to prevent drift)
+    // Smooth Lerp loop for trailing ring (0.12 on normal space, 1.0 on buttons to lock 100% centered)
     const updateRingPosition = () => {
       if (activeRef.current) {
-        const factor = hoveringRef.current ? 0.5 : 0.12;
+        const factor = hoveringRef.current ? 1.0 : 0.12;
         ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
         ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
 
@@ -138,6 +138,12 @@ export function Cursor() {
         setActive(true);
       }
 
+      // If hovering over a button, force ring position to follow mouse instantly with 0 drift
+      if (hoveringRef.current) {
+        ringRef.current = { x: clientX, y: clientY };
+        setRingPos({ x: clientX, y: clientY });
+      }
+
       resetIdleTimer();
     };
 
@@ -151,6 +157,13 @@ export function Cursor() {
     const onOver = (e: Event) => {
       const target = e.target as Element | null;
       const isHover = !!target?.closest?.("a, button, [role='button']");
+
+      if (isHover && !hoveringRef.current) {
+        // Instant snap on entering hover target so ring is 100% centered over the dot
+        ringRef.current = { x: mouseRef.current.x, y: mouseRef.current.y };
+        setRingPos({ x: mouseRef.current.x, y: mouseRef.current.y });
+      }
+
       hoveringRef.current = isHover;
       setHovering(isHover);
     };
