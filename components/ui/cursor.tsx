@@ -76,15 +76,15 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth Lerp loop for trailing ring (factor = 0.18 for silky smooth delay)
+    // Smooth Lerp loop for trailing ring (factor = 0.12 for distinct, silky trailing lag)
     const updateRingPosition = () => {
       if (activeRef.current) {
-        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.18;
-        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.18;
+        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.12;
+        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.12;
 
         setRingPos({
-          x: Math.round(ringRef.current.x * 100) / 100,
-          y: Math.round(ringRef.current.y * 100) / 100,
+          x: Math.round(ringRef.current.x * 10) / 10,
+          y: Math.round(ringRef.current.y * 10) / 10,
         });
       }
       animFrameRef.current = requestAnimationFrame(updateRingPosition);
@@ -187,7 +187,7 @@ export function Cursor() {
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
         }}
         className={cn(
-          "absolute left-0 top-0 size-8 rounded-full border transition-all duration-200 ease-out",
+          "absolute left-0 top-0 size-8 rounded-full border transition-[transform,border-color,background-color] duration-200 ease-out",
           hovering
             ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
             : "scale-100 border-foreground/35"
