@@ -78,7 +78,7 @@ export const MERT_KNOWLEDGE = {
     "edX HP AI & Data Science Professional Certificate",
     "Udemy C# & .NET Core Yazılım Uzmanlık Sertifikası",
     "Siber Güvenlik Sertifikası",
-    "Toplam 23+ Doğrulanmış Sertifika",
+    "Toplam 22+ Doğrulanmış Sertifika",
   ],
 };
 
@@ -92,7 +92,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("merhaba") || q.includes("selam") || q.includes("sa") || q.includes("hey") || q.includes("günaydın") || q.includes("iyi günler")) {
     if (locale === "tr") {
       return {
-        text: "Merhaba! 👋 Size Mert Ceren'in **5Genç** takımıyla geliştirdiği TEKNOFEST 2026 projesi, 23 onaylı sertifikası, yetenekleri veya üniversite eğitimi hakkında nasıl yardımcı olabilirim?",
+        text: "Merhaba! 👋 Size Mert Ceren'in **5Genç** takımıyla geliştirdiği TEKNOFEST 2026 projesi, 22 onaylı sertifikası, yetenekleri veya üniversite eğitimi hakkında nasıl yardımcı olabilirim?",
         actionLinks: [
           { label: "TEKNOFEST Projesi 🚀", href: "/work/smart-road-safety" },
           { label: "Sertifikaları Gör 📜", href: "#certificates", isAnchor: true },
@@ -100,7 +100,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       };
     } else {
       return {
-        text: "Hello! 👋 How can I help you regarding Mert Ceren's TEKNOFEST 2026 project with Team 5Genç, his 23 certifications, skills, or education?",
+        text: "Hello! 👋 How can I help you regarding Mert Ceren's TEKNOFEST 2026 project with Team 5Genç, his 22 certifications, skills, or education?",
         actionLinks: [
           { label: "TEKNOFEST Project 🚀", href: "/work/smart-road-safety" },
           { label: "Certificates 📜", href: "#certificates", isAnchor: true },
@@ -188,16 +188,16 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (q.includes("sertifika") || q.includes("certificate") || q.includes("btk") || q.includes("edx") || q.includes("udemy") || q.includes("belge")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren'in yapay zekâ, bilgisayarlı görü ve yazılım alanında **23 adet onaylı sertifikası** bulunmaktadır.\n\nÖne çıkan sertifikalar arasında **Google & BTK Akademi Uygulamalı Yapay Zekâ**, **BTK YOLO Bilgisayarlı Görü**, **edX HP AI & Data Science** ve **Udemy C#/.NET Uzmanlığı** yer almaktadır.",
+        text: "Mert Ceren'in yapay zekâ, bilgisayarlı görü ve yazılım alanında **22 adet onaylı sertifikası** bulunmaktadır.\n\nÖne çıkan sertifikalar arasında **Google & BTK Akademi Uygulamalı Yapay Zekâ**, **BTK YOLO Bilgisayarlı Görü**, **edX HP AI & Data Science** ve **Udemy C#/.NET Uzmanlığı** yer almaktadır.",
         actionLinks: [
-          { label: "Tüm Sertifikaları Gör (23) 📜", href: "#certificates", isAnchor: true },
+          { label: "Tüm Sertifikaları Gör (22) 📜", href: "#certificates", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "Mert Ceren holds **23 verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey certifications include **Google & BTK Applied AI**, **BTK YOLO Computer Vision**, and **edX HP AI & Data Science**.",
+        text: "Mert Ceren holds **22 verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey certifications include **Google & BTK Applied AI**, **BTK YOLO Computer Vision**, and **edX HP AI & Data Science**.",
         actionLinks: [
-          { label: "View All Certificates (23) 📜", href: "#certificates", isAnchor: true },
+          { label: "View All Certificates (22) 📜", href: "#certificates", isAnchor: true },
         ],
       };
     }

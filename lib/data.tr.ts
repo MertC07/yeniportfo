@@ -425,7 +425,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "ChatGPT Prompt Mühendisliği, İçerik ve Görsel Üretme",
-    issuer: "Academy Club",
+    issuer: "Udemy",
     issued: "Oca 2026",
     image: "/certificates/chatgpt-2026-prompt-muhendisligi-icerik-ve-gorsel-uretme.jpg",
   },
@@ -530,12 +530,6 @@ export const certificates: Certificate[] = [
     issuer: "BTK Akademi",
     issued: "Kas 2023",
     image: "/certificates/siber-guvenlik-5-kasim-2023.png",
-  },
-  {
-    title: "Udemy Yazılım Uzmanlık Sertifikası",
-    issuer: "Udemy",
-    issued: "2024",
-    image: "/certificates/uc-e1fa22eb-86d3-4ebc-94b6-1b3f6d638308.jpg",
   },
 ];
 
