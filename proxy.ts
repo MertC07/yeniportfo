@@ -9,6 +9,11 @@ import type { NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Do not rewrite API endpoints
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   // Turkish used to live under /tr; it is now the root. Redirect the old
   // URLs so shared links and search results survive the swap.
   if (pathname === "/tr" || pathname.startsWith("/tr/")) {
@@ -33,9 +38,8 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals, metadata routes (icon, opengraph-image, sitemap,
-  // robots) and anything with a file extension (public/ assets).
+  // Skip Next internals, API routes, metadata routes and static assets.
   matcher: [
-    "/((?!_next|icon|apple-icon|opengraph-image|twitter-image|robots.txt|sitemap.xml|.*\\..*).*)",
+    "/((?!api|_next|icon|apple-icon|opengraph-image|twitter-image|robots.txt|sitemap.xml|.*\\..*).*)",
   ],
 };
