@@ -25,7 +25,7 @@ export function AiAssistant() {
       sender: "assistant",
       text: initialWelcomeText,
       actionLinks: [
-        { label: isTr ? "TEKNOFEST Projesi 🚀" : "TEKNOFEST Project 🚀", href: "/work/smart-road-safety" },
+        { label: isTr ? "Seçilmiş Projeler 🚀" : "Featured Projects 🚀", href: "#work", isAnchor: true },
         { label: isTr ? "Sertifikaları Gör 📜" : "View Certificates 📜", href: "#certificates", isAnchor: true },
         { label: isTr ? "İletişime Geç ✉️" : "Contact Mert ✉️", href: "#contact", isAnchor: true },
       ],
@@ -35,7 +35,7 @@ export function AiAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load chat history & open state from sessionStorage on mount
+  // Load chat history from sessionStorage on mount (keep drawer closed by default)
   useEffect(() => {
     try {
       const savedMessages = sessionStorage.getItem("mert_ai_chat_history");
@@ -44,10 +44,6 @@ export function AiAssistant() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           setMessages(parsed);
         }
-      }
-      const savedIsOpen = sessionStorage.getItem("mert_ai_chat_open");
-      if (savedIsOpen === "true") {
-        setIsOpen(true);
       }
     } catch {
       // ignore
@@ -67,11 +63,6 @@ export function AiAssistant() {
 
   const updateIsOpen = (val: boolean) => {
     setIsOpen(val);
-    try {
-      sessionStorage.setItem("mert_ai_chat_open", val ? "true" : "false");
-    } catch {
-      // ignore
-    }
   };
 
   useEffect(() => {
@@ -143,24 +134,27 @@ export function AiAssistant() {
   };
 
   const handleActionClick = (link: ActionLink) => {
-    // Close chatbot drawer so user can view the target section/page clearly
-    updateIsOpen(false);
+    // 1. Immediately close the chatbot drawer
+    setIsOpen(false);
 
-    if (link.isAnchor && link.href.startsWith("#")) {
-      const element = document.querySelector(link.href);
+    // 2. Handle scroll or navigation
+    if (link.isAnchor || link.href.startsWith("#")) {
+      const targetId = link.href.startsWith("#") ? link.href : `#${link.href}`;
+      const element = document.querySelector(targetId);
       if (element) {
-        // Smooth scroll background page to target section
         element.scrollIntoView({ behavior: "smooth" });
       } else {
-        // Navigating from a subpage back to main page section (e.g. /tr#work)
-        window.location.href = `/${locale}${link.href}`;
+        window.location.href = `/${locale}${targetId}`;
       }
+    } else if (link.href.startsWith("http")) {
+      window.open(link.href, "_blank", "noopener,noreferrer");
     } else {
-      if (link.href.startsWith("/")) {
-        const cleanHref = link.href.replace(/^\/(tr|en)/, "");
-        window.location.href = `/${locale}${cleanHref}`;
+      const targetId = "#work";
+      const element = document.querySelector(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
       } else {
-        window.location.href = link.href;
+        window.location.href = `/${locale}${targetId}`;
       }
     }
   };

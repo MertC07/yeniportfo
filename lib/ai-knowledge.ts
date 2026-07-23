@@ -106,7 +106,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
         text: "🏆 **Ödüller & Dereceler Özet Bilgisi**:\n\n• **TEKNOFEST 2026 Finalisti** — *T3 Vakfı & Sanayi ve Teknoloji Bakanlığı*\n  **Proje**: 5G & Yapay Zekâ ile Akıllı Yol Güvenliği (5Genç Takım Kaptanı)\n\nMert Ceren ve takımı 5Genç, 5G ve YOLOv11 tabanlı Akıllı Yol Güvenliği projesiyle TEKNOFEST 2026'da finale yükselmiştir.",
         actionLinks: [
           { label: "Ödüller Bölümüne Git 🏆", href: "#awards", isAnchor: true },
-          { label: "TEKNOFEST Projesini İncele 🚀", href: "/work/smart-road-safety" },
+          { label: "Seçilmiş Projeler Bölümüne Git 🚀", href: "#work", isAnchor: true },
         ],
       };
     } else {
@@ -114,7 +114,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
         text: "🏆 **Awards & Honors Summary**:\n\n• **TEKNOFEST 2026 Finalist** — *T3 Foundation & Ministry of Industry and Technology*\n  **Project**: 5G & AI Smart Road Safety (Team 5Genç Captain)",
         actionLinks: [
           { label: "Jump to Awards Section 🏆", href: "#awards", isAnchor: true },
-          { label: "View TEKNOFEST Project 🚀", href: "/work/smart-road-safety" },
+          { label: "Jump to Projects Section 🚀", href: "#work", isAnchor: true },
         ],
       };
     }
@@ -222,16 +222,14 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       return {
         text: "🚀 **TEKNOFEST 2026 Akıllı Yol Güvenliği Projesi Özet Bilgisi**:\n\n• **Takım**: 5Genç\n• **Mert'in Rolü**: Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi\n• **Kategori**: Yapay Zekâ & 5G Haberleşme\n• **Teknolojiler**: Python, YOLOv11, OpenCV, 5G Edge Computing\n\nProjede 5G haberleşme altyapısıyla entegre çalışan, otonom ve destekli sürüş senaryoları için Python'da eğitilen YOLO tabanlı gerçek zamanlı nesne tespit modelleri geliştirilmektedir.",
         actionLinks: [
-          { label: "Detaylı Vaka İncelesini Oku ↗", href: "/work/smart-road-safety" },
-          { label: "Seçilmiş Projeler Bölümüne Git ↗", href: "#work", isAnchor: true },
+          { label: "Seçilmiş Projeler Bölümüne Git 🚀", href: "#work", isAnchor: true },
         ],
       };
     } else {
       return {
         text: "🚀 **TEKNOFEST 2026 Smart Road Safety Project Summary**:\n\n• **Team**: 5Genç\n• **Mert's Role**: Team Captain, Project Coordinator & AI/ML Engineer\n• **Tech**: Python, YOLOv11, Computer Vision, 5G Edge\n\nDeveloping real-time YOLOv11 object detection models integrated with 5G edge communication for assisted and autonomous driving scenarios.",
         actionLinks: [
-          { label: "Read Case Study ↗", href: "/work/smart-road-safety" },
-          { label: "Jump to Projects ↗", href: "#work", isAnchor: true },
+          { label: "Jump to Projects Section 🚀", href: "#work", isAnchor: true },
         ],
       };
     }
@@ -361,7 +359,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       return {
         text: "Merhaba! 👋 Ben Mert Ceren'in yapay zekâ asistanıyım.\n\nMert Ceren; Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisi, TEKNOFEST 2026 **5Genç** Takım Kaptanı ve yapay zekâ geliştiricisidir.\n\nSize projeleri, yetenekleri, 22 onaylı sertifikası, ödülleri, GitHub repoları veya iletişimi hakkında bilgi verebilirim. Ne öğrenmek istersiniz?",
         actionLinks: [
-          { label: "TEKNOFEST Projesi 🚀", href: "/work/smart-road-safety" },
+          { label: "Seçilmiş Projeler 🚀", href: "#work", isAnchor: true },
           { label: "Ödüller & Dereceler 🏆", href: "#awards", isAnchor: true },
           { label: "GitHub Repoları 🐙", href: "#github", isAnchor: true },
         ],
@@ -370,7 +368,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       return {
         text: "Hello! 👋 I am Mert Ceren's AI assistant.\n\nMert is a Software Engineering Student at BANÜ, Team Captain for TEKNOFEST 2026 (Team 5Genç), and an AI developer.\n\nHow can I help you regarding his projects, awards, GitHub repos, skills, or certifications?",
         actionLinks: [
-          { label: "TEKNOFEST Project 🚀", href: "/work/smart-road-safety" },
+          { label: "Featured Projects 🚀", href: "#work", isAnchor: true },
           { label: "Awards & Honors 🏆", href: "#awards", isAnchor: true },
         ],
       };
@@ -389,8 +387,8 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       return {
         text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** lisans öğrencisidir (2024 - 2028).\n\nTEKNOFEST 2026 'Akıllı Ulaşım & Yol Güvenliği' yarışmasında **5Genç** takımının **Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisidir**.\n\nYapay zekâ, bilgisayarlı görü (YOLOv11), C#/.NET Core ve modern web platformları üzerine odaklanmaktadır.",
         actionLinks: [
-          { label: "Zaman Çizelgesinde Detaylı Gör ↗", href: "#about", isAnchor: true },
-          { label: "TEKNOFEST Projesini İncele 🚀", href: "/work/smart-road-safety" },
+          { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
+          { label: "Seçilmiş Projeleri Gör 🚀", href: "#work", isAnchor: true },
         ],
       };
     } else {
