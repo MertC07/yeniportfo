@@ -170,21 +170,21 @@ export function Cursor() {
         {/* Center Accent Dot */}
         <div className="size-1.5 rounded-full bg-accent" />
 
-        {/* Playful Speech Bubble on Idle */}
+        {/* Playful Speech Bubble on Idle - Perfectly Centered Above Cursor Dot */}
         <AnimatePresence>
           {idleMessage && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 12, x: 16 }}
-              animate={{ opacity: 1, scale: 1, y: -45, x: 16 }}
+              initial={{ opacity: 0, scale: 0.8, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: -48 }}
               exit={{ opacity: 0, scale: 0.8, y: 5 }}
               transition={{ type: "spring", stiffness: 500, damping: 28 }}
-              className="absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
             >
               <div className="relative flex items-center gap-1.5">
                 <span>{idleMessage}</span>
               </div>
-              {/* Speech bubble tail pointer */}
-              <div className="absolute -bottom-1 left-3 size-2 rotate-45 border-b border-r border-accent/30 bg-background/90" />
+              {/* Speech bubble tail pointer centered at bottom pointing at cursor */}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95" />
             </motion.div>
           )}
         </AnimatePresence>
