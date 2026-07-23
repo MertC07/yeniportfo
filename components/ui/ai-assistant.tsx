@@ -16,8 +16,8 @@ export function AiAssistant() {
   const [hasUnread, setHasUnread] = useState(true);
 
   const initialWelcomeText = isTr
-    ? "Merhaba! Ben Mert Ceren'in yapay zekâ asistanıyım. 🤖\n\nMert'in TEKNOFEST 2026 projesi, yetenekleri, 23 sertifikası veya eğitimi hakkında merak ettiğiniz her şeyi sorabilirsiniz."
-    : "Hello! I am Mert Ceren's AI Assistant. 🤖\n\nAsk me anything about Mert's TEKNOFEST 2026 project, skills, certificates, or education!";
+    ? "Merhaba! Ben Mert Ceren'in yapay zekâ asistanıyım. 🤖\n\nMert'in 5Genç takımıyla geliştirdiği TEKNOFEST 2026 Akıllı Yol Güvenliği projesi, yetenekleri, 23 onaylı sertifikası veya üniversite eğitimi hakkında merak ettiğiniz her şeyi sorabilirsiniz."
+    : "Hello! I am Mert Ceren's AI Assistant. 🤖\n\nAsk me anything about Mert's TEKNOFEST 2026 project with Team 5Genç, his skills, 23 certificates, or education!";
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
