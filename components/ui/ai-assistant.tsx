@@ -34,6 +34,30 @@ export function AiAssistant() {
   ]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = (instant = false) => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: instant ? "instant" : "smooth",
+      });
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior: instant ? "instant" : "smooth" });
+    }
+  };
+
+  // Scroll to bottom when drawer opens so user sees where they left off
+  useEffect(() => {
+    if (isOpen) {
+      const t1 = setTimeout(() => scrollToBottom(true), 10);
+      const t2 = setTimeout(() => scrollToBottom(true), 150);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [isOpen]);
 
   // Load chat history from sessionStorage on mount (keep drawer closed by default)
   useEffect(() => {
@@ -66,7 +90,7 @@ export function AiAssistant() {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom(false);
   }, [messages, loading]);
 
   // Handle ESC key close
@@ -284,6 +308,7 @@ export function AiAssistant() {
 
             {/* Messages Body */}
             <div
+              ref={messagesContainerRef}
               data-lenis-prevent
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
