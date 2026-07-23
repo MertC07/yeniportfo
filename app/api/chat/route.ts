@@ -1,0 +1,89 @@
+import { NextResponse } from "next/server";
+import { MERT_KNOWLEDGE, getLocalAiResponse } from "@/lib/ai-knowledge";
+
+export async function POST(req: Request) {
+  try {
+    const { message, locale = "tr" } = await req.json();
+
+    if (!message || typeof message !== "string") {
+      return NextResponse.json(
+        { error: "Mesaj gerekli" },
+        { status: 400 }
+      );
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    // If Gemini API Key is available, attempt Google Gemini 1.5 Flash API call
+    if (apiKey) {
+      try {
+        const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
+Mert Ceren hakkında sorulan sorulara kısa, yardımsever, nazik ve doğru cevaplar vermelisin. 
+
+MERT CEREN BİLGİ TABANI:
+- Unvan: ${MERT_KNOWLEDGE.profile.roleTr}
+- Üniversite: ${MERT_KNOWLEDGE.profile.university} (${MERT_KNOWLEDGE.profile.department})
+- TEKNOFEST 2026: Akıllı Yol Güvenliği (5G & YOLOv11) projesinde 5Genç takımının TAKIM KAPTANI, Proje Koordinatörü ve AI/ML Mühendisidir.
+- Diğer Projeler: Sanal Kampüs (360° tour & inventory), Rosso Lounge Bistro Web Platformu, bwai İK Karar Motoru.
+- Yetenekler: Python, YOLOv11, OpenCV, C# / .NET Core, React, Next.js, PostgreSQL, SignalR, Docker, 5G.
+- Sertifikalar: Google & BTK Akademi Yapay Zekâ, BTK YOLO Bilgisayarlı Görü, edX HP AI & Data Science dahil 23 adet onaylı sertifika.
+- İletişim: E-posta: ${MERT_KNOWLEDGE.profile.email}, Konum: ${MERT_KNOWLEDGE.profile.location}.
+
+KURALLAR:
+1. Mert Ceren adına konuştuğunu unutma. Cevapların kibar, anlaşılır ve Türkçe (${locale === "tr" ? "Türkçe" : "İngilizce"}) olsun.
+2. Bilmediğin kişisel bilgileri uydurma.
+3. Yanıtı çok uzun tutma (maksimum 3-4 cümle).`;
+
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [
+                    { text: systemPrompt },
+                    { text: `Kullanıcı Sorusu: ${message}` },
+                  ],
+                },
+              ],
+              generationConfig: {
+                maxOutputTokens: 350,
+                temperature: 0.6,
+              },
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const candidateText =
+            data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+          if (candidateText) {
+            // Get local action links matching the query
+            const localResult = getLocalAiResponse(message, locale);
+            return NextResponse.json({
+              text: candidateText,
+              actionLinks: localResult.actionLinks || [],
+            });
+          }
+        }
+      } catch (geminiError) {
+        console.warn("Gemini API call failed, falling back to local NLP engine:", geminiError);
+      }
+    }
+
+    // Fallback to local intelligent response engine
+    const localResult = getLocalAiResponse(message, locale);
+    return NextResponse.json(localResult);
+  } catch (error) {
+    console.error("Chat API Error:", error);
+    return NextResponse.json(
+      { text: "Üzgünüm, şu anda yanıt oluşturulurken bir hata oluştu." },
+      { status: 500 }
+    );
+  }
+}

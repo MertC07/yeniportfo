@@ -8,6 +8,7 @@ import { GrainOverlay } from "@/components/ui/grain-overlay";
 import { Preloader } from "@/components/ui/preloader";
 import { Cursor } from "@/components/ui/cursor";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { AiAssistant } from "@/components/ui/ai-assistant";
 import { getContent, isLocale, localePath, locales } from "@/lib/content";
 import "../globals.css";
 
@@ -115,6 +116,7 @@ export default async function RootLayout({
             <SmoothScroll>
               {children}
               <ScrollProgress />
+              <AiAssistant />
               <Preloader />
               <GrainOverlay />
               <Cursor />
