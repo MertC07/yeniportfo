@@ -3,27 +3,48 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
-const IDLE_MESSAGES = [
+const IDLE_MESSAGES_TR = [
   "Hangi projeyi incelesek? 🤔",
   "Kod yazarken ben: ☕ + 💻",
   "YOLOv11 kareleri sayıyor... 🤖",
   "Beni burada unuttun sanırım 😅",
   "Bug var mı diye bakıyorum... 🐛🔍",
-  "Kahve molası mı versek? ☕",
   "Buradayım, kaybolmadım! 👋",
   "Yine mi aşağı kaydırıyorsun? 📜",
   "Sayfayı aşındırdın valla 😅",
   "Gözüm üzerinde 👀",
   "Chatbot'a bir merhaba desene! 🤖",
   "Kaydırma tekerleğin yorulmadı mı? 🖱️",
-  "Hâlâ buradaysan bir çay söyle ☕",
   "Projeleri beğendin mi? 🚀",
   "Aşağıdaki butonlar tıklanmak için var 🚀",
   "Bana mı bakıyorsun, projelere mi? 👀",
   "Piksel piksel inceledin valla 🔍",
   "Sayfada kaybolursan ses et! 📍",
   "Tıklamaktan korkma, bozulmaz! 🖱️💥",
+  "Biraz daha durursan çay koyacağım ☕",
+];
+
+const IDLE_MESSAGES_EN = [
+  "Which project shall we explore? 🤔",
+  "Me while coding: ☕ + 💻",
+  "YOLOv11 counting frames... 🤖",
+  "I think you forgot me here 😅",
+  "Looking for bugs... 🐛🔍",
+  "Still here, not lost! 👋",
+  "Scrolling down again? 📜",
+  "You're wearing out the page 😅",
+  "My eyes are on you 👀",
+  "Say hi to the chatbot! 🤖",
+  "Is your scroll wheel tired yet? 🖱️",
+  "Liking the projects so far? 🚀",
+  "The buttons below are meant to be clicked 🚀",
+  "Looking at me or the projects? 👀",
+  "Examined pixel by pixel 🔍",
+  "Shout if you get lost on the page! 📍",
+  "Don't be afraid to click, it won't break! 🖱️💥",
+  "If you stay a bit longer, I'll pour tea ☕",
 ];
 
 /**
@@ -32,6 +53,9 @@ const IDLE_MESSAGES = [
  * Displays a playful speech bubble when the cursor remains idle for a few seconds.
  */
 export function Cursor() {
+  const pathname = usePathname() ?? "/";
+  const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
+
   const [active, setActive] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
@@ -66,6 +90,8 @@ export function Cursor() {
 
     animFrameRef.current = requestAnimationFrame(updateRingPosition);
 
+    const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
+
     const resetIdleTimer = () => {
       setIdleMessage(null);
 
@@ -74,12 +100,12 @@ export function Cursor() {
       }
 
       idleTimerRef.current = setTimeout(() => {
-        let nextIndex = Math.floor(Math.random() * IDLE_MESSAGES.length);
+        let nextIndex = Math.floor(Math.random() * messages.length);
         if (nextIndex === lastIndexRef.current) {
-          nextIndex = (nextIndex + 1) % IDLE_MESSAGES.length;
+          nextIndex = (nextIndex + 1) % messages.length;
         }
         lastIndexRef.current = nextIndex;
-        setIdleMessage(IDLE_MESSAGES[nextIndex]);
+        setIdleMessage(messages[nextIndex]);
       }, 2500); // 2.5 seconds idle trigger
     };
 
