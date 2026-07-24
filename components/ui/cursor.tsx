@@ -183,6 +183,60 @@ export function Cursor() {
     };
   }, [isEnglish]);
 
+  // Smart Viewport Edge Detection for Speech Bubble
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+
+  const isNearLeft = dotPos.x < 220;
+  const isNearRight = dotPos.x > vw - 220;
+  const isNearTop = dotPos.y < 120;
+  const isNearBottom = dotPos.y > vh - 120;
+
+  let animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
+  let bubbleClass =
+    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md";
+  let tailClass =
+    "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
+
+  if (isNearTop && isNearLeft) {
+    animateProps = { opacity: 1, scale: 1, x: 20, y: 20 };
+    tailClass =
+      "absolute -top-1 left-3 size-2 rotate-45 border-t border-l border-accent/30 bg-background/95";
+  } else if (isNearTop && isNearRight) {
+    animateProps = { opacity: 1, scale: 1, x: -20, y: 20 };
+    bubbleClass += " -translate-x-full";
+    tailClass =
+      "absolute -top-1 right-3 size-2 rotate-45 border-t border-r border-accent/30 bg-background/95";
+  } else if (isNearBottom && isNearLeft) {
+    animateProps = { opacity: 1, scale: 1, x: 20, y: -45 };
+    tailClass =
+      "absolute -bottom-1 left-3 size-2 rotate-45 border-b border-l border-accent/30 bg-background/95";
+  } else if (isNearBottom && isNearRight) {
+    animateProps = { opacity: 1, scale: 1, x: -20, y: -45 };
+    bubbleClass += " -translate-x-full";
+    tailClass =
+      "absolute -bottom-1 right-3 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
+  } else if (isNearLeft) {
+    animateProps = { opacity: 1, scale: 1, x: 25, y: -18 };
+    tailClass =
+      "absolute -left-1 top-1/2 -translate-y-1/2 size-2 rotate-45 border-b border-l border-accent/30 bg-background/95";
+  } else if (isNearRight) {
+    animateProps = { opacity: 1, scale: 1, x: -25, y: -18 };
+    bubbleClass += " -translate-x-full";
+    tailClass =
+      "absolute -right-1 top-1/2 -translate-y-1/2 size-2 rotate-45 border-t border-r border-accent/30 bg-background/95";
+  } else if (isNearTop) {
+    animateProps = { opacity: 1, scale: 1, x: 0, y: 25 };
+    bubbleClass += " -translate-x-1/2";
+    tailClass =
+      "absolute -top-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-t border-l border-accent/30 bg-background/95";
+  } else {
+    animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
+    bubbleClass += " -translate-x-1/2";
+    tailClass =
+      "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
+  }
+
   if (!active) return null;
 
   return (
@@ -221,7 +275,7 @@ export function Cursor() {
         />
       </div>
 
-      {/* 3. Playful Speech Bubble on Idle (Centered comfortably above cursor dot) */}
+      {/* 3. Playful Speech Bubble on Idle (Smart Viewport Positioned) */}
       <AnimatePresence>
         {idleMessage && (
           <motion.div
@@ -229,17 +283,17 @@ export function Cursor() {
               left: `${dotPos.x}px`,
               top: `${dotPos.y}px`,
             }}
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: -60 }}
-            exit={{ opacity: 0, scale: 0.8, y: 5 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={animateProps}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className="absolute -translate-x-1/2 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+            className={bubbleClass}
           >
             <div className="relative flex items-center gap-1.5">
               <span>{idleMessage}</span>
             </div>
-            {/* Speech bubble tail pointer centered at bottom pointing at cursor */}
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95" />
+            {/* Speech bubble tail pointer */}
+            <div className={tailClass} />
           </motion.div>
         )}
       </AnimatePresence>
