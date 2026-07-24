@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 
 type Position = {
   x: number;
@@ -19,24 +18,27 @@ export function ContextMenu() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // 1. Right Click Context Menu Listener
+  // 1. Right Click Context Menu Listener with Capture Phase Priority
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
-      // Allow native menu if Shift is pressed
+      // Allow native browser menu if Shift key is held down
       if (e.shiftKey) return;
 
       e.preventDefault();
-      const x = Math.min(e.clientX, window.innerWidth - 240);
-      const y = Math.min(e.clientY, window.innerHeight - 320);
+      e.stopPropagation();
+
+      const x = Math.min(e.clientX, window.innerWidth - 270);
+      const y = Math.min(e.clientY, window.innerHeight - 340);
 
       setPos({ x, y });
       setIsOpen(true);
     };
 
     const handleClickOutside = (e: MouseEvent) => {
+      // Ignore right click so menu opens smoothly without instant auto-close
+      if (e.button === 2) return;
+
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      } else {
         setIsOpen(false);
       }
     };
@@ -49,14 +51,14 @@ export function ContextMenu() {
       if (e.key === "Escape") setIsOpen(false);
     };
 
-    window.addEventListener("contextmenu", handleContextMenu);
-    window.addEventListener("click", handleClickOutside);
+    window.addEventListener("contextmenu", handleContextMenu, { capture: true });
+    window.addEventListener("pointerdown", handleClickOutside);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("contextmenu", handleContextMenu);
-      window.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("contextmenu", handleContextMenu, { capture: true });
+      window.removeEventListener("pointerdown", handleClickOutside);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -139,12 +141,12 @@ export function ContextMenu() {
             exit={{ opacity: 0, scale: 0.92, y: -5 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
-            className="fixed z-[99990] w-64 rounded-2xl border hairline bg-surface-elevated/95 p-2 font-mono text-xs shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl border-accent/30 text-foreground"
+            className="fixed z-[100001] w-64 rounded-2xl border hairline bg-surface-elevated/95 p-2 font-mono text-xs shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl border-accent/30 text-foreground"
           >
             {/* Header branding */}
             <div className="px-3 py-2 border-b hairline flex items-center justify-between text-[0.6875rem] text-muted">
               <span className="font-bold text-accent">MERT CEREN OS v2.6</span>
-              <span className="text-[0.625rem] text-muted/60">Shift+RightClick: Normal Menu</span>
+              <span className="text-[0.625rem] text-muted/60">Shift+RightClick: Orijinal</span>
             </div>
 
             {/* Menu Items */}
@@ -158,7 +160,7 @@ export function ContextMenu() {
                       : "🐛 Kodlarda bug mu arıyorsun yoksa stilleri mi aşırıyorsun? 😄"
                   )
                 }
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-sm">🐛</span>
@@ -176,7 +178,7 @@ export function ContextMenu() {
                       : "🤫 Kopyaladın bak! Kaynak göster bari: @MertC07!"
                   )
                 }
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-sm">📋</span>
@@ -194,7 +196,7 @@ export function ContextMenu() {
                       : "🎯 YOLOv11 Modeli: 3 Araç, 1 Mühendis Tespit Edildi! (%99 Güven)"
                   )
                 }
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left"
+                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left cursor-pointer"
               >
                 <span className="text-sm">🤖</span>
                 <span>{isEnglish ? "Run YOLOv11 AI Scanner" : "YOLOv11 AI Taraması Yap"}</span>
@@ -203,7 +205,7 @@ export function ContextMenu() {
               <button
                 type="button"
                 onClick={handleToggleMute}
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left"
+                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left cursor-pointer"
               >
                 <span className="text-sm">🤐</span>
                 <span>{isEnglish ? "Toggle Cursor Speech" : "İmleç Balonunu Sustur/Aç"}</span>
@@ -214,7 +216,7 @@ export function ContextMenu() {
               <button
                 type="button"
                 onClick={handleScrollTop}
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-sm">📜</span>
