@@ -33,7 +33,7 @@ function TypewriterText({
       idx += 1;
       if (idx <= text.length) {
         setDisplayed(text.slice(0, idx));
-        if (idx % 5 === 0) onProgress?.();
+        if (idx % 4 === 0) onProgress?.();
       } else {
         clearInterval(interval);
         onComplete?.();
@@ -76,6 +76,7 @@ export function AiAssistant() {
   const latestAiRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const isUserInteractingRef = useRef(false);
 
   const scrollToBottom = (instant = false) => {
     if (messagesContainerRef.current) {
@@ -88,7 +89,7 @@ export function AiAssistant() {
     }
   };
 
-  const scrollToLatestAi = () => {
+  const alignToTop = () => {
     if (latestAiRef.current && messagesContainerRef.current) {
       const topPos = latestAiRef.current.offsetTop - 16;
       messagesContainerRef.current.scrollTo({
@@ -96,6 +97,28 @@ export function AiAssistant() {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleTypewriterProgress = () => {
+    // Only auto-follow scroll if user has NOT manually taken control of scrolling
+    if (!isUserInteractingRef.current && latestAiRef.current && messagesContainerRef.current) {
+      const container = messagesContainerRef.current;
+      const element = latestAiRef.current;
+      const elementBottom = element.offsetTop + element.offsetHeight;
+      const visibleBottom = container.scrollTop + container.clientHeight;
+
+      if (elementBottom > visibleBottom - 20) {
+        container.scrollTo({
+          top: elementBottom - container.clientHeight + 40,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
+  const handleUserInteraction = () => {
+    // If the user scrolls, wheels or touches, mark user interaction so auto-scroll stops
+    isUserInteractingRef.current = true;
   };
 
   // Scroll to bottom when drawer opens so user sees where they left off
@@ -157,6 +180,7 @@ export function AiAssistant() {
 
     setInput("");
     setHasUnread(false);
+    isUserInteractingRef.current = false; // Reset user scroll override for new response
 
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -187,7 +211,7 @@ export function AiAssistant() {
         };
         setMessages((prev) => [...prev, botMsg]);
         setTypingMsgId(botMsg.id);
-        setTimeout(() => scrollToLatestAi(), 80);
+        setTimeout(() => alignToTop(), 80);
       } else {
         throw new Error("API error");
       }
@@ -203,7 +227,7 @@ export function AiAssistant() {
       };
       setMessages((prev) => [...prev, botMsg]);
       setTypingMsgId(botMsg.id);
-      setTimeout(() => scrollToLatestAi(), 80);
+      setTimeout(() => alignToTop(), 80);
     } finally {
       setLoading(false);
     }
@@ -362,8 +386,9 @@ export function AiAssistant() {
             <div
               ref={messagesContainerRef}
               data-lenis-prevent
-              onWheel={(e) => e.stopPropagation()}
-              onTouchMove={(e) => e.stopPropagation()}
+              onScroll={handleUserInteraction}
+              onWheel={handleUserInteraction}
+              onTouchStart={handleUserInteraction}
               className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 font-sans text-sm"
             >
               {messages.map((msg) => {
@@ -391,7 +416,7 @@ export function AiAssistant() {
                           speed={14}
                           isTyping={isTypingThisMsg}
                           onComplete={() => setTypingMsgId(null)}
-                          onProgress={scrollToLatestAi}
+                          onProgress={handleTypewriterProgress}
                         />
                       )}
 
