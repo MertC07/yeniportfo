@@ -133,32 +133,15 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <style font-display="swap">{`
-          #main, header, footer {
-            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-          }
-          html.is-loading #main,
-          html.is-loading header,
-          html.is-loading footer {
-            opacity: 0 !important;
-            transform: translateY(16px);
-            pointer-events: none;
-          }
-        `}</style>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(!sessionStorage.getItem("intro-seen")){document.documentElement.classList.add("is-loading");}}catch(e){}})()`,
-          }}
-        />
       </head>
-      <body className="bg-background">
+      <body>
         <LocaleProvider locale={lang}>
           <ThemeProvider>
-            <Preloader />
             <SmoothScroll>
               {children}
               <ScrollProgress />
               <AiAssistant />
+              <Preloader />
               <GrainOverlay />
               <Cursor />
             </SmoothScroll>
