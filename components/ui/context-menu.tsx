@@ -75,17 +75,13 @@ export function ContextMenu() {
       const msgsTR = [
         "Hop hemşerim nereye kopyalıyorsun? 🤨 Kaynak göster bari!",
         "Ctrl+C yaptın ama Ctrl+V yaparken vicdanın sızlayacak... 🤫",
-        "Mert'in emekleriyle yazılmış kodlar! Kaynak gösterirsen harika olur ☕✨",
         "Kopyala kopyala... Sonra 'Senior Developer'ım dersin 😅",
-        "O kopyaladığın kodun kusursuz çalışması için Mert'ten tavsiye isteyebilirsin 🤲⚡",
       ];
 
       const msgsEN = [
         "Hey buddy where are you copying that? 🤨 At least give credit!",
         "Ctrl+C done, but your conscience will hurt on Ctrl+V... 🤫",
-        "Don't steal the code! Mert put hard work into this! ☕",
         "Copy away... and then call yourself a Senior Dev 😅",
-        "For that code to run, you'll need Mert's blessing 🤲⚡",
       ];
 
       const list = isEnglish ? msgsEN : msgsTR;
