@@ -26,6 +26,9 @@ export function ContextMenu() {
 
       e.preventDefault();
       e.stopPropagation();
+      if ("stopImmediatePropagation" in e) {
+        (e as MouseEvent).stopImmediatePropagation();
+      }
 
       const x = Math.min(e.clientX, window.innerWidth - 270);
       const y = Math.min(e.clientY, window.innerHeight - 300);
@@ -51,13 +54,15 @@ export function ContextMenu() {
       if (e.key === "Escape") setIsOpen(false);
     };
 
-    window.addEventListener("contextmenu", handleContextMenu, { capture: true });
+    document.addEventListener("contextmenu", handleContextMenu, true);
+    window.addEventListener("contextmenu", handleContextMenu, true);
     window.addEventListener("pointerdown", handleClickOutside);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("contextmenu", handleContextMenu, { capture: true });
+      document.removeEventListener("contextmenu", handleContextMenu, true);
+      window.removeEventListener("contextmenu", handleContextMenu, true);
       window.removeEventListener("pointerdown", handleClickOutside);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleKeyDown);
