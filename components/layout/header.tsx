@@ -7,6 +7,7 @@ import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { localePath } from "@/lib/content";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { LanguageToggle } from "@/components/layout/language-toggle";
+import { CursorMuteToggle } from "@/components/ui/cursor-mute-toggle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { cn } from "@/lib/utils";
 
@@ -114,6 +115,7 @@ export function Header() {
 
             <LanguageToggle />
             <ThemeToggle />
+            <CursorMuteToggle />
 
             <button
               type="button"

@@ -49,7 +49,7 @@ const IDLE_MESSAGES_EN = [
 
 /**
  * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
- * Displays a playful speech bubble with a bottom-left Mute / Unmute button.
+ * Displays a playful speech bubble with a header Mute / Unmute emoji toggle.
  */
 export function Cursor() {
   const pathname = usePathname() ?? "/";
@@ -74,6 +74,7 @@ export function Cursor() {
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
+  const isMutedRef = useRef(false);
 
   // Load initial mute state from localStorage
   useEffect(() => {
@@ -81,6 +82,7 @@ export function Cursor() {
       const saved = localStorage.getItem("mert_cursor_muted");
       if (saved === "true") {
         setIsMuted(true);
+        isMutedRef.current = true;
       }
     } catch {
       // ignore
@@ -96,10 +98,12 @@ export function Cursor() {
 
     setTimeout(() => {
       setIsMuted(true);
+      isMutedRef.current = true;
       setSulkyMessage(null);
       setIdleMessage(null);
       try {
         localStorage.setItem("mert_cursor_muted", "true");
+        window.dispatchEvent(new CustomEvent("mert-cursor-mute-changed", { detail: { muted: true } }));
       } catch {
         // ignore
       }
@@ -108,8 +112,10 @@ export function Cursor() {
 
   const handleUnmute = () => {
     setIsMuted(false);
+    isMutedRef.current = false;
     try {
       localStorage.setItem("mert_cursor_muted", "false");
+      window.dispatchEvent(new CustomEvent("mert-cursor-mute-changed", { detail: { muted: false } }));
     } catch {
       // ignore
     }
@@ -124,13 +130,27 @@ export function Cursor() {
     }, 2200);
   };
 
+  // Listen to header toggle event
+  useEffect(() => {
+    const handleToggleEvent = () => {
+      if (isMutedRef.current) {
+        handleUnmute();
+      } else {
+        handleMute();
+      }
+    };
+
+    window.addEventListener("mert-toggle-cursor-mute", handleToggleEvent);
+    return () => window.removeEventListener("mert-toggle-cursor-mute", handleToggleEvent);
+  }, [isEnglish]);
+
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
     if (!fine) return;
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth Lerp loop for trailing ring (0.12 on normal space, 1.0 on buttons to lock 100% centered)
+    // Smooth Lerp loop for trailing ring
     const updateRingPosition = () => {
       if (activeRef.current) {
         const factor = hoveringRef.current ? 1.0 : 0.12;
@@ -191,7 +211,6 @@ export function Cursor() {
         setActive(true);
       }
 
-      // If hovering over a button, force ring position to follow mouse instantly with 0 drift
       if (hoveringRef.current) {
         ringRef.current = { x: clientX, y: clientY };
         setRingPos({ x: clientX, y: clientY });
@@ -212,7 +231,6 @@ export function Cursor() {
       const isHover = !!target?.closest?.("a, button, [role='button']");
 
       if (isHover && !hoveringRef.current) {
-        // Instant snap on entering hover target so ring is 100% centered over the dot
         ringRef.current = { x: mouseRef.current.x, y: mouseRef.current.y };
         setRingPos({ x: mouseRef.current.x, y: mouseRef.current.y });
       }
@@ -290,98 +308,60 @@ export function Cursor() {
       "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
   }
 
+  if (!active) return null;
+
   return (
-    <>
-      {/* FLOATING BOTTOM-LEFT SUS / MUTE BUTTON */}
-      <div className="fixed bottom-6 left-6 z-40 hidden md:block">
-        <motion.button
-          type="button"
-          onClick={isMuted ? handleUnmute : handleMute}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-120 hidden md:block"
+    >
+      {/* 1. Instant Center Accent Dot */}
+      <div
+        style={{
+          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
+        }}
+        className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
+      />
+
+      {/* 2. Silky Smooth Trailing Ring */}
+      <div
+        style={{
+          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
+        }}
+        className="absolute left-0 top-0"
+      >
+        <div
           className={cn(
-            "flex items-center gap-2 rounded-full border px-4 py-2.5 font-mono text-xs font-semibold shadow-2xl backdrop-blur-xl transition-all duration-300 cursor-pointer",
-            isMuted
-              ? "border-amber-500/60 bg-amber-500/15 text-amber-400 hover:border-amber-500"
-              : "border-accent/60 bg-surface/90 text-accent hover:border-accent hover:bg-accent hover:text-accent-ink"
+            "size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
+            hovering
+              ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
+              : "scale-100 border-foreground/35"
           )}
-          title={
-            isMuted
-              ? isEnglish
-                ? "Unmute speech bubble 🗣️"
-                : "Balonları Konuştur 🗣️"
-              : isEnglish
-              ? "Mute speech bubble 🤐"
-              : "Balonları Sustur 🤐"
-          }
-        >
-          <span className="text-sm">{isMuted ? "🤐" : "🗣️"}</span>
-          <span>
-            {isMuted
-              ? isEnglish
-                ? "Balonları Aç"
-                : "Balonları Aç"
-              : isEnglish
-              ? "Balonları Sustur"
-              : "Balonları Sustur"}
-          </span>
-        </motion.button>
+        />
       </div>
 
-      {active && (
-        <div
-          aria-hidden
-          className="pointer-events-none fixed inset-0 z-120 hidden md:block"
-        >
-          {/* 1. Instant Center Accent Dot */}
-          <div
+      {/* 3. Playful Speech Bubble on Idle (With Sulky Trip Feature) */}
+      <AnimatePresence>
+        {(sulkyMessage || (idleMessage && !isMuted)) && (
+          <motion.div
             style={{
-              transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
+              left: `${dotPos.x}px`,
+              top: `${dotPos.y}px`,
             }}
-            className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
-          />
-
-          {/* 2. Silky Smooth Trailing Ring */}
-          <div
-            style={{
-              transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
-            }}
-            className="absolute left-0 top-0"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={animateProps}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+            className={bubbleClass}
           >
-            <div
-              className={cn(
-                "size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
-                hovering
-                  ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
-                  : "scale-100 border-foreground/35"
-              )}
-            />
-          </div>
-
-          {/* 3. Playful Speech Bubble on Idle */}
-          <AnimatePresence>
-            {(sulkyMessage || (idleMessage && !isMuted)) && (
-              <motion.div
-                style={{
-                  left: `${dotPos.x}px`,
-                  top: `${dotPos.y}px`,
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={animateProps}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                className={bubbleClass}
-              >
-                <div className="relative flex items-center gap-2">
-                  <span>{sulkyMessage || idleMessage}</span>
-                </div>
-                {/* Speech bubble tail pointer */}
-                <div className={tailClass} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
-    </>
+            <div className="relative flex items-center gap-2">
+              <span>{sulkyMessage || idleMessage}</span>
+            </div>
+            {/* Speech bubble tail pointer */}
+            <div className={tailClass} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
