@@ -69,7 +69,7 @@ export function ContextMenu() {
     };
   }, []);
 
-  // 2. Copy Event Listener (Hilarious & Huysuz Copy Toast)
+  // 2. Copy Event Listener (Hilarious Copy Toast - v2.6.2 Fresh Bundle)
   useEffect(() => {
     const handleCopy = () => {
       const msgsTR = [
