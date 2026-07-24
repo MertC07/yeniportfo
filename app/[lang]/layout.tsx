@@ -134,11 +134,15 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <style font-display="swap">{`
+          #main, header, footer {
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+          }
           html.is-loading #main,
           html.is-loading header,
           html.is-loading footer {
             opacity: 0 !important;
-            visibility: hidden !important;
+            transform: translateY(16px);
+            pointer-events: none;
           }
         `}</style>
         <script

@@ -5,8 +5,8 @@ import { useContent } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 /**
- * Ultra-fast cinematic opening preloader: shown once per session (0.8s total).
- * High z-index (z-[99999]) covers the screen instantly to prevent layout flash.
+ * Ultra-fast cinematic opening preloader (0.75s total duration).
+ * Synchronized with page smooth fade-in and slide-up.
  */
 export function Preloader() {
   const { profile, ui } = useContent();
@@ -25,18 +25,21 @@ export function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    // Fast 450ms show + 400ms slide-up exit transition
-    const exitTimer = setTimeout(() => setPhase("exit"), 450);
+    // At 350ms, curtain begins sliding up AND page starts smooth fade-in
+    const exitTimer = setTimeout(() => {
+      document.documentElement.classList.remove("is-loading");
+      setPhase("exit");
+    }, 350);
+
     const doneTimer = setTimeout(() => {
       document.body.style.overflow = "";
-      document.documentElement.classList.remove("is-loading");
       try {
         sessionStorage.setItem("intro-seen", "1");
       } catch {
         // ignore
       }
       setPhase("done");
-    }, 850);
+    }, 750);
 
     return () => {
       clearTimeout(exitTimer);
@@ -52,7 +55,7 @@ export function Preloader() {
     <div
       aria-hidden
       className={cn(
-        "fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-6 bg-background transition-transform duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-auto",
+        "fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-6 bg-background transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-auto",
         phase === "exit" ? "-translate-y-full" : "translate-y-0"
       )}
     >
@@ -61,7 +64,7 @@ export function Preloader() {
         <span className="text-accent">.</span>
       </p>
       <div className="h-px w-44 overflow-hidden bg-foreground/10">
-        <div className="h-full w-full origin-left animate-[loadbar_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
+        <div className="h-full w-full origin-left animate-[loadbar_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
       </div>
       <p className="microlabel text-muted">
         {profile.name} — {ui.preloader}
