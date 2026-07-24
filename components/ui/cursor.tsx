@@ -49,7 +49,7 @@ const IDLE_MESSAGES_EN = [
 
 /**
  * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
- * Displays a playful speech bubble with a "Sus Butonu" (Mute / Sulky Trip Atma feature).
+ * Displays a playful speech bubble with a bottom-left Mute / Unmute button.
  */
 export function Cursor() {
   const pathname = usePathname() ?? "/";
@@ -74,7 +74,6 @@ export function Cursor() {
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
-  const isMutedRef = useRef(false);
 
   // Load initial mute state from localStorage
   useEffect(() => {
@@ -82,7 +81,6 @@ export function Cursor() {
       const saved = localStorage.getItem("mert_cursor_muted");
       if (saved === "true") {
         setIsMuted(true);
-        isMutedRef.current = true;
       }
     } catch {
       // ignore
@@ -98,7 +96,6 @@ export function Cursor() {
 
     setTimeout(() => {
       setIsMuted(true);
-      isMutedRef.current = true;
       setSulkyMessage(null);
       setIdleMessage(null);
       try {
@@ -109,10 +106,8 @@ export function Cursor() {
     }, 2200);
   };
 
-  const handleUnmute = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleUnmute = () => {
     setIsMuted(false);
-    isMutedRef.current = false;
     try {
       localStorage.setItem("mert_cursor_muted", "false");
     } catch {
@@ -252,7 +247,7 @@ export function Cursor() {
 
   let animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
   let bubbleClass =
-    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md pointer-events-auto";
+    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md pointer-events-none";
   let tailClass =
     "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
 
@@ -295,98 +290,98 @@ export function Cursor() {
       "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
   }
 
-  if (!active) return null;
-
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed inset-0 z-120 hidden md:block"
-    >
-      {/* 1. Instant Center Accent Dot */}
-      <div
-        style={{
-          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
-        }}
-        className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
-      />
-
-      {/* 2. Silky Smooth Trailing Ring */}
-      <div
-        style={{
-          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
-        }}
-        className="absolute left-0 top-0"
-      >
-        <div
+    <>
+      {/* FLOATING BOTTOM-LEFT SUS / MUTE BUTTON */}
+      <div className="fixed bottom-6 left-6 z-40 hidden md:block">
+        <motion.button
+          type="button"
+          onClick={isMuted ? handleUnmute : handleMute}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           className={cn(
-            "size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
-            hovering
-              ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
-              : "scale-100 border-foreground/35"
+            "flex items-center gap-2 rounded-full border px-4 py-2.5 font-mono text-xs font-semibold shadow-2xl backdrop-blur-xl transition-all duration-300 cursor-pointer",
+            isMuted
+              ? "border-amber-500/60 bg-amber-500/15 text-amber-400 hover:border-amber-500"
+              : "border-accent/60 bg-surface/90 text-accent hover:border-accent hover:bg-accent hover:text-accent-ink"
           )}
-        />
+          title={
+            isMuted
+              ? isEnglish
+                ? "Unmute speech bubble 🗣️"
+                : "Balonları Konuştur 🗣️"
+              : isEnglish
+              ? "Mute speech bubble 🤐"
+              : "Balonları Sustur 🤐"
+          }
+        >
+          <span className="text-sm">{isMuted ? "🤐" : "🗣️"}</span>
+          <span>
+            {isMuted
+              ? isEnglish
+                ? "Balonları Aç"
+                : "Balonları Aç"
+              : isEnglish
+              ? "Balonları Sustur"
+              : "Balonları Sustur"}
+          </span>
+        </motion.button>
       </div>
 
-      {/* 3. Playful Speech Bubble on Idle (With Sus Butonu & Sulky Trip Feature) */}
-      <AnimatePresence>
-        {/* Case A: Show Sulky Trip Message or Normal Idle Message (when NOT muted) */}
-        {(sulkyMessage || (idleMessage && !isMuted)) && (
-          <motion.div
+      {active && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-120 hidden md:block"
+        >
+          {/* 1. Instant Center Accent Dot */}
+          <div
             style={{
-              left: `${dotPos.x}px`,
-              top: `${dotPos.y}px`,
+              transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
             }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={animateProps}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className={bubbleClass}
-          >
-            <div className="relative flex items-center gap-2">
-              <span>{sulkyMessage || idleMessage}</span>
+            className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
+          />
 
-              {/* Mute "Sus" Button */}
-              {!sulkyMessage && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMute();
-                  }}
-                  className="ml-1 flex items-center justify-center rounded-full p-0.5 text-muted hover:text-accent hover:scale-125 transition-all cursor-pointer"
-                  title={isEnglish ? "Mute speech bubble 🤐" : "Baloncuğu sustur 🤐"}
-                >
-                  🤐
-                </button>
+          {/* 2. Silky Smooth Trailing Ring */}
+          <div
+            style={{
+              transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
+            }}
+            className="absolute left-0 top-0"
+          >
+            <div
+              className={cn(
+                "size-8 rounded-full border transition-[scale,border-color,background-color] duration-200 ease-out",
+                hovering
+                  ? "scale-125 border-accent/80 bg-accent/10 shadow-sm"
+                  : "scale-100 border-foreground/35"
               )}
-            </div>
-            {/* Speech bubble tail pointer */}
-            <div className={tailClass} />
-          </motion.div>
-        )}
+            />
+          </div>
 
-        {/* Case B: Show Unmute Badge when idle and MUTED */}
-        {isMuted && idleMessage && !sulkyMessage && (
-          <motion.div
-            style={{
-              left: `${dotPos.x}px`,
-              top: `${dotPos.y}px`,
-            }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={animateProps}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className={cn(bubbleClass, "cursor-pointer hover:border-accent hover:text-accent")}
-            onClick={handleUnmute}
-            title={isEnglish ? "Click to let me talk again! 🗣️" : "Konuşmama izin vermek için tıkla! 🗣️"}
-          >
-            <div className="relative flex items-center gap-1.5 font-mono text-[0.6875rem]">
-              <span>🤐 {isEnglish ? "Muted (Click to talk)" : "Sustum (Tıkla konuşayım)"}</span>
-            </div>
-            <div className={tailClass} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          {/* 3. Playful Speech Bubble on Idle */}
+          <AnimatePresence>
+            {(sulkyMessage || (idleMessage && !isMuted)) && (
+              <motion.div
+                style={{
+                  left: `${dotPos.x}px`,
+                  top: `${dotPos.y}px`,
+                }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={animateProps}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                className={bubbleClass}
+              >
+                <div className="relative flex items-center gap-2">
+                  <span>{sulkyMessage || idleMessage}</span>
+                </div>
+                {/* Speech bubble tail pointer */}
+                <div className={tailClass} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+    </>
   );
 }
