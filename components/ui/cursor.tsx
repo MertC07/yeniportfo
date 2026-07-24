@@ -49,7 +49,7 @@ const IDLE_MESSAGES_EN = [
 
 /**
  * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
- * Displays a playful speech bubble centered above the cursor on idle.
+ * Displays a playful speech bubble with a "Sus Butonu" (Mute / Sulky Trip Atma feature).
  */
 export function Cursor() {
   const pathname = usePathname() ?? "/";
@@ -58,6 +58,10 @@ export function Cursor() {
   const [active, setActive] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
+
+  // Mute & Sulky state
+  const [isMuted, setIsMuted] = useState(false);
+  const [sulkyMessage, setSulkyMessage] = useState<string | null>(null);
 
   const [dotPos, setDotPos] = useState({ x: -100, y: -100 });
   const [ringPos, setRingPos] = useState({ x: -100, y: -100 });
@@ -70,6 +74,60 @@ export function Cursor() {
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
+  const isMutedRef = useRef(false);
+
+  // Load initial mute state from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mert_cursor_muted");
+      if (saved === "true") {
+        setIsMuted(true);
+        isMutedRef.current = true;
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const handleMute = () => {
+    const tripMsg = isEnglish
+      ? "Fine! I'll shut up! 🙄 Not saying a single word, happy?!"
+      : "Öff tamam sustum ya! 🙄 HİÇ konuşmuyorum tamam mı!";
+
+    setSulkyMessage(tripMsg);
+
+    setTimeout(() => {
+      setIsMuted(true);
+      isMutedRef.current = true;
+      setSulkyMessage(null);
+      setIdleMessage(null);
+      try {
+        localStorage.setItem("mert_cursor_muted", "true");
+      } catch {
+        // ignore
+      }
+    }, 2200);
+  };
+
+  const handleUnmute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMuted(false);
+    isMutedRef.current = false;
+    try {
+      localStorage.setItem("mert_cursor_muted", "false");
+    } catch {
+      // ignore
+    }
+
+    const happyMsg = isEnglish
+      ? "Yayy! Finally letting me talk again! 😄🎉"
+      : "Yeyy! Sonunda konuşturdun beni! 😄🎉";
+
+    setSulkyMessage(happyMsg);
+    setTimeout(() => {
+      setSulkyMessage(null);
+    }, 2200);
+  };
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
@@ -194,7 +252,7 @@ export function Cursor() {
 
   let animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
   let bubbleClass =
-    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md";
+    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md pointer-events-auto";
   let tailClass =
     "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
 
@@ -252,13 +310,7 @@ export function Cursor() {
         className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
       />
 
-      {/* 2. Silky Smooth Trailing Ring.
-          Position and scale live on separate elements on purpose: `scale` is
-          applied after `transform` in the CSS chain, so scaling this element
-          directly would multiply its translation too and fling the ring away
-          from the cursor. The outer element only positions (never
-          transitioned — the lerp loop does the smoothing), the inner one only
-          grows and recolours. */}
+      {/* 2. Silky Smooth Trailing Ring */}
       <div
         style={{
           transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
@@ -275,9 +327,10 @@ export function Cursor() {
         />
       </div>
 
-      {/* 3. Playful Speech Bubble on Idle (Smart Viewport Positioned) */}
+      {/* 3. Playful Speech Bubble on Idle (With Sus Butonu & Sulky Trip Feature) */}
       <AnimatePresence>
-        {idleMessage && (
+        {/* Case A: Show Sulky Trip Message or Normal Idle Message (when NOT muted) */}
+        {(sulkyMessage || (idleMessage && !isMuted)) && (
           <motion.div
             style={{
               left: `${dotPos.x}px`,
@@ -289,10 +342,47 @@ export function Cursor() {
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
             className={bubbleClass}
           >
-            <div className="relative flex items-center gap-1.5">
-              <span>{idleMessage}</span>
+            <div className="relative flex items-center gap-2">
+              <span>{sulkyMessage || idleMessage}</span>
+
+              {/* Mute "Sus" Button */}
+              {!sulkyMessage && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMute();
+                  }}
+                  className="ml-1 flex items-center justify-center rounded-full p-0.5 text-muted hover:text-accent hover:scale-125 transition-all cursor-pointer"
+                  title={isEnglish ? "Mute speech bubble 🤐" : "Baloncuğu sustur 🤐"}
+                >
+                  🤐
+                </button>
+              )}
             </div>
             {/* Speech bubble tail pointer */}
+            <div className={tailClass} />
+          </motion.div>
+        )}
+
+        {/* Case B: Show Unmute Badge when idle and MUTED */}
+        {isMuted && idleMessage && !sulkyMessage && (
+          <motion.div
+            style={{
+              left: `${dotPos.x}px`,
+              top: `${dotPos.y}px`,
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={animateProps}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+            className={cn(bubbleClass, "cursor-pointer hover:border-accent hover:text-accent")}
+            onClick={handleUnmute}
+            title={isEnglish ? "Click to let me talk again! 🗣️" : "Konuşmama izin vermek için tıkla! 🗣️"}
+          >
+            <div className="relative flex items-center gap-1.5 font-mono text-[0.6875rem]">
+              <span>🤐 {isEnglish ? "Muted (Click to talk)" : "Sustum (Tıkla konuşayım)"}</span>
+            </div>
             <div className={tailClass} />
           </motion.div>
         )}

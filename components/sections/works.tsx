@@ -21,6 +21,7 @@ export function Works() {
         label={ui.sections.work.label}
         meta={`${projects.length} ${ui.sections.work.metaSuffix}`}
       />
+
       <div ref={stackRef} className="mt-8">
         {projects.map((project, i) => (
           <ProjectCard
