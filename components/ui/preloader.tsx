@@ -5,7 +5,7 @@ import { useContent } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 /**
- * Cinematic opening preloader: shown once per session.
+ * Ultra-fast cinematic opening preloader: shown once per session (0.8s total).
  * High z-index (z-[99999]) covers the screen instantly to prevent layout flash.
  */
 export function Preloader() {
@@ -25,7 +25,8 @@ export function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    const exitTimer = setTimeout(() => setPhase("exit"), 950);
+    // Fast 450ms show + 400ms slide-up exit transition
+    const exitTimer = setTimeout(() => setPhase("exit"), 450);
     const doneTimer = setTimeout(() => {
       document.body.style.overflow = "";
       document.documentElement.classList.remove("is-loading");
@@ -35,7 +36,7 @@ export function Preloader() {
         // ignore
       }
       setPhase("done");
-    }, 1650);
+    }, 850);
 
     return () => {
       clearTimeout(exitTimer);
@@ -51,7 +52,7 @@ export function Preloader() {
     <div
       aria-hidden
       className={cn(
-        "fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-8 bg-background transition-transform duration-700 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-auto",
+        "fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-6 bg-background transition-transform duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-auto",
         phase === "exit" ? "-translate-y-full" : "translate-y-0"
       )}
     >
@@ -60,7 +61,7 @@ export function Preloader() {
         <span className="text-accent">.</span>
       </p>
       <div className="h-px w-44 overflow-hidden bg-foreground/10">
-        <div className="h-full w-full origin-left animate-[loadbar_0.9s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
+        <div className="h-full w-full origin-left animate-[loadbar_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards] bg-accent" />
       </div>
       <p className="microlabel text-muted">
         {profile.name} — {ui.preloader}
