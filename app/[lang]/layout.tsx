@@ -9,6 +9,7 @@ import { Preloader } from "@/components/ui/preloader";
 import { Cursor } from "@/components/ui/cursor";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { AiAssistant } from "@/components/ui/ai-assistant";
+import { ContextMenu } from "@/components/ui/context-menu";
 import { getContent, isLocale, localePath, locales } from "@/lib/content";
 import "../globals.css";
 
@@ -144,6 +145,7 @@ export default async function RootLayout({
               <Preloader />
               <GrainOverlay />
               <Cursor />
+              <ContextMenu />
             </SmoothScroll>
           </ThemeProvider>
         </LocaleProvider>
