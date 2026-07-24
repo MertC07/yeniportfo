@@ -28,7 +28,7 @@ export function ContextMenu() {
       e.stopPropagation();
 
       const x = Math.min(e.clientX, window.innerWidth - 270);
-      const y = Math.min(e.clientY, window.innerHeight - 340);
+      const y = Math.min(e.clientY, window.innerHeight - 300);
 
       setPos({ x, y });
       setIsOpen(true);
@@ -64,21 +64,23 @@ export function ContextMenu() {
     };
   }, []);
 
-  // 2. Copy Event Listener (Hilarious Copy Toast)
+  // 2. Copy Event Listener (Hilarious & Huysuz Copy Toast)
   useEffect(() => {
     const handleCopy = () => {
       const msgsTR = [
-        "Kaynak göster bari! 🤫 Kodları mı aşırıyorsun? 😄",
-        "Kopyaladın ama bir yıldız at bari GitHub'dan! ⭐",
-        "Aha kodlar kopyalandı! TEKNOFEST lisansı devrede 🚀",
-        "Çalma la kodları! Mert'e bir kahve ısmarlarsın artık ☕",
+        "Hop hemşerim nereye kopyalıyorsun? 🤨 Kaynak göster bari!",
+        "Ctrl+C yaptın ama Ctrl+V yaparken vicdanın sızlayacak... 🤫",
+        "Çalma la kodları! Mert'in emeği var orada! ☕",
+        "Kopyala kopyala... Sonra 'Senior Developer'ım dersin 😅",
+        "O kopyaladığın kodun çalışması için Mert'ten dua istemen lazım 🤲⚡",
       ];
 
       const msgsEN = [
-        "At least cite the source! 🤫 Stealing code? 😄",
-        "Copied! Don't forget to star on GitHub! ⭐",
-        "Aha! Code copied under TEKNOFEST license 🚀",
-        "Treat Mert to a coffee for that code! ☕",
+        "Hey buddy where are you copying that? 🤨 At least give credit!",
+        "Ctrl+C done, but your conscience will hurt on Ctrl+V... 🤫",
+        "Don't steal the code! Mert put hard work into this! ☕",
+        "Copy away... and then call yourself a Senior Dev 😅",
+        "For that code to run, you'll need Mert's blessing 🤲⚡",
       ];
 
       const list = isEnglish ? msgsEN : msgsTR;
@@ -87,7 +89,7 @@ export function ContextMenu() {
       setToastMessage(msg);
       setTimeout(() => {
         setToastMessage((prev) => (prev === msg ? null : prev));
-      }, 3000);
+      }, 3200);
     };
 
     window.addEventListener("copy", handleCopy);
@@ -110,7 +112,7 @@ export function ContextMenu() {
     setIsOpen(false);
     setTimeout(() => {
       setToastMessage((prev) => (prev === msg ? null : prev));
-    }, 3000);
+    }, 3500);
   };
 
   return (
@@ -123,9 +125,9 @@ export function ContextMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -15, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-[100000] flex items-center gap-3 rounded-full border-2 border-accent bg-surface-elevated/95 px-6 py-3 font-mono text-xs sm:text-sm font-extrabold text-foreground shadow-[0_15px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-4 ring-accent/20"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-[100000] flex items-center gap-3 rounded-full border-2 border-accent bg-surface-elevated/95 px-6 py-3 font-mono text-xs sm:text-sm font-extrabold text-foreground shadow-[0_15px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-4 ring-accent/20 max-w-[90vw] text-center"
           >
-            <span className="inline-block size-2 rounded-full bg-accent animate-pulse" />
+            <span className="inline-block size-2 shrink-0 rounded-full bg-accent animate-pulse" />
             <span>{toastMessage}</span>
           </motion.div>
         )}
@@ -141,7 +143,7 @@ export function ContextMenu() {
             exit={{ opacity: 0, scale: 0.92, y: -5 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
-            className="fixed z-[100001] w-64 rounded-2xl border hairline bg-surface-elevated/95 p-2 font-mono text-xs shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl border-accent/30 text-foreground"
+            className="fixed z-[99998] w-64 rounded-2xl border hairline bg-surface-elevated/95 p-2 font-mono text-xs shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-2xl border-accent/30 text-foreground pointer-events-auto"
           >
             {/* Header branding */}
             <div className="px-3 py-2 border-b hairline flex items-center justify-between text-[0.6875rem] text-muted">
@@ -156,14 +158,14 @@ export function ContextMenu() {
                 onClick={() =>
                   triggerToast(
                     isEnglish
-                      ? "🐛 Inspecting code? Looking for bugs or stealing styles? 😄"
-                      : "🐛 Kodlarda bug mu arıyorsun yoksa stilleri mi aşırıyorsun? 😄"
+                      ? "🕵️‍♂️ Press F12 or Ctrl+Shift+I! Browser JS blocks opening DevTools via script (Code is 100% clean though!)"
+                      : "🕵️‍♂️ F12 veya Ctrl+Shift+I yap kanka! Tarayıcı güvenlikten JS ile F12 açtırmıyor (Ama kodlar tertemiz, bakabilirsin!)"
                   )
                 }
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-sm">🐛</span>
+                  <span className="text-sm">🔍</span>
                   <span>{isEnglish ? "Inspect Code (F12)" : "Sayfayı İncele (F12)"}</span>
                 </div>
                 <span className="text-[0.625rem] text-muted group-hover:text-accent">F12</span>
@@ -175,10 +177,10 @@ export function ContextMenu() {
                   triggerToast(
                     isEnglish
                       ? "🤫 Copying? At least give credit: @MertC07!"
-                      : "🤫 Kopyaladın bak! Kaynak göster bari: @MertC07!"
+                      : "🤫 Hop hemşerim nereye kopyalıyorsun? Kaynak göster bari: @MertC07!"
                   )
                 }
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-sm">📋</span>
@@ -189,23 +191,8 @@ export function ContextMenu() {
 
               <button
                 type="button"
-                onClick={() =>
-                  triggerToast(
-                    isEnglish
-                      ? "🎯 YOLOv11 Model: 3 Vehicles, 1 Engineer Detected! (Conf: 0.99)"
-                      : "🎯 YOLOv11 Modeli: 3 Araç, 1 Mühendis Tespit Edildi! (%99 Güven)"
-                  )
-                }
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left cursor-pointer"
-              >
-                <span className="text-sm">🤖</span>
-                <span>{isEnglish ? "Run YOLOv11 AI Scanner" : "YOLOv11 AI Taraması Yap"}</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={handleToggleMute}
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-accent/15 hover:text-accent transition-all text-left cursor-pointer"
               >
                 <span className="text-sm">🤐</span>
                 <span>{isEnglish ? "Toggle Cursor Speech" : "İmleç Balonunu Sustur/Aç"}</span>
@@ -216,7 +203,7 @@ export function ContextMenu() {
               <button
                 type="button"
                 onClick={handleScrollTop}
-                className="w-full flex items-center justify-between rounded-xl px-3 py-2 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-sm">📜</span>

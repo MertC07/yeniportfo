@@ -313,7 +313,7 @@ export function Cursor() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-120 hidden md:block"
+      className="pointer-events-none fixed inset-0 z-[999999] hidden md:block"
     >
       {/* 1. Instant Center Accent Dot */}
       <div
