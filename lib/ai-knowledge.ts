@@ -19,6 +19,8 @@ export type ChatMessage = {
 export const MERT_KNOWLEDGE = {
   profile: {
     name: "Mert Ceren",
+    birthYear: 2003,
+    age: 23,
     roleTr: "Yapay Zekâ & Yazılım Mühendisliği Öğrencisi",
     roleEn: "AI & Software Engineering Student",
     university: "Bandırma Onyedi Eylül Üniversitesi (BANÜ)",
@@ -88,6 +90,32 @@ export const MERT_KNOWLEDGE = {
  */
 export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): { text: string; actionLinks?: ActionLink[] } {
   const q = query.toLowerCase().trim();
+
+  // 0. YAŞ & DOĞUM TARİHİ
+  if (
+    q.includes("yaş") ||
+    q.includes("kaç yaşında") ||
+    q.includes("doğum") ||
+    q.includes("2003") ||
+    q.includes("age") ||
+    q.includes("old")
+  ) {
+    if (locale === "tr") {
+      return {
+        text: "Mert Ceren 2003 doğumludur ve şu an 23 yaşındadır 😄 (2026 yılı itibarıyla). Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisidir 🚀",
+        actionLinks: [
+          { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
+        ],
+      };
+    } else {
+      return {
+        text: "Mert Ceren was born in 2003 and is currently 23 years old 😄 (as of 2026). He studies Software Engineering at BANÜ 🚀",
+        actionLinks: [
+          { label: "View About & Timeline ↗", href: "#about", isAnchor: true },
+        ],
+      };
+    }
+  }
 
   // 1. ÖDÜLLER & DERECELER (Awards & Honors)
   if (
