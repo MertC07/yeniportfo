@@ -38,7 +38,7 @@ export function CursorMuteToggle() {
       type="button"
       onClick={handleClick}
       aria-label={isMuted ? (isEnglish ? "Unmute Speech Bubbles" : "Konuşma Balonlarını Aç") : (isEnglish ? "Mute Speech Bubbles" : "Konuşma Balonlarını Sustur")}
-      title={isMuted ? (isEnglish ? "Balonları Aç 🗣️" : "Balonları Aç 🗣️") : (isEnglish ? "Balonları Sustur 🤐" : "Balonları Sustur 🤐")}
+      title={isMuted ? (isEnglish ? "Balonları Aç 🤪" : "Balonları Aç 🤪") : (isEnglish ? "Balonları Sustur 🤐" : "Balonları Sustur 🤐")}
       className={cn(
         "flex size-9 items-center justify-center rounded-full border transition-all duration-300 cursor-pointer text-[1rem]",
         isMuted
