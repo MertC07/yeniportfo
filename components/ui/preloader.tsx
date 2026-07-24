@@ -15,6 +15,7 @@ export function Preloader() {
   useEffect(() => {
     try {
       if (sessionStorage.getItem("intro-seen") === "1") {
+        document.documentElement.classList.remove("is-loading");
         setPhase("done");
         return;
       }
@@ -27,6 +28,7 @@ export function Preloader() {
     const exitTimer = setTimeout(() => setPhase("exit"), 950);
     const doneTimer = setTimeout(() => {
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("is-loading");
       try {
         sessionStorage.setItem("intro-seen", "1");
       } catch {
@@ -39,6 +41,7 @@ export function Preloader() {
       clearTimeout(exitTimer);
       clearTimeout(doneTimer);
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("is-loading");
     };
   }, []);
 

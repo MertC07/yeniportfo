@@ -133,6 +133,19 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <style font-display="swap">{`
+          html.is-loading #main,
+          html.is-loading header,
+          html.is-loading footer {
+            opacity: 0 !important;
+            visibility: hidden !important;
+          }
+        `}</style>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(!sessionStorage.getItem("intro-seen")){document.documentElement.classList.add("is-loading");}}catch(e){}})()`,
+          }}
+        />
       </head>
       <body className="bg-background">
         <LocaleProvider locale={lang}>
