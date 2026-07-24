@@ -7,6 +7,45 @@ import { type ChatMessage, type ActionLink, getLocalAiResponse } from "@/lib/ai-
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+function TypewriterText({
+  text,
+  speed = 14,
+  isTyping,
+  onComplete,
+  onProgress,
+}: {
+  text: string;
+  speed?: number;
+  isTyping: boolean;
+  onComplete?: () => void;
+  onProgress?: () => void;
+}) {
+  const [displayed, setDisplayed] = useState(isTyping ? "" : text);
+
+  useEffect(() => {
+    if (!isTyping) {
+      setDisplayed(text);
+      return;
+    }
+    let idx = 0;
+    setDisplayed("");
+    const interval = setInterval(() => {
+      idx += 1;
+      if (idx <= text.length) {
+        setDisplayed(text.slice(0, idx));
+        if (idx % 5 === 0) onProgress?.();
+      } else {
+        clearInterval(interval);
+        onComplete?.();
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed, isTyping]);
+
+  return <p className="whitespace-pre-wrap">{displayed}</p>;
+}
+
 export function AiAssistant() {
   const locale = useLocale();
   const isTr = locale === "tr";
@@ -33,6 +72,8 @@ export function AiAssistant() {
     },
   ]);
 
+  const [typingMsgId, setTypingMsgId] = useState<string | null>(null);
+  const latestAiRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +85,16 @@ export function AiAssistant() {
       });
     } else {
       messagesEndRef.current?.scrollIntoView({ behavior: instant ? "instant" : "smooth" });
+    }
+  };
+
+  const scrollToLatestAi = () => {
+    if (latestAiRef.current && messagesContainerRef.current) {
+      const topPos = latestAiRef.current.offsetTop - 16;
+      messagesContainerRef.current.scrollTo({
+        top: Math.max(0, topPos),
+        behavior: "smooth",
+      });
     }
   };
 
@@ -89,10 +140,6 @@ export function AiAssistant() {
     setIsOpen(val);
   };
 
-  useEffect(() => {
-    scrollToBottom(false);
-  }, [messages, loading]);
-
   // Handle ESC key close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,6 +167,7 @@ export function AiAssistant() {
 
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
+    setTimeout(() => scrollToBottom(false), 50);
 
     try {
       const res = await fetch("/api/chat", {
@@ -138,6 +186,8 @@ export function AiAssistant() {
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         };
         setMessages((prev) => [...prev, botMsg]);
+        setTypingMsgId(botMsg.id);
+        setTimeout(() => scrollToLatestAi(), 80);
       } else {
         throw new Error("API error");
       }
@@ -152,6 +202,8 @@ export function AiAssistant() {
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, botMsg]);
+      setTypingMsgId(botMsg.id);
+      setTimeout(() => scrollToLatestAi(), 80);
     } finally {
       setLoading(false);
     }
@@ -316,9 +368,12 @@ export function AiAssistant() {
             >
               {messages.map((msg) => {
                 const isUser = msg.sender === "user";
+                const isTypingThisMsg = typingMsgId === msg.id;
+
                 return (
                   <div
                     key={msg.id}
+                    ref={!isUser && msg.id === messages[messages.length - 1]?.id ? latestAiRef : null}
                     className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
                   >
                     <div
@@ -328,7 +383,17 @@ export function AiAssistant() {
                           : "bg-surface-elevated/80 border hairline text-foreground rounded-bl-none shadow-sm"
                       }`}
                     >
-                      <p className="whitespace-pre-wrap">{msg.text}</p>
+                      {isUser ? (
+                        <p className="whitespace-pre-wrap">{msg.text}</p>
+                      ) : (
+                        <TypewriterText
+                          text={msg.text}
+                          speed={14}
+                          isTyping={isTypingThisMsg}
+                          onComplete={() => setTypingMsgId(null)}
+                          onProgress={scrollToLatestAi}
+                        />
+                      )}
 
                       {/* Action Links */}
                       {msg.actionLinks && msg.actionLinks.length > 0 && (
