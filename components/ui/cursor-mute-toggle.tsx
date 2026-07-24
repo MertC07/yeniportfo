@@ -40,13 +40,13 @@ export function CursorMuteToggle() {
       aria-label={isMuted ? (isEnglish ? "Unmute Speech Bubbles" : "Konuşma Balonlarını Aç") : (isEnglish ? "Mute Speech Bubbles" : "Konuşma Balonlarını Sustur")}
       title={isMuted ? (isEnglish ? "Balonları Aç 🗣️" : "Balonları Aç 🗣️") : (isEnglish ? "Balonları Sustur 🤐" : "Balonları Sustur 🤐")}
       className={cn(
-        "flex size-9 items-center justify-center rounded-full border transition-all duration-300 cursor-pointer text-sm",
+        "flex size-9 items-center justify-center rounded-full border transition-all duration-300 cursor-pointer text-[1rem]",
         isMuted
           ? "border-amber-500/60 bg-amber-500/15 text-amber-400 hover:border-amber-500"
           : "hairline bg-surface/40 text-foreground hover:border-foreground/40"
       )}
     >
-      <span>{isMuted ? "🗣️" : "🤐"}</span>
+      <span>{isMuted ? "🤐" : "🤪"}</span>
     </button>
   );
 }
