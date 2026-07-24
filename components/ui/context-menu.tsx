@@ -75,9 +75,9 @@ export function ContextMenu() {
       const msgsTR = [
         "Hop hemşerim nereye kopyalıyorsun? 🤨 Kaynak göster bari!",
         "Ctrl+C yaptın ama Ctrl+V yaparken vicdanın sızlayacak... 🤫",
-        "Çalma la kodları! Mert'in emeği var orada! ☕",
+        "Mert'in emekleriyle yazılmış kodlar! Kaynak gösterirsen harika olur ☕✨",
         "Kopyala kopyala... Sonra 'Senior Developer'ım dersin 😅",
-        "O kopyaladığın kodun çalışması için Mert'ten dua istemen lazım 🤲⚡",
+        "O kopyaladığın kodun kusursuz çalışması için Mert'ten tavsiye isteyebilirsin 🤲⚡",
       ];
 
       const msgsEN = [
