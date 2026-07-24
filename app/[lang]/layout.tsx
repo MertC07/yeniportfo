@@ -134,14 +134,14 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>
+      <body className="bg-background">
         <LocaleProvider locale={lang}>
           <ThemeProvider>
+            <Preloader />
             <SmoothScroll>
               {children}
               <ScrollProgress />
               <AiAssistant />
-              <Preloader />
               <GrainOverlay />
               <Cursor />
             </SmoothScroll>
