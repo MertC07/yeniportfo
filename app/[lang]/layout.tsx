@@ -7,6 +7,7 @@ import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { GrainOverlay } from "@/components/ui/grain-overlay";
 import { Preloader } from "@/components/ui/preloader";
 import { Cursor } from "@/components/ui/cursor";
+import { IdleMode } from "@/components/ui/idle-mode";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { AiAssistant } from "@/components/ui/ai-assistant";
 import { ContextMenu } from "@/components/ui/context-menu";
@@ -145,6 +146,7 @@ export default async function RootLayout({
               <Preloader />
               <GrainOverlay />
               <Cursor />
+              <IdleMode />
               <ContextMenu />
             </SmoothScroll>
           </ThemeProvider>

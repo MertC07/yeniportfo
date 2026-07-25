@@ -11,9 +11,14 @@ import type { NextConfig } from "next";
  * writes inline styles. The policy still blocks script loads from any other
  * origin, framing, form posts elsewhere, and plugin content.
  */
+// React's development build uses eval() for debugging tooling (stack
+// reconstruction, hot reload). The production build never does, so the
+// allowance is scoped to dev only and never ships.
+const isDev = process.env.NODE_ENV === "development";
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
