@@ -33,6 +33,9 @@ export function ContextMenu() {
   const menuRef = useRef<HTMLDivElement>(null);
   const copyQueueRef = useRef<number[]>([]);
   const lastCopyIndexRef = useRef<number>(-1);
+  // Clicking a menu button clears the page selection, so remember what was
+  // highlighted at the moment the menu opened.
+  const selectionRef = useRef("");
 
   // 1. Right Click Context Menu Listener with Capture Phase Priority
   useEffect(() => {
@@ -45,6 +48,8 @@ export function ContextMenu() {
       if ("stopImmediatePropagation" in e) {
         (e as MouseEvent).stopImmediatePropagation();
       }
+
+      selectionRef.current = window.getSelection()?.toString().trim() ?? "";
 
       const x = Math.min(e.clientX, window.innerWidth - 270);
       const y = Math.min(e.clientY, window.innerHeight - 300);
@@ -134,6 +139,37 @@ export function ContextMenu() {
     setIsOpen(false);
   };
 
+  // The menu replaces the native one, so this item has to do the copying
+  // itself — the browser no longer does it for us.
+  const handleCopySelection = async () => {
+    const text = selectionRef.current;
+
+    if (!text) {
+      triggerToast(
+        isEnglish
+          ? "📋 Select the text you want first, then right-click!"
+          : "📋 Önce kopyalamak istediğin metni seç, sonra sağ tıkla!"
+      );
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      triggerToast(
+        isEnglish
+          ? "🤫 Copying? At least give credit: @MertC07!"
+          : "🤫 Hop hemşerim nereye kopyalıyorsun? Kaynak göster bari: @MertC07!"
+      );
+    } catch {
+      // Clipboard unavailable (permissions / insecure context)
+      triggerToast(
+        isEnglish
+          ? "😬 The browser blocked the clipboard — try Ctrl+C!"
+          : "😬 Tarayıcı panoya izin vermedi — Ctrl+C dene!"
+      );
+    }
+  };
+
   const triggerToast = (msg: string) => {
     setToastMessage(msg);
     setIsOpen(false);
@@ -200,13 +236,7 @@ export function ContextMenu() {
 
               <button
                 type="button"
-                onClick={() =>
-                  triggerToast(
-                    isEnglish
-                      ? "🤫 Copying? At least give credit: @MertC07!"
-                      : "🤫 Hop hemşerim nereye kopyalıyorsun? Kaynak göster bari: @MertC07!"
-                  )
-                }
+                onClick={handleCopySelection}
                 className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 hover:bg-accent/15 hover:text-accent transition-all text-left group cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
