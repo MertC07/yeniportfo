@@ -19,14 +19,15 @@ const readMute = () => {
 };
 
 /**
- * Three escalating stages of being ignored. Each entry is the wait *from the
- * previous stage*, so the site dims gently first and only gets snippy if you
- * really have wandered off.
+ * Three escalating stages of being ignored. `delay` is the wait *since the
+ * previous stage*, not since the visitor went quiet — so the timeline lands at
+ * 40s, 50s and 60s. Nobody sits still much longer than that, so the whole
+ * escalation is over within a minute.
  */
 const STAGES = [
-  { delay: 40_000, dim: 0.55, blur: 2 },
-  { delay: 45_000, dim: 0.76, blur: 4 },
-  { delay: 60_000, dim: 0.9, blur: 7 },
+  { delay: 40_000, dim: 0.55, blur: 2 }, // 40s
+  { delay: 10_000, dim: 0.76, blur: 4 }, // 50s
+  { delay: 10_000, dim: 0.9, blur: 7 }, // 60s
 ];
 
 const MESSAGES_TR = [
