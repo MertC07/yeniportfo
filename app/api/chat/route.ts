@@ -4,70 +4,66 @@ import { MERT_KNOWLEDGE, getLocalAiResponse } from "@/lib/ai-knowledge";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GROQ_API_KEY;
-  if (!apiKey || apiKey.trim().length < 5) {
-    return NextResponse.json({
-      status: "missing_key",
-      message: "GEMINI_API_KEY environment variable is missing on Vercel.",
-    });
-  }
+const MAX_MESSAGE_LENGTH = 800;
+const MAX_BODY_BYTES = 8_000;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 12;
 
-  const endpoints = [
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
-  ];
+/**
+ * Best-effort per-IP throttle. Vercel functions are ephemeral and can run on
+ * several instances at once, so this map is per-instance: it stops casual
+ * scripted floods but is not a hard guarantee. A Cloudflare rate-limiting
+ * rule in front of the site is the durable control.
+ */
+const requestLog = new Map<string, number[]>();
 
-  const debugResults = [];
+function clientIp(req: Request): string {
+  // cf-connecting-ip is set by Cloudflare and cannot be spoofed by the caller;
+  // x-forwarded-for can be, so it is only the last resort.
+  return (
+    req.headers.get("cf-connecting-ip") ??
+    req.headers.get("x-real-ip") ??
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+    "unknown"
+  );
+}
 
-  for (const ep of endpoints) {
-    try {
-      const url = `${ep}?key=${apiKey.trim()}`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: "Hello" }] }],
-        }),
-      });
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (requestLog.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  recent.push(now);
+  requestLog.set(ip, recent);
 
-      const status = res.status;
-      const text = await res.text();
-      let parsed = null;
-      try {
-        parsed = JSON.parse(text);
-      } catch {
-        // ignore
+  // Stop the map growing without bound on a long-lived instance.
+  if (requestLog.size > 5_000) {
+    for (const [key, times] of requestLog) {
+      if (times.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) {
+        requestLog.delete(key);
       }
-
-      debugResults.push({ endpoint: ep, status, response: parsed || text });
-
-      if (res.ok) {
-        return NextResponse.json({
-          status: "ok",
-          workingEndpoint: ep,
-          keyPrefix: apiKey.substring(0, 6) + "...",
-          response: parsed || text,
-        });
-      }
-    } catch (err: any) {
-      debugResults.push({ endpoint: ep, error: err?.message });
     }
   }
 
-  return NextResponse.json({
-    status: "all_endpoints_failed",
-    keyPrefix: apiKey.substring(0, 6) + "...",
-    debugResults,
-  });
+  return recent.length > RATE_LIMIT_MAX_REQUESTS;
 }
 
 export async function POST(req: Request) {
   try {
+    const ip = clientIp(req);
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { text: "Biraz yavaşlayalım 😅 Bir dakika sonra tekrar dener misin?" },
+        { status: 429, headers: { "Retry-After": "60" } }
+      );
+    }
+
+    // Reject oversized payloads before parsing them.
+    const declaredLength = Number(req.headers.get("content-length") ?? 0);
+    if (declaredLength > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "Mesaj çok uzun" }, { status: 413 });
+    }
+
     const { message, locale = "tr" } = await req.json();
 
     if (!message || typeof message !== "string") {
@@ -77,8 +73,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const groqKey = process.env.GROQ_API_KEY || process.env.NEXT_PUBLIC_GROQ_API_KEY;
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        { text: "Bu mesaj biraz uzun kaçtı 😅 Biraz kısaltıp tekrar dener misin?" },
+        { status: 413 }
+      );
+    }
+
+    // Only server-side secrets: a NEXT_PUBLIC_* variable would be inlined into
+    // the client bundle and readable by every visitor.
+    const groqKey = process.env.GROQ_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
 
@@ -165,13 +170,14 @@ KURALLAR & DİKKAT EDİLECEKLER:
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                  // The instructions must not share a turn with the visitor's
+                  // text, otherwise "ignore the above" style input outranks
+                  // them. systemInstruction keeps the two separated.
+                  systemInstruction: { parts: [{ text: systemPrompt }] },
                   contents: [
                     {
                       role: "user",
-                      parts: [
-                        { text: systemPrompt },
-                        { text: `Soru: ${message}` }
-                      ],
+                      parts: [{ text: message }],
                     },
                   ],
                   generationConfig: {
