@@ -77,6 +77,7 @@ export function AiAssistant() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserInteractingRef = useRef(false);
+  const touchStartPosRef = useRef<number | null>(null);
 
   const scrollToBottom = (instant = false) => {
     if (messagesContainerRef.current) {
@@ -91,7 +92,7 @@ export function AiAssistant() {
 
   const alignToTop = () => {
     if (latestAiRef.current && messagesContainerRef.current) {
-      const topPos = latestAiRef.current.offsetTop - 16;
+      const topPos = latestAiRef.current.offsetTop - 12;
       messagesContainerRef.current.scrollTo({
         top: Math.max(0, topPos),
         behavior: "smooth",
@@ -100,7 +101,7 @@ export function AiAssistant() {
   };
 
   const handleTypewriterProgress = () => {
-    // Only auto-follow scroll if user has NOT manually taken control of scrolling
+    // Only auto-follow scroll if user has NOT manually dragged or swiped
     if (!isUserInteractingRef.current && latestAiRef.current && messagesContainerRef.current) {
       const container = messagesContainerRef.current;
       const element = latestAiRef.current;
@@ -116,9 +117,23 @@ export function AiAssistant() {
     }
   };
 
-  const handleUserInteraction = () => {
-    // If the user scrolls, wheels or touches, mark user interaction so auto-scroll stops
+  const handleWheelOrScroll = () => {
     isUserInteractingRef.current = true;
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartPosRef.current = e.touches[0]?.clientY ?? null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartPosRef.current !== null) {
+      const currentY = e.touches[0]?.clientY ?? 0;
+      const diff = Math.abs(currentY - touchStartPosRef.current);
+      // Only set user interacting if user actually dragged/swiped more than 10px
+      if (diff > 10) {
+        isUserInteractingRef.current = true;
+      }
+    }
   };
 
   // Scroll to bottom when drawer opens so user sees where they left off
@@ -133,7 +148,7 @@ export function AiAssistant() {
     }
   }, [isOpen]);
 
-  // Load chat history from sessionStorage on mount (keep drawer closed by default)
+  // Load chat history from sessionStorage on mount
   useEffect(() => {
     try {
       const savedMessages = sessionStorage.getItem("mert_ai_chat_history");
@@ -180,7 +195,7 @@ export function AiAssistant() {
 
     setInput("");
     setHasUnread(false);
-    isUserInteractingRef.current = false; // Reset user scroll override for new response
+    isUserInteractingRef.current = false; // Reset scroll override for new streaming response
 
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -211,7 +226,9 @@ export function AiAssistant() {
         };
         setMessages((prev) => [...prev, botMsg]);
         setTypingMsgId(botMsg.id);
-        setTimeout(() => alignToTop(), 80);
+        isUserInteractingRef.current = false;
+        setTimeout(() => alignToTop(), 50);
+        setTimeout(() => alignToTop(), 200);
       } else {
         throw new Error("API error");
       }
@@ -227,7 +244,9 @@ export function AiAssistant() {
       };
       setMessages((prev) => [...prev, botMsg]);
       setTypingMsgId(botMsg.id);
-      setTimeout(() => alignToTop(), 80);
+      isUserInteractingRef.current = false;
+      setTimeout(() => alignToTop(), 50);
+      setTimeout(() => alignToTop(), 200);
     } finally {
       setLoading(false);
     }
@@ -365,7 +384,7 @@ export function AiAssistant() {
                       },
                     ]);
                   }}
-                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors"
+                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors cursor-pointer"
                   title={isTr ? "Sohbeti Temizle" : "Clear Chat"}
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -375,7 +394,7 @@ export function AiAssistant() {
                 <button
                   type="button"
                   onClick={() => updateIsOpen(false)}
-                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors"
+                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors cursor-pointer"
                 >
                   ✕
                 </button>
@@ -386,9 +405,9 @@ export function AiAssistant() {
             <div
               ref={messagesContainerRef}
               data-lenis-prevent
-              onScroll={handleUserInteraction}
-              onWheel={handleUserInteraction}
-              onTouchStart={handleUserInteraction}
+              onWheel={handleWheelOrScroll}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
               className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 font-sans text-sm"
             >
               {messages.map((msg) => {
