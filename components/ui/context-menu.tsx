@@ -9,6 +9,20 @@ type Position = {
   y: number;
 };
 
+// Kept parallel: index N is the same joke in both languages, so switching
+// locale mid-rotation never replays the joke you just saw.
+const COPY_MESSAGES_TR = [
+  "Hop hemşerim nereye kopyalıyorsun? 🤨 Kaynak göster bari!",
+  "Ctrl+C yaptın ama Ctrl+V yaparken vicdanın sızlayacak... 🤫",
+  "Kopyala kopyala... Sonra 'Senior Developer'ım dersin 😅",
+];
+
+const COPY_MESSAGES_EN = [
+  "Hey buddy where are you copying that? 🤨 At least give credit!",
+  "Ctrl+C done, but your conscience will hurt on Ctrl+V... 🤫",
+  "Copy away... and then call yourself a Senior Dev 😅",
+];
+
 export function ContextMenu() {
   const pathname = usePathname() ?? "/";
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
@@ -17,6 +31,8 @@ export function ContextMenu() {
   const [pos, setPos] = useState<Position>({ x: 0, y: 0 });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const copyQueueRef = useRef<number[]>([]);
+  const lastCopyIndexRef = useRef<number>(-1);
 
   // 1. Right Click Context Menu Listener with Capture Phase Priority
   useEffect(() => {
@@ -71,21 +87,31 @@ export function ContextMenu() {
 
   // 2. Copy Event Listener (Hilarious Copy Toast - v2.6.2 Fresh Bundle)
   useEffect(() => {
+    const messages = isEnglish ? COPY_MESSAGES_EN : COPY_MESSAGES_TR;
+
+    // Shuffled deck instead of a plain random pick: every message plays once
+    // before any of them repeats, and a fresh shuffle never leads with the
+    // message that just played — so you never see the same one twice in a row.
+    const nextMessage = () => {
+      if (copyQueueRef.current.length === 0) {
+        const deck = Array.from({ length: messages.length }, (_, i) => i);
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        // Cards are drawn off the end, so guard the last slot, not the first.
+        if (deck[deck.length - 1] === lastCopyIndexRef.current && deck.length > 1) {
+          [deck[deck.length - 1], deck[0]] = [deck[0], deck[deck.length - 1]];
+        }
+        copyQueueRef.current = deck;
+      }
+      const index = copyQueueRef.current.pop()!;
+      lastCopyIndexRef.current = index;
+      return messages[index];
+    };
+
     const handleCopy = () => {
-      const msgsTR = [
-        "Hop hemşerim nereye kopyalıyorsun? 🤨 Kaynak göster bari!",
-        "Ctrl+C yaptın ama Ctrl+V yaparken vicdanın sızlayacak... 🤫",
-        "Kopyala kopyala... Sonra 'Senior Developer'ım dersin 😅",
-      ];
-
-      const msgsEN = [
-        "Hey buddy where are you copying that? 🤨 At least give credit!",
-        "Ctrl+C done, but your conscience will hurt on Ctrl+V... 🤫",
-        "Copy away... and then call yourself a Senior Dev 😅",
-      ];
-
-      const list = isEnglish ? msgsEN : msgsTR;
-      const msg = list[Math.floor(Math.random() * list.length)];
+      const msg = nextMessage();
 
       setToastMessage(msg);
       setTimeout(() => {
