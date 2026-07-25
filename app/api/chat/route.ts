@@ -80,10 +80,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Only server-side secrets: a NEXT_PUBLIC_* variable would be inlined into
-    // the client bundle and readable by every visitor.
+    // Only a server-side secret: a NEXT_PUBLIC_* variable would be inlined
+    // into the client bundle and readable by every visitor.
     const groqKey = process.env.GROQ_API_KEY;
-    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
 
@@ -112,7 +111,8 @@ KURALLAR & DİKKAT EDİLECEKLER:
 3. Bilmediğin kişisel bilgileri uydurma.
 4. Cevap uzunluğunu çok uzatma (2-4 cümle arası samimi, neşeli ve öz olsun).`;
 
-    // 1. Attempt Groq API (Llama 3.3 70B) if Groq key exists
+    // 1. Groq (Llama 3.3 70B) is the only upstream model; if it is unavailable
+    // the local engine below answers instead.
     if (groqKey && groqKey.trim().length > 5) {
       try {
         const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -150,73 +150,7 @@ KURALLAR & DİKKAT EDİLECEKLER:
       }
     }
 
-    // 2. Attempt Google Gemini Flash API call
-    if (apiKey && apiKey.trim().length > 5) {
-      try {
-        const endpoints = [
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent",
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent",
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
-        ];
-
-        for (const ep of endpoints) {
-          try {
-            const response = await fetch(
-              `${ep}?key=${apiKey.trim()}`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  // The instructions must not share a turn with the visitor's
-                  // text, otherwise "ignore the above" style input outranks
-                  // them. systemInstruction keeps the two separated.
-                  systemInstruction: { parts: [{ text: systemPrompt }] },
-                  contents: [
-                    {
-                      role: "user",
-                      parts: [{ text: message }],
-                    },
-                  ],
-                  generationConfig: {
-                    maxOutputTokens: 350,
-                    temperature: 0.5,
-                  },
-                }),
-              }
-            );
-
-            if (response.ok) {
-              const data = await response.json();
-              const candidateText =
-                data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-              if (candidateText) {
-                // Get local action links matching the query
-                const localResult = getLocalAiResponse(message, locale);
-                return NextResponse.json({
-                  text: candidateText,
-                  actionLinks: localResult.actionLinks || [],
-                });
-              }
-            } else {
-              const errText = await response.text();
-              console.warn(`Gemini API HTTP Error (${ep}):`, response.status, errText);
-            }
-          } catch (modelErr) {
-            console.warn(`Gemini endpoint ${ep} failed:`, modelErr);
-          }
-        }
-      } catch (geminiError) {
-        console.warn("Gemini API call failed, falling back to local NLP engine:", geminiError);
-      }
-    } else {
-      console.warn("GEMINI_API_KEY is not defined in environment variables.");
-    }
-
-    // Fallback to local intelligent response engine
+    // 2. Fallback to local intelligent response engine
     const localResult = getLocalAiResponse(message, locale);
     return NextResponse.json(localResult);
   } catch (error) {
