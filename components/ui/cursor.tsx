@@ -24,6 +24,12 @@ const IDLE_MESSAGES_TR = [
   "Sayfada kaybolursan ses et! 📍",
   "Tıklamaktan korkma, bozulmaz! 🖱️💥",
   "Biraz daha durursan çay koyacağım ☕",
+  "Asistana soracağına bana sorsana 🙄",
+  "Asistan mı ben mi? Bir karar ver 😤",
+  "O chatbot'un benden fazla nesi var? 😒",
+  "Ben de buradayım ha, unutma 👀",
+  "İmleçim diye ciddiye almıyorsun beni 🥲",
+  "Sen bilirsin, ben bir şey demiyorum... 😑",
 ];
 
 const IDLE_MESSAGES_EN = [
@@ -45,7 +51,52 @@ const IDLE_MESSAGES_EN = [
   "Shout if you get lost on the page! 📍",
   "Don't be afraid to click, it won't break! 🖱️💥",
   "If you stay a bit longer, I'll pour tea ☕",
+  "Ask me instead of that assistant 🙄",
+  "The assistant or me? Pick one 😤",
+  "What's that chatbot got that I haven't? 😒",
+  "I'm right here too, you know 👀",
+  "You don't take me seriously, I'm just a cursor 🥲",
+  "Suit yourself. Not saying a word... 😑",
 ];
+
+/** Fired when the page is flung, not merely scrolled. */
+const SCROLL_DOWN_TR = [
+  "Yavaş ol biraz, başım döndü 😵‍💫",
+  "Bu hızda iniyorsan kemer tak 🎢",
+  "Kaydırma tekerini kırmaya mı çalışıyorsun? 🌀",
+  "Iıı, çok hızlı indik aşağı 🫠",
+];
+
+const SCROLL_UP_TR = [
+  "Yukarı fırladık, midem ağzıma geldi 😵",
+  "Asansör mü bu? 🛗",
+  "Bir şey mi kaçırdın, niye geri döndük? 🤨",
+  "Roket gibi çıktık valla 🚀",
+];
+
+const SCROLL_DOWN_EN = [
+  "Slow down, you're making me dizzy 😵‍💫",
+  "Buckle up if we're going that fast 🎢",
+  "Trying to snap that scroll wheel? 🌀",
+  "Whoa, that was a long way down 🫠",
+];
+
+const SCROLL_UP_EN = [
+  "Shot straight up — my stomach dropped 😵",
+  "Is this an elevator? 🛗",
+  "Miss something? Why are we back up here? 🤨",
+  "That was practically a launch 🚀",
+];
+
+/**
+ * Flick speed that counts as "flung", and how long before it can nag again.
+ * Lenis eases the wheel out over several frames, so peak velocity here is
+ * lower than a raw native scroll: a wheel notch lands around 300px/s and a
+ * hard fling clears 3000px/s.
+ */
+const FAST_SCROLL_PX_PER_SEC = 2000;
+const SCROLL_REACTION_COOLDOWN = 9000;
+const SCROLL_REACTION_MS = 2600;
 
 /**
  * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
@@ -57,7 +108,12 @@ export function Cursor() {
 
   const [active, setActive] = useState(false);
   const [hovering, setHovering] = useState(false);
+  // The ring is larger than the header chick and would bury it, so the
+  // custom cursor steps aside and lets the native grab cursor show.
+  const [overChick, setOverChick] = useState(false);
   const [idleMessage, setIdleMessage] = useState<string | null>(null);
+  /** Talks over the idle deck when the page gets flung around. */
+  const [reactionMessage, setReactionMessage] = useState<string | null>(null);
 
   // Mute & Sulky state
   const [isMuted, setIsMuted] = useState(false);
@@ -74,6 +130,7 @@ export function Cursor() {
   const animFrameRef = useRef<number | null>(null);
   const lastIndexRef = useRef<number>(-1);
   const queueRef = useRef<number[]>([]);
+  const reactionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isMutedRef = useRef(false);
 
   // Load initial mute state from localStorage
@@ -184,6 +241,62 @@ export function Cursor() {
       return nextIndex;
     };
 
+    /** Same shuffled-deck rotation, for the short scroll-reaction lists. */
+    const makePicker = (list: string[]) => {
+      let deck: number[] = [];
+      let last = -1;
+      return () => {
+        if (deck.length === 0) {
+          deck = Array.from({ length: list.length }, (_, i) => i);
+          for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+          }
+          if (deck[deck.length - 1] === last && deck.length > 1) {
+            [deck[deck.length - 1], deck[0]] = [deck[0], deck[deck.length - 1]];
+          }
+        }
+        const index = deck.pop()!;
+        last = index;
+        return list[index];
+      };
+    };
+
+    const pickScrollDown = makePicker(isEnglish ? SCROLL_DOWN_EN : SCROLL_DOWN_TR);
+    const pickScrollUp = makePicker(isEnglish ? SCROLL_UP_EN : SCROLL_UP_TR);
+
+    let lastScrollY = window.scrollY;
+    let lastScrollAt = performance.now();
+    let lastReactionAt = 0;
+
+    const onScroll = () => {
+      const now = performance.now();
+      const y = window.scrollY;
+      const dt = now - lastScrollAt;
+
+      // Ignore the first sample and anything too small to measure against.
+      if (dt >= 16) {
+        const velocity = ((y - lastScrollY) / dt) * 1000;
+
+        if (
+          Math.abs(velocity) > FAST_SCROLL_PX_PER_SEC &&
+          now - lastReactionAt > SCROLL_REACTION_COOLDOWN &&
+          !isMutedRef.current
+        ) {
+          lastReactionAt = now;
+          setReactionMessage(velocity > 0 ? pickScrollDown() : pickScrollUp());
+          if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current);
+          reactionTimerRef.current = setTimeout(
+            () => setReactionMessage(null),
+            SCROLL_REACTION_MS
+          );
+        }
+
+        lastScrollY = y;
+        lastScrollAt = now;
+      }
+    };
+
     const resetIdleTimer = () => {
       setIdleMessage(null);
 
@@ -228,7 +341,11 @@ export function Cursor() {
 
     const onOver = (e: Event) => {
       const target = e.target as Element | null;
-      const isHover = !!target?.closest?.("a, button, [role='button']");
+      const onChick = !!target?.closest?.('[data-cursor="chick"]');
+      setOverChick(onChick);
+
+      const isHover =
+        !onChick && !!target?.closest?.("a, button, [role='button']");
 
       if (isHover && !hoveringRef.current) {
         ringRef.current = { x: mouseRef.current.x, y: mouseRef.current.y };
@@ -241,14 +358,17 @@ export function Cursor() {
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("mouseleave", onLeave, { passive: true });
     document.documentElement.classList.add("custom-cursor");
 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("mouseleave", onLeave);
       document.documentElement.classList.remove("custom-cursor");
     };
@@ -308,7 +428,7 @@ export function Cursor() {
       "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
   }
 
-  if (!active) return null;
+  if (!active || overChick) return null;
 
   return (
     <div
@@ -342,7 +462,7 @@ export function Cursor() {
 
       {/* 3. Playful Speech Bubble on Idle (With Sulky Trip Feature) */}
       <AnimatePresence>
-        {(sulkyMessage || (idleMessage && !isMuted)) && (
+        {(sulkyMessage || ((reactionMessage || idleMessage) && !isMuted)) && (
           <motion.div
             style={{
               left: `${dotPos.x}px`,
@@ -355,7 +475,7 @@ export function Cursor() {
             className={bubbleClass}
           >
             <div className="relative flex items-center gap-2">
-              <span>{sulkyMessage || idleMessage}</span>
+              <span>{sulkyMessage || reactionMessage || idleMessage}</span>
             </div>
             {/* Speech bubble tail pointer */}
             <div className={tailClass} />

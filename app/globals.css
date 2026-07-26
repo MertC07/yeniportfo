@@ -113,6 +113,219 @@ html.custom-cursor * {
   }
 }
 
+/* Header easter egg: a chick patrolling the bottom edge of the header.
+   Horizontal travel is driven in JS so the chick can be picked up and
+   dropped; the gait is CSS, animating the parts of an inline SVG so the
+   legs, body and head can move independently.
+
+   Every part shares one 0.18s cycle. Rotation needs fill-box, otherwise SVG
+   transforms resolve against the whole viewBox instead of the shape. */
+.chick-part {
+  transform-box: fill-box;
+}
+
+/* A leg: slow constant push back while it carries the weight (65% of the
+   cycle), then a quick swing forward. The two legs run half a cycle apart. */
+@keyframes chick-leg {
+  0% {
+    transform: rotate(30deg);
+  }
+  65% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(30deg);
+  }
+}
+
+/* Body rises over the swing and drops onto each planted foot — twice per
+   cycle, because there are two steps in it. */
+@keyframes chick-body {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0.35px);
+  }
+  25%,
+  75% {
+    transform: translateY(-0.55px);
+  }
+}
+
+/* The giveaway of a real bird: the head holds still in space while the body
+   walks under it, then darts forward to catch up. */
+@keyframes chick-head {
+  0% {
+    transform: translateX(1px);
+  }
+  45% {
+    transform: translateX(-0.7px);
+  }
+  60% {
+    transform: translateX(-0.8px);
+  }
+  78%,
+  100% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes chick-tail {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+/* Mostly open, with a quick blink — off the gait clock so it stays random
+   looking against the steps. */
+@keyframes chick-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Standing still: breathing only. */
+@keyframes chick-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.045);
+  }
+}
+
+.chick-leg-a {
+  animation: chick-leg 0.18s linear infinite;
+}
+
+.chick-leg-b {
+  animation: chick-leg 0.18s linear -0.09s infinite;
+}
+
+.chick-body {
+  animation: chick-body 0.18s ease-in-out infinite;
+}
+
+.chick-head {
+  animation: chick-head 0.18s ease-out infinite;
+}
+
+.chick-tail {
+  animation: chick-tail 0.18s ease-in-out infinite;
+}
+
+.chick-eye {
+  animation: chick-blink 4.3s linear infinite;
+}
+
+/* Everything but the blink freezes when it stops walking; the body keeps a
+   slow breath so it never looks like a paused GIF. */
+.chick-resting .chick-leg-a,
+.chick-resting .chick-leg-b,
+.chick-resting .chick-head,
+.chick-resting .chick-tail {
+  animation-play-state: paused;
+}
+
+.chick-resting .chick-body {
+  animation: chick-breathe 2.6s ease-in-out infinite;
+}
+
+/* Shaken about, the chick goes green and sways it off. The colour lives on
+   custom properties so only these two values change. */
+[data-cursor="chick"] svg ellipse,
+[data-cursor="chick"] svg circle,
+[data-cursor="chick"] svg path {
+  transition: fill 450ms ease;
+}
+
+/* Stops to peck at the ground: three dips, the last one shallower, pivoting
+   on its feet rather than its middle. Runs once per stop. */
+@keyframes chick-peck {
+  0%,
+  8% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(40deg);
+  }
+  32% {
+    transform: rotate(8deg);
+  }
+  44% {
+    transform: rotate(40deg);
+  }
+  56% {
+    transform: rotate(6deg);
+  }
+  68% {
+    transform: rotate(34deg);
+  }
+  84%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.chick-pecking svg {
+  animation: chick-peck 1.4s ease-in-out;
+  transform-origin: 50% 88%;
+}
+
+@keyframes chick-woozy {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+.chick-queasy svg {
+  animation: chick-woozy 1.15s ease-in-out infinite;
+}
+
+/* The custom cursor ring is bigger than the chick and buries it, so it
+   hides on hover and the native grab cursor takes over. The extra
+   attribute beats the blanket `cursor: none` on specificity. */
+html.custom-cursor [data-cursor="chick"],
+html.custom-cursor [data-cursor="chick"] * {
+  cursor: grab !important;
+}
+
+html.custom-cursor [data-cursor="chick"][data-dragging="true"],
+html.custom-cursor [data-cursor="chick"][data-dragging="true"] * {
+  cursor: grabbing !important;
+}
+
+/* Drifts out to the chick's right rather than upwards: the track is only a
+   few pixels taller than the chick, so anything rising was clipped away. */
+@keyframes chick-heart {
+  0% {
+    opacity: 0;
+    transform: translateX(-2px) scale(0.4);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(13px) scale(0.85);
+  }
+}
+
 /* Mono micro-label */
 .microlabel {
   font-family: var(--font-jetbrains-mono), monospace;

@@ -7,6 +7,7 @@ import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { localePath } from "@/lib/content";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { LanguageToggle } from "@/components/layout/language-toggle";
+import { HeaderChick } from "@/components/ui/header-chick";
 import { CursorMuteToggle } from "@/components/ui/cursor-mute-toggle";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { cn } from "@/lib/utils";
@@ -146,6 +147,8 @@ export function Header() {
             </button>
           </div>
         </div>
+
+        <HeaderChick />
       </header>
 
       {/* Full-screen mobile menu overlay */}
