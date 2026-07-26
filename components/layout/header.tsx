@@ -73,9 +73,15 @@ export function Header() {
 
   return (
     <>
+      {/*
+        focus-visible, not focus: the router moves focus here after a
+        client-side navigation, and plain :focus would flash the link at
+        mouse users on every project they open. :focus-visible only fires
+        when the browser judges focus should be shown — i.e. keyboard.
+      */}
       <a
         href="#main"
-        className="sr-only z-100 bg-accent text-accent-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:rounded-full focus:px-5 focus:py-3 focus:font-mono focus:text-xs"
+        className="sr-only z-100 bg-accent text-accent-ink focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:rounded-full focus-visible:px-5 focus-visible:py-3 focus-visible:font-mono focus-visible:text-xs"
       >
         {ui.skipToContent}
       </a>
