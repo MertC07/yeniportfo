@@ -86,20 +86,59 @@ export const MERT_KNOWLEDGE = {
 };
 
 /**
+ * Short keywords that have to match a whole word. Turkish stacks suffixes, so
+ * matching the start of a word is the right default — "proje" should catch
+ * "projeleri". These few would otherwise fire from inside unrelated words:
+ * "sa" inside "saat" and "tasarım", "kim" inside "kimya" and "ekim", "old"
+ * inside "oldu", "git" inside "gitti".
+ */
+const WHOLE_WORD_KEYWORDS = new Set([
+  "sa",
+  "kim",
+  "old",
+  "git",
+  "iş",
+  "age",
+  "cv",
+  "hey",
+]);
+
+/**
+ * Turkish is very often typed without its diacritics ("odulleri", "kac
+ * yasinda"), so both the query and the keywords are folded before matching.
+ */
+const foldTurkish = (value: string) =>
+  value
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/[âà]/g, "a")
+    .replace(/[îï]/g, "i")
+    .replace(/û/g, "u");
+
+/**
  * Fast Local Response Engine with 100% comprehensive coverage of all portfolio sections
  */
 export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): { text: string; actionLinks?: ActionLink[] } {
   const q = query.toLowerCase().trim();
+  const folded = foldTurkish(q);
+  // Keep # and + so "c#" and "c++" survive as single words.
+  const words = folded.split(/[^\p{L}\p{N}#+]+/u).filter(Boolean);
+
+  const has = (...keywords: string[]) =>
+    keywords.some((raw) => {
+      const keyword = foldTurkish(raw);
+      // Multi-word phrases are specific enough to match anywhere.
+      if (keyword.includes(" ")) return folded.includes(keyword);
+      if (WHOLE_WORD_KEYWORDS.has(raw)) return words.includes(keyword);
+      return words.some((word) => word.startsWith(keyword));
+    });
 
   // 0. YAŞ & DOĞUM TARİHİ
-  if (
-    q.includes("yaş") ||
-    q.includes("kaç yaşında") ||
-    q.includes("doğum") ||
-    q.includes("2003") ||
-    q.includes("age") ||
-    q.includes("old")
-  ) {
+  if (has("yaş", "kaç yaşında", "doğum", "2003", "age", "old")) {
     if (locale === "tr") {
       return {
         text: "Mert Ceren 2003 doğumludur ve şu an 23 yaşındadır 😄 (2026 yılı itibarıyla). Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisidir 🚀",
@@ -118,17 +157,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 1. ÖDÜLLER & DERECELER (Awards & Honors)
-  if (
-    q.includes("ödül") ||
-    q.includes("derece") ||
-    q.includes("yarısm") ||
-    q.includes("yarışm") ||
-    q.includes("başarı") ||
-    q.includes("finalist") ||
-    q.includes("t3") ||
-    q.includes("award") ||
-    q.includes("honor")
-  ) {
+  if (has("ödül", "derece", "yarısm", "yarışm", "başarı", "finalist", "t3", "award", "honor")) {
     if (locale === "tr") {
       return {
         text: "🏆 **Ödüller & Dereceler (TEKNOFEST'te finale kaldık bile! 😄)**:\n\n• **TEKNOFEST 2026 Finalisti** — *T3 Vakfı & Sanayi ve Teknoloji Bakanlığı*\n  **Proje**: 5G & Yapay Zekâ ile Akıllı Yol Güvenliği (5Genç Takım Kaptanı)\n\nMert ve 5Genç takımı YOLOv11 modeliyle finale yükseldi. Ben de burada sevinçten nöronlarımı çalıştırıyorum 🤖✨",
@@ -149,14 +178,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 2. GITHUB & AÇIK KAYNAK PROJELER (GitHub & Open Source)
-  if (
-    q.includes("github") ||
-    q.includes("repo") ||
-    q.includes("kod") ||
-    q.includes("open source") ||
-    q.includes("açık kaynak") ||
-    q.includes("git")
-  ) {
+  if (has("github", "repo", "kod", "open source", "açık kaynak", "git")) {
     if (locale === "tr") {
       return {
         text: "🐙 **GitHub & Açık Kaynak Repoları (Kodlarımızı rahatça inceleyebilirsin 😄)**:\n\nResmi GitHub profili: `github.com/MertC07`\n\nÖne çıkan açık kaynak repoları:\n1. 🤖 **bwai-IK-Karar-Motoru** — İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platformu Kaynak Kodları\n3. 💻 **yeniportfo** — Şu an gezdiğin bu güzel portfolyonun kaynak kodları ✨",
@@ -177,15 +199,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 3. REFERANSLAR & TAVSİYELER (Testimonials)
-  if (
-    q.includes("referans") ||
-    q.includes("tavsiye") ||
-    q.includes("görüş") ||
-    q.includes("yorum") ||
-    q.includes("değerlendirme") ||
-    q.includes("kadir") ||
-    q.includes("hasan")
-  ) {
+  if (has("referans", "tavsiye", "görüş", "yorum", "değerlendirme", "kadir", "hasan")) {
     if (locale === "tr") {
       return {
         text: "💬 **Referanslar & Görüşler (Sağ olsun hocalarımız ve müşterilerimiz bizi pek övmüş 😄)**:\n\n• **Dr. Kadir C.** *(BANÜ Yazılım Mühendisliği Öğretim Üyesi)*:\n  *'Mert, teorik yazılım prensiplerini gerçek dünya problemlerine aktarmada ve yapay zekâ uygulamalarında olağanüstü bir pratik zekaya sahip.'*\n\n• **Hasan K.** *(İşletme Sahibi, Rosso Lounge Bistro)*:\n  *'Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarımızı özel bir panele dönüştürerek bize saatlerce zaman kazandırdı.'*",
@@ -204,22 +218,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 5. İLETİŞİM, E-POSTA, CV & ÖZGEÇMİŞ
-  if (
-    q.includes("iletişim") ||
-    q.includes("konuş") ||
-    q.includes("ulaş") ||
-    q.includes("görüş") ||
-    q.includes("mesaj") ||
-    q.includes("mail") ||
-    q.includes("eposta") ||
-    q.includes("email") ||
-    q.includes("cv") ||
-    q.includes("özgeçmiş") ||
-    q.includes("staj") ||
-    q.includes("iş") ||
-    q.includes("freelance") ||
-    q.includes("indir")
-  ) {
+  if (has("iletişim", "konuş", "ulaş", "görüş", "mesaj", "mail", "eposta", "email", "cv", "özgeçmiş", "staj", "iş", "freelance", "indir")) {
     if (locale === "tr") {
       return {
         text: "✉️ **İletişim & CV (Staj veya proje teklifin varsa hemen konuşalım! 😄)**:\n\n• **E-posta**: `mertceren.2003.mc@gmail.com`\n• **Lokasyon**: İstanbul / Bandırma, Türkiye\n• **İş Birlikleri**: Staj ve freelance proje tekliflerine sonuna kadar açık!\n• **Özgeçmiş (CV)**: Sayfadan 1 tıkla önizleyip PDF indirebilirsin ✨",
@@ -239,13 +238,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 6. TEKNOFEST & YOL GÜVENLİĞİ & 5GENÇ
-  if (
-    q.includes("teknofest") ||
-    q.includes("yol güvenliği") ||
-    q.includes("5genç") ||
-    q.includes("yolo") ||
-    q.includes("kaptan")
-  ) {
+  if (has("teknofest", "yol güvenliği", "5genç", "yolo", "kaptan")) {
     if (locale === "tr") {
       return {
         text: "🚀 **TEKNOFEST 2026 (Kaptan Mert ve 5Genç iş başında! 😄)**:\n\n• **Takım**: 5Genç\n• **Mert'in Rolü**: Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi\n• **Teknolojiler**: Python, YOLOv11, OpenCV, 5G Edge Computing\n\n5G ile entegre otonom sürüş için YOLOv11 modelleri geliştiriyoruz 🤖✨",
@@ -264,14 +257,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 7. SERTİFİKALAR & BELGELER
-  if (
-    q.includes("sertifika") ||
-    q.includes("certificate") ||
-    q.includes("btk") ||
-    q.includes("edx") ||
-    q.includes("udemy") ||
-    q.includes("belge")
-  ) {
+  if (has("sertifika", "certificate", "btk", "edx", "udemy", "belge")) {
     if (locale === "tr") {
       return {
         text: "📜 **Sertifikalar (Tam 22 tane onaylı sertifika topladık! 😄)**:\n\nMert Ceren'in yapay zekâ ve yazılım alanında **22 adet onaylı sertifikası** var.\n\n• **Google & BTK Akademi**: Uygulamalı Yapay Zekâ Eğitimi\n• **BTK Akademi**: Bilgisayarlı Görü ve YOLO\n• **edX & HP**: Generative AI for Games Development ✨",
@@ -290,14 +276,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 8. PROJELER (TEKNOFEST, Sanal Kampüs, Rosso Lounge, bwai İK)
-  if (
-    q.includes("proje") ||
-    q.includes("project") ||
-    q.includes("sanal kampüs") ||
-    q.includes("rosso") ||
-    q.includes("ik karar") ||
-    q.includes("işler")
-  ) {
+  if (has("proje", "project", "sanal kampüs", "rosso", "ik karar", "işler")) {
     if (locale === "tr") {
       return {
         text: "💻 **Projeler (Mert'in geliştirdiği harika işlere bakalım 😄)**:\n\n1. 🚦 **Akıllı Yol Güvenliği (TEKNOFEST 2026)** — 5G & YOLOv11 ile Otonom Sürüş Desteği (5Genç Takım Kaptanı)\n2. 🏫 **Sanal Kampüs** — 360° Panoramik Sanal Tur & İdare Envanter Yönetim Platformu\n3. 🍷 **Rosso Lounge Bistro** — Özel Yönetim Panelli Web Platformu & Menü Sistemi\n4. 🤖 **bwai İK Karar Motoru** — Açık kaynak yapay zekâ İK karar destek motoru ✨",
@@ -317,18 +296,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 9. YETENEKLER & TEKNOLOJİ STACK (Python, C#, React, Next.js, YOLO)
-  if (
-    q.includes("yetenek") ||
-    q.includes("skill") ||
-    q.includes("dil") ||
-    q.includes("tech") ||
-    q.includes("python") ||
-    q.includes("c#") ||
-    q.includes("react") ||
-    q.includes("stack") ||
-    q.includes("teknoloji") ||
-    q.includes("yazılım")
-  ) {
+  if (has("yetenek", "skill", "dil", "tech", "python", "c#", "react", "stack", "teknoloji", "yazılım")) {
     if (locale === "tr") {
       return {
         text: "🛠️ **Yetenekler (C#, Python, YOLO, React... Ne ararsan var! 😄)**:\n\n• **Yapay Zekâ & Görü**: Python, YOLOv8/v11, OpenCV, PyTorch, Model Optimizasyonu\n• **Backend Servisleri**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend & Web**: React, Next.js, TypeScript, TailwindCSS, Photo Sphere Viewer (360°)\n• **Geliştirme Araçları**: Git & GitHub, Docker, Linux, 5G & Edge Computing ✨",
@@ -347,16 +315,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 10. EĞİTİM & ÜNİVERSİTE & LİSE
-  if (
-    q.includes("okul") ||
-    q.includes("üniversite") ||
-    q.includes("öğrenci") ||
-    q.includes("banü") ||
-    q.includes("bandırma") ||
-    q.includes("lise") ||
-    q.includes("hazırlık") ||
-    q.includes("eğitim")
-  ) {
+  if (has("okul", "üniversite", "öğrenci", "banü", "bandırma", "lise", "hazırlık", "eğitim")) {
     if (locale === "tr") {
       return {
         text: "🎓 **Eğitim (Bandırma Onyedi Eylül Üni - Yazılım Mühendisliği 😄)**:\n\nMert şu an BANÜ Yazılım Mühendisliği öğrencisi ✨\n\n• **Lisans**: BANÜ Yazılım Mühendisliği (2024 - 2028)\n• **Hazırlık**: BANÜ İsteğe Bağlı İngilizce Hazırlık (2023 - 2024)\n• **Lise**: Eyüpsultan Anadolu Lisesi (2018 - 2022)",
@@ -375,14 +334,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 11. SELAMLAMA & GENEL SORULAR
-  if (
-    q.includes("merhaba") ||
-    q.includes("selam") ||
-    q.includes("sa") ||
-    q.includes("hey") ||
-    q.includes("günaydın") ||
-    q.includes("iyi günler")
-  ) {
+  if (has("merhaba", "selam", "sa", "hey", "günaydın", "iyi günler")) {
     if (locale === "tr") {
       return {
         text: "Selam! 👋 Ben Mert Ceren'in yapay zekâ asistanıyım, hoş geldin! 😄☕\n\nMert Ceren; Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisi, TEKNOFEST 2026 **5Genç** Takım Kaptanı ve yapay zekâ geliştiricisidir.\n\nSöyle bakalım, projeleri mi, 22 sertifikayı mı yoksa iletişim bilgilerini mi merak ediyorsun? ✨",
@@ -404,13 +356,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 12. BİYOGRAFİ & KİMDİR
-  if (
-    q.includes("kimdir") ||
-    q.includes("kim") ||
-    q.includes("hakkında") ||
-    q.includes("tanıt") ||
-    q.includes("biyografi")
-  ) {
+  if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi")) {
     if (locale === "tr") {
       return {
         text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nYapay zekâ, bilgisayarlı görü (YOLOv11), C#/.NET Core ve modern web platformları üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
@@ -432,7 +378,9 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   // 13. FALLBACK FOR UNMATCHED QUERIES
   if (locale === "tr") {
     return {
-      text: `Haha, ilahi! 😄 Ben hava durumu spikeri değilim ki 😅 Sadece Mert'in projeleri, yetenekleri, 22 sertifikası ve eğitimi hakkında yardımcı olabilirim 🚀\n\nMert ile doğrudan görüşmek istersen: **${MERT_KNOWLEDGE.profile.email}**`,
+      // Bu cevap SORULAN her konu için kullanılıyor — belirli bir konudan
+      // (hava durumu, yemek vb.) bahsetmemeli, yoksa alakasız görünür.
+      text: `Orası tam benim alanım değil 😅 Ama Mert'in projeleri, yetenekleri, sertifikaları ve eğitimi hakkında ne sorarsan seve seve anlatırım 🚀\n\nMert ile doğrudan görüşmek istersen: **${MERT_KNOWLEDGE.profile.email}**`,
       actionLinks: [
         { label: "Projeleri İncele 🚀", href: "#work", isAnchor: true },
         { label: "Ödüller & Dereceler 🏆", href: "#awards", isAnchor: true },
