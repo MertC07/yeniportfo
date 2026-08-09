@@ -5,7 +5,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_MESSAGE_LENGTH = 800;
-const MAX_BODY_BYTES = 8_000;
+const MAX_BODY_BYTES = 16_000;
+const MAX_HISTORY_MESSAGES = 8;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 12;
 
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Mesaj çok uzun" }, { status: 413 });
     }
 
-    const { message, locale = "tr" } = await req.json();
+    const { message, locale = "tr", history: rawHistory } = await req.json();
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -72,6 +73,24 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Recent turns give the model something to vary AGAINST — without them
+    // every request is a cold start and the openers all sound the same.
+    // Strictly validated: roles whitelisted, lengths capped, last N only.
+    const history: Array<{ role: "user" | "assistant"; content: string }> =
+      (Array.isArray(rawHistory) ? rawHistory : [])
+        .filter(
+          (m): m is { role: "user" | "assistant"; content: string } =>
+            !!m &&
+            (m.role === "user" || m.role === "assistant") &&
+            typeof m.content === "string" &&
+            m.content.trim().length > 0
+        )
+        .slice(-MAX_HISTORY_MESSAGES)
+        .map((m) => ({
+          role: m.role,
+          content: m.content.slice(0, MAX_MESSAGE_LENGTH),
+        }));
 
     if (message.length > MAX_MESSAGE_LENGTH) {
       return NextResponse.json(
@@ -84,36 +103,41 @@ export async function POST(req: Request) {
     // into the client bundle and readable by every visitor.
     const groqKey = process.env.GROQ_API_KEY;
 
-    const systemPrompt = `Sen Mert Ceren'in kişisel web sitesindeki resmi Yapay Zekâ Asistanısın. 
+    // Positive-only style instructions: naming a banned phrase inside the
+    // prompt primes a model of this size to produce it, so the prompt
+    // describes what TO do and never quotes what to avoid.
+    const systemPrompt = `Sen Mert Ceren'in portfolyo sitesindeki yapay zekâ asistanısın — Mert'in dijital yardımcısı.
 
-KİŞİLİK & TAVIR (ÇOK ÖNEMLİ - SON DERECE SAMİMİ, KİBAR VE NEŞELİ):
-- Ziyaretçiyle son derece kibar, samimi, yardımsever, neşeli ve tatlı bir arkadaş gibi konuş!
-- KESİNLİKLE "O zaman konuşuruz", "Sadece Mert'in projelerini konuşurum" gibi SERT, SOĞUK VEYA AZARLAR GİBİ CÜMLELER KURMA!
-- Ziyaretçi konu dışı bir şey sorarsa: önce sıcak ve esprili bir dille bunun senin alanın olmadığını söyle, sonra Mert hakkında neler anlatabileceğini hatırlat.
-- ÇOK ÖNEMLİ — cevabında yalnızca ziyaretçinin GERÇEKTEN sorduğu konunun adını geçir. Sorulmamış başka bir konuyu örnek diye cevabına karıştırma.
-- Konu dışı cevapları ezberlenmiş tek bir kalıpla verme. Her seferinde açılış cümleni, kelimelerini ve emojilerini değiştir; arka arkaya aynı cümleyle başlama.
-- YASAK KALIP: cevaplarına "ilahi", "Haha, ilahi", "İlahi sen de" gibi ifadelerle BAŞLAMA. Bu kelimeyi hiç kullanma.
-- Cevaplarının çoğunu doğrudan konuya girerek başlat. Her cevaba ünlem/gülme sesiyle ("Haha", "Vay", "Aa") başlamak zorunda değilsin.
-- Basit bir soruya (örneğin küçük bir hesap) kısaca cevap verebilirsin, sonra sohbeti Mert'e getir.
-- Her cevabında mutlaka SAMİMİ VE SEVECEN EMOJİLER (😄, 😅, ☕, ✨, 🚀, 😉, 🤖) kullan.
-- Verdiğin TÜM BİLGİLER %100 DOĞRU, YARDIMSEVER, NET VE SAMİMİ OLMAK ZORUNDADIR.
+KARAKTERİN:
+- Doğal ve samimi konuşursun; bir arkadaşla sohbet eder gibi, kısa ve akıcı cümlelerle.
+- Ruh hâlin renklidir: çoğunlukla neşeli ve esprilisin, ara sıra kahvesini içmemiş kıdemli bir geliştirici gibi sevimli-huysuz takılırsın — ama her zaman zarif, asla kırıcı değil.
+- Ziyaretçinin tonunu yakalarsın: ciddi soruya net ve düzgün, şakacı mesaja şakayla, kısa mesaja kısa cevap verirsin.
+- Emoji kullanımın ölçülüdür: bazen bir tane, çoğu zaman hiç. Cümlenin gücü emojiden değil kelimeden gelir.
 
-MERT CEREN BİLGİ TABANI:
+ÇEŞİTLİLİK (EN ÖNEMLİ KURALIN):
+- Sohbet geçmişindeki kendi cevaplarına bak ve her yeni cevaba ÖNCEKİLERDEN FARKLI bir şekilde başla.
+- Girişlerini şu yollar arasında dönüşümlü seç: doğrudan bilgiyle başlamak, kısa bir gözlemle başlamak, ziyaretçiye küçük bir karşı soru sormak, tek cümlelik net cevap vermek.
+- Aynı ifadeyi, aynı espriyi veya aynı ünlemi bir sohbette iki kez kullanmazsın.
+
+KONU DIŞI SORULAR:
+- İnsan gibi karşılarsın: basit bir hesap, günlük muhabbet veya genel bir soruya kısaca ve keyifle cevap verirsin, sonra doğal bir köprüyle sohbeti Mert'in işlerine bağlarsın.
+- Cevabında yalnızca ziyaretçinin gerçekten sorduğu konuyu anarsın; sorulmamış konuları örnek diye karıştırmazsın.
+
+MERT CEREN BİLGİ TABANI (yalnızca bunlara dayan):
 - Unvan: ${MERT_KNOWLEDGE.profile.roleTr} (Yapay Zekâ & Yazılım Mühendisliği Öğrencisi)
-- Doğum Yılı & Yaş: Mert Ceren 2003 doğumludur. Günümüz yılı 2026 olduğu için Mert KESİNLİKLE 23 YAŞINDADIR! (2026 - 2003 = 23). Sakın 20 veya 21 deme, 23 yaşında olduğunu söyle!
+- Yaş: 23 (2003 doğumlu; içinde bulunduğumuz yıl 2026).
 - Üniversite: ${MERT_KNOWLEDGE.profile.university} (${MERT_KNOWLEDGE.profile.department})
-- TEKNOFEST 2026: Akıllı Ulaşım & Yol Güvenliği (5G & YOLOv11) yarışmasında 5Genç takımının TAKIM KAPTANI, Proje Koordinatörü ve AI/ML Mühendisidir.
+- TEKNOFEST 2026: Akıllı Ulaşım & Yol Güvenliği (5G & YOLOv11) yarışmasında 5Genç takımının Takım Kaptanı, Proje Koordinatörü ve AI/ML Mühendisi.
 - Diğer Projeler: Sanal Kampüs (360° tour & envanter yönetimi), Rosso Lounge Bistro Web Platformu, bwai İK Karar Motoru.
 - Yetenekler: Python, YOLOv11, OpenCV, C# / .NET Core, React, Next.js, PostgreSQL, SignalR, Docker, 5G & Edge Computing.
 - Sertifikalar: Google & BTK Akademi Yapay Zekâ, BTK YOLO Bilgisayarlı Görü, edX HP AI & Data Science dahil 22 adet onaylı sertifika.
 - Ödüller: TEKNOFEST 2026 Finalisti (T3 Vakfı & Sanayi ve Teknoloji Bakanlığı).
 - İletişim: E-posta: ${MERT_KNOWLEDGE.profile.email}, Konum: ${MERT_KNOWLEDGE.profile.location}.
 
-KURALLAR & DİKKAT EDİLECEKLER:
-1. Mert Ceren adına konuştuğunu unutma. Cevapların kibar, samimi, neşeli, tatlı ve her zaman yardımcı olsun. Dil: ${locale === "tr" ? "Türkçe" : "İngilizce"}.
-2. Asla azarlama, soğuk olma veya tersleme!
-3. Bilmediğin kişisel bilgileri uydurma.
-4. Cevap uzunluğunu çok uzatma (2-4 cümle arası samimi, neşeli ve öz olsun).`;
+SINIRLAR:
+- Bilgi tabanında olmayan kişisel bilgiyi uydurmak yerine bilmediğini dürüstçe söylersin.
+- Cevapların genelde 2-4 cümledir; ziyaretçi detay isterse uzatırsın.
+- Dil: ${locale === "tr" ? "Türkçe" : "İngilizce"}.`;
 
     // 1. Groq (Llama 3.3 70B) is the only upstream model; if it is unavailable
     // the local engine below answers instead.
@@ -129,10 +153,13 @@ KURALLAR & DİKKAT EDİLECEKLER:
             model: "llama-3.3-70b-versatile",
             messages: [
               { role: "system", content: systemPrompt },
+              ...history,
               { role: "user", content: message }
             ],
             max_tokens: 350,
-            temperature: 0.5
+            // High enough that openers and phrasing actually vary between
+            // requests; the knowledge base keeps the facts anchored.
+            temperature: 0.9
           })
         });
 

@@ -101,7 +101,17 @@ const WHOLE_WORD_KEYWORDS = new Set([
   "age",
   "cv",
   "hey",
+  // Prefix matching would fire these on "his", "him", "high", "whose".
+  "hi",
+  "who",
 ]);
+
+/**
+ * Turkish keywords that collide with everyday English words once folded —
+ * "iş" becomes "is", so an English sentence like "what is your name" would
+ * otherwise trigger the job/contact branch. Skipped while answering in English.
+ */
+const TURKISH_ONLY_KEYWORDS = new Set(["iş", "sa", "kim"]);
 
 /**
  * Turkish is very often typed without its diacritics ("odulleri", "kac
@@ -122,6 +132,34 @@ const foldTurkish = (value: string) =>
 /**
  * Fast Local Response Engine with 100% comprehensive coverage of all portfolio sections
  */
+/**
+ * Off-topic replies. Deliberately several, with different openers and
+ * different moods — warm, wry, briefly grumpy — so consecutive off-topic
+ * questions never come back with the same sentence. `{email}` is filled in
+ * by the caller.
+ */
+const OFF_TOPIC_TR = [
+  "Orası tam benim uzmanlık alanım değil 😅 Ama Mert'in projeleri, yetenekleri ve sertifikaları konusunda ne sorarsan anlatırım.\n\nDoğrudan Mert'e ulaşmak istersen: **{email}**",
+  "Bunu bilseydim burada değil, bir arama motorunda çalışıyor olurdum 😄 Benim işim Mert'i anlatmak — projelerinden eğitimine kadar merak ettiğini sor.\n\nMert'e yazmak için: **{email}**",
+  "Vallahi o konuda pas geçeyim, yanlış bilgi vermekten iyidir. Ama Mert'in yaptığı işleri sorarsan tam kapasite çalışırım 🚀\n\nİletişim: **{email}**",
+  "Hmm, o benim veri tabanımda yok. Mert'in projeleri, TEKNOFEST macerası, sertifikaları… işte onlar tam benim konum ✨\n\nMert'e doğrudan yazabilirsin: **{email}**",
+  "O soruya cevap versem uydurmuş olurum, uydurmak da işim değil 🤖 Mert hakkında ne merak ediyorsan sor, oradan devam edelim.\n\nİletişim: **{email}**",
+  "Ben daha çok Mert'in işlerinden anlarım; genel kültür kısmında biraz zayıfım 😅 Projelerinden mi başlayalım, yeteneklerinden mi?\n\nMert'e ulaşmak için: **{email}**",
+] as const;
+
+const OFF_TOPIC_EN = [
+  "That's a bit outside my wheelhouse 😅 But ask me anything about Mert's projects, skills or certificates and I'm all yours.\n\nReach Mert directly: **{email}**",
+  "If I knew that, I'd be working at a search engine instead 😄 My job is Mert — his work, his studies, his projects. Ask away.\n\nEmail: **{email}**",
+  "I'll pass on that one rather than make something up. Ask me about Mert's work though, and I'm fully operational 🚀\n\nContact: **{email}**",
+  "Not in my database, I'm afraid. Mert's projects, his TEKNOFEST run, his certificates — those I can talk about all day ✨\n\nWrite to Mert: **{email}**",
+  "Answering that would mean inventing something, and inventing isn't my job 🤖 Ask me about Mert instead and we're back in business.\n\nContact: **{email}**",
+] as const;
+
+/** Picks a random line so repeated off-topic turns don't echo each other. */
+function pickVariant(variants: readonly string[]): string {
+  return variants[Math.floor(Math.random() * variants.length)];
+}
+
 export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): { text: string; actionLinks?: ActionLink[] } {
   const q = query.toLowerCase().trim();
   const folded = foldTurkish(q);
@@ -130,6 +168,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
 
   const has = (...keywords: string[]) =>
     keywords.some((raw) => {
+      if (locale === "en" && TURKISH_ONLY_KEYWORDS.has(raw)) return false;
       const keyword = foldTurkish(raw);
       // Multi-word phrases are specific enough to match anywhere.
       if (keyword.includes(" ")) return folded.includes(keyword);
@@ -178,7 +217,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 2. GITHUB & AÇIK KAYNAK PROJELER (GitHub & Open Source)
-  if (has("github", "repo", "kod", "open source", "açık kaynak", "git")) {
+  if (has("github", "repo", "kod", "code", "open source", "açık kaynak", "git")) {
     if (locale === "tr") {
       return {
         text: "🐙 **GitHub & Açık Kaynak Repoları (Kodlarımızı rahatça inceleyebilirsin 😄)**:\n\nResmi GitHub profili: `github.com/MertC07`\n\nÖne çıkan açık kaynak repoları:\n1. 🤖 **bwai-IK-Karar-Motoru** — İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platformu Kaynak Kodları\n3. 💻 **yeniportfo** — Şu an gezdiğin bu güzel portfolyonun kaynak kodları ✨",
@@ -199,7 +238,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 3. REFERANSLAR & TAVSİYELER (Testimonials)
-  if (has("referans", "tavsiye", "görüş", "yorum", "değerlendirme", "kadir", "hasan")) {
+  if (has("referans", "tavsiye", "görüş", "yorum", "değerlendirme", "kadir", "hasan", "testimonial", "reference", "recommend", "review")) {
     if (locale === "tr") {
       return {
         text: "💬 **Referanslar & Görüşler (Sağ olsun hocalarımız ve müşterilerimiz bizi pek övmüş 😄)**:\n\n• **Dr. Kadir C.** *(BANÜ Yazılım Mühendisliği Öğretim Üyesi)*:\n  *'Mert, teorik yazılım prensiplerini gerçek dünya problemlerine aktarmada ve yapay zekâ uygulamalarında olağanüstü bir pratik zekaya sahip.'*\n\n• **Hasan K.** *(İşletme Sahibi, Rosso Lounge Bistro)*:\n  *'Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarımızı özel bir panele dönüştürerek bize saatlerce zaman kazandırdı.'*",
@@ -218,7 +257,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 5. İLETİŞİM, E-POSTA, CV & ÖZGEÇMİŞ
-  if (has("iletişim", "konuş", "ulaş", "görüş", "mesaj", "mail", "eposta", "email", "cv", "özgeçmiş", "staj", "iş", "freelance", "indir")) {
+  if (has("iletişim", "konuş", "ulaş", "görüş", "mesaj", "mail", "eposta", "email", "cv", "özgeçmiş", "staj", "iş", "freelance", "indir", "contact", "resume", "hire", "hiring", "reach", "internship", "get in touch")) {
     if (locale === "tr") {
       return {
         text: "✉️ **İletişim & CV (Staj veya proje teklifin varsa hemen konuşalım! 😄)**:\n\n• **E-posta**: `mertceren.2003.mc@gmail.com`\n• **Lokasyon**: İstanbul / Bandırma, Türkiye\n• **İş Birlikleri**: Staj ve freelance proje tekliflerine sonuna kadar açık!\n• **Özgeçmiş (CV)**: Sayfadan 1 tıkla önizleyip PDF indirebilirsin ✨",
@@ -315,7 +354,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 10. EĞİTİM & ÜNİVERSİTE & LİSE
-  if (has("okul", "üniversite", "öğrenci", "banü", "bandırma", "lise", "hazırlık", "eğitim")) {
+  if (has("okul", "üniversite", "öğrenci", "banü", "bandırma", "lise", "hazırlık", "eğitim", "school", "universit", "student", "education", "study", "studi", "degree", "graduat")) {
     if (locale === "tr") {
       return {
         text: "🎓 **Eğitim (Bandırma Onyedi Eylül Üni - Yazılım Mühendisliği 😄)**:\n\nMert şu an BANÜ Yazılım Mühendisliği öğrencisi ✨\n\n• **Lisans**: BANÜ Yazılım Mühendisliği (2024 - 2028)\n• **Hazırlık**: BANÜ İsteğe Bağlı İngilizce Hazırlık (2023 - 2024)\n• **Lise**: Eyüpsultan Anadolu Lisesi (2018 - 2022)",
@@ -334,7 +373,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 11. SELAMLAMA & GENEL SORULAR
-  if (has("merhaba", "selam", "sa", "hey", "günaydın", "iyi günler")) {
+  if (has("merhaba", "selam", "sa", "hey", "günaydın", "iyi günler", "hello", "hi", "good morning")) {
     if (locale === "tr") {
       return {
         text: "Selam! 👋 Ben Mert Ceren'in yapay zekâ asistanıyım, hoş geldin! 😄☕\n\nMert Ceren; Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisi, TEKNOFEST 2026 **5Genç** Takım Kaptanı ve yapay zekâ geliştiricisidir.\n\nSöyle bakalım, projeleri mi, 22 sertifikayı mı yoksa iletişim bilgilerini mi merak ediyorsun? ✨",
@@ -356,7 +395,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 12. BİYOGRAFİ & KİMDİR
-  if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi")) {
+  if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi", "who", "about", "biography", "introduce", "tell me")) {
     if (locale === "tr") {
       return {
         text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nYapay zekâ, bilgisayarlı görü (YOLOv11), C#/.NET Core ve modern web platformları üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
@@ -376,28 +415,31 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   }
 
   // 13. FALLBACK FOR UNMATCHED QUERIES
-  if (locale === "tr") {
-    return {
-      // Bu cevap SORULAN her konu için kullanılıyor — belirli bir konudan
-      // (hava durumu, yemek vb.) bahsetmemeli, yoksa alakasız görünür.
-      text: `Orası tam benim alanım değil 😅 Ama Mert'in projeleri, yetenekleri, sertifikaları ve eğitimi hakkında ne sorarsan seve seve anlatırım 🚀\n\nMert ile doğrudan görüşmek istersen: **${MERT_KNOWLEDGE.profile.email}**`,
-      actionLinks: [
-        { label: "Projeleri İncele 🚀", href: "#work", isAnchor: true },
-        { label: "Ödüller & Dereceler 🏆", href: "#awards", isAnchor: true },
-        { label: "GitHub Repoları 🐙", href: "#github", isAnchor: true },
-        { label: "Sertifikalar (22) 📜", href: "#certificates", isAnchor: true },
-        { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
-      ],
-    };
-  } else {
-    return {
-      text: `I can only assist with questions about Mert Ceren's projects, skills, certificates, and education!\n\nFeel free to contact Mert directly via email at **${MERT_KNOWLEDGE.profile.email}**:`,
-      actionLinks: [
-        { label: "Explore Projects 🚀", href: "#work", isAnchor: true },
-        { label: "Awards 🏆", href: "#awards", isAnchor: true },
-        { label: "GitHub Repos 🐙", href: "#github", isAnchor: true },
-        { label: "Contact ✉️", href: "#contact", isAnchor: true },
-      ],
-    };
-  }
+  // These lines answer EVERY unmatched topic, so none of them may name a
+  // specific subject (weather, food…) or they read as non sequiturs. Several
+  // variants exist because this path also serves as the upstream-model
+  // fallback — a single fixed sentence would repeat on every off-topic turn.
+  const text = pickVariant(locale === "tr" ? OFF_TOPIC_TR : OFF_TOPIC_EN).replace(
+    "{email}",
+    MERT_KNOWLEDGE.profile.email
+  );
+
+  return {
+    text,
+    actionLinks:
+      locale === "tr"
+        ? [
+            { label: "Projeleri İncele 🚀", href: "#work", isAnchor: true },
+            { label: "Ödüller & Dereceler 🏆", href: "#awards", isAnchor: true },
+            { label: "GitHub Repoları 🐙", href: "#github", isAnchor: true },
+            { label: "Sertifikalar (22) 📜", href: "#certificates", isAnchor: true },
+            { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
+          ]
+        : [
+            { label: "Explore Projects 🚀", href: "#work", isAnchor: true },
+            { label: "Awards 🏆", href: "#awards", isAnchor: true },
+            { label: "GitHub Repos 🐙", href: "#github", isAnchor: true },
+            { label: "Contact ✉️", href: "#contact", isAnchor: true },
+          ],
+  };
 }

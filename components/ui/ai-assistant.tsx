@@ -212,7 +212,17 @@ export function AiAssistant() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: query, locale }),
+        body: JSON.stringify({
+          message: query,
+          locale,
+          // `messages` here is the pre-send closure state, so it holds the
+          // conversation up to (not including) the message being sent — the
+          // model uses it to vary its openers instead of cold-starting.
+          history: messages.slice(-8).map((m) => ({
+            role: m.sender === "user" ? "user" : "assistant",
+            content: m.text,
+          })),
+        }),
       });
 
       if (res.ok) {
