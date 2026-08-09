@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { awardsGallery } from "@/lib/data";
 import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 
@@ -42,6 +43,39 @@ export function Awards() {
           </motion.li>
         ))}
       </ol>
+
+      {/* Photo strip — drifts left-to-right (reversed marquee), pauses on
+          hover. Rows are duplicated so the -50% keyframe loops seamlessly. */}
+      {awardsGallery.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: 0.8, ease: EASE }}
+          className="mt-14 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+        >
+          <div className="flex w-max animate-marquee will-change-transform [animation-direction:reverse] [animation-duration:55s] hover:[animation-play-state:paused]">
+            {[false, true].map((hidden) => (
+              <div
+                key={String(hidden)}
+                aria-hidden={hidden || undefined}
+                className="flex shrink-0 gap-4 pr-4"
+              >
+                {awardsGallery.map((src, i) => (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    key={src}
+                    src={src}
+                    alt={hidden ? "" : `${ui.sections.awards.label} — ${i + 1}`}
+                    loading="lazy"
+                    className="h-44 w-auto rounded-xl border hairline object-cover sm:h-56"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 }

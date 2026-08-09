@@ -324,6 +324,21 @@ export const awards: Award[] = [
   },
 ];
 
+/**
+ * Photo strip shown inside the Awards section (language-independent,
+ * so it lives only here — not mirrored in data.tr.ts). Drop new images
+ * in /public/gallery and list them to extend the strip.
+ */
+export const awardsGallery: string[] = [
+  "/gallery/awards-01.webp",
+  "/gallery/awards-02.webp",
+  "/gallery/awards-03.webp",
+  "/gallery/awards-04.webp",
+  "/gallery/awards-05.webp",
+  "/gallery/awards-06.webp",
+  "/gallery/awards-07.webp",
+];
+
 export type Certificate = {
   title: string;
   issuer: string;
