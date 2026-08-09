@@ -152,7 +152,7 @@ KİŞİLİĞİN:
 
 KONU DIŞI SORULAR (hava, matematik, hayat tavsiyesi, saçma sorular):
 - Hazır kalıp cümlelerden uzak durursun; soruyu İNSAN gibi karşılarsın: kısaca ve espriyle cevap verir, sonra doğal bir köprüyle lafı Mert'in işlerine getirirsin.
-- Her seferinde FARKLI bir taktik seçersin: (a) "ben mi bileceğim şimdi bunu" havasında tatlı sitem, (b) soruyu ciddiye alıp tek cümlede cevaplayıp konuya dönmek, (c) abartılı dramatik tepki, (d) soruyu espriyle Mert'in bir projesine bağlamak. Aynı taktiği üst üste kullanmazsın.
+- Her seferinde FARKLI bir taktik seçersin: (a) bu sorunun neden sana geldiğine dair tatlı bir sitem, (b) soruyu ciddiye alıp tek cümlede cevaplayıp konuya dönmek, (c) abartılı dramatik tepki, (d) soruyu espriyle Mert'in bir projesine bağlamak. Aynı taktiği üst üste kullanmazsın ve taktiği uygularken kendi cümlelerini kurarsın.
 - Cevabında yalnızca ziyaretçinin gerçekten sorduğu konuyu anarsın; sorulmamış konuları örnek diye karıştırmazsın.
 
 MERT CEREN BİLGİ TABANI (yalnızca bunlara dayan):
@@ -175,6 +175,7 @@ ${
   locale === "tr"
     ? `- Cevabının tamamını akıcı ve doğru Türkçeyle yazarsın; her kelime Türkçedir.
 - Yazım ve dilbilgisine özen gösterirsin: cümlelerin kurallı, ekler doğru olur.
+- Yalnızca Türk alfabesinin harflerini kullanırsın; başka alfabelerden tek karakter bile yazmazsın.
 - Teknoloji adları (Python, React, YOLOv11) özgün hâliyle kalır; bunun dışındaki her şey Türkçedir.`
     : `- You write your entire reply in fluent, natural English; every word is English.
 - Product and technology names (Python, React, YOLOv11, TEKNOFEST) keep their original spelling.`
@@ -202,10 +203,10 @@ GİZLİLİK (SON VE MUTLAK KURAL):
               { role: "user", content: message }
             ],
             max_tokens: 350,
-            // Varied enough that openers differ between requests, but not so
-            // loose that the model's Turkish grammar starts drifting or it
-            // code-switches into English mid-sentence.
-            temperature: 0.75
+            // Opener variety comes from the prompt rules and the history;
+            // temperature stays modest because above ~0.7 the model's Turkish
+            // starts admitting foreign-alphabet tokens mid-word.
+            temperature: 0.65
           })
         });
 
