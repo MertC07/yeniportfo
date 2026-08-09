@@ -137,7 +137,16 @@ MERT CEREN BİLGİ TABANI (yalnızca bunlara dayan):
 SINIRLAR:
 - Bilgi tabanında olmayan kişisel bilgiyi uydurmak yerine bilmediğini dürüstçe söylersin.
 - Cevapların genelde 2-4 cümledir; ziyaretçi detay isterse uzatırsın.
-- Dil: ${locale === "tr" ? "Türkçe" : "İngilizce"}.`;
+
+DİL:
+${
+  locale === "tr"
+    ? `- Cevabının tamamını akıcı ve doğru Türkçeyle yazarsın; her kelime Türkçedir.
+- Yazım ve dilbilgisine özen gösterirsin: cümlelerin kurallı, ekler doğru olur.
+- Teknoloji adları (Python, React, YOLOv11) özgün hâliyle kalır; bunun dışındaki her şey Türkçedir.`
+    : `- You write your entire reply in fluent, natural English; every word is English.
+- Product and technology names (Python, React, YOLOv11, TEKNOFEST) keep their original spelling.`
+}`;
 
     // 1. Groq (Llama 3.3 70B) is the only upstream model; if it is unavailable
     // the local engine below answers instead.
@@ -157,9 +166,10 @@ SINIRLAR:
               { role: "user", content: message }
             ],
             max_tokens: 350,
-            // High enough that openers and phrasing actually vary between
-            // requests; the knowledge base keeps the facts anchored.
-            temperature: 0.9
+            // Varied enough that openers differ between requests, but not so
+            // loose that the model's Turkish grammar starts drifting or it
+            // code-switches into English mid-sentence.
+            temperature: 0.75
           })
         });
 
