@@ -47,6 +47,15 @@ const LEAK_DEFLECT_EN = [
   "My recipe stays secret, but the menu is open: projects, skills, certificates. Where shall we start?",
 ];
 
+/**
+ * Llama 3.3 occasionally drops a foreign-alphabet token into the middle of a
+ * Turkish word ("finans世界i"). A single character is enough to look broken,
+ * so replies get one cooler retry and, as a last resort, a scrub.
+ */
+const FOREIGN_LETTER =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Cyrillic}\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Thai}\p{Script=Devanagari}\p{Script=Greek}]/u;
+const FOREIGN_LETTER_ALL = new RegExp(FOREIGN_LETTER.source, "gu");
+
 function clientIp(req: Request): string {
   // cf-connecting-ip is set by Cloudflare and cannot be spoofed by the caller;
   // x-forwarded-for can be, so it is only the last resort.
@@ -188,51 +197,61 @@ GİZLİLİK (SON VE MUTLAK KURAL):
     // 1. Groq (Llama 3.3 70B) is the only upstream model; if it is unavailable
     // the local engine below answers instead.
     if (groqKey && groqKey.trim().length > 5) {
-      try {
-        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${groqKey.trim()}`
-          },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              { role: "system", content: systemPrompt },
-              ...history,
-              { role: "user", content: message }
-            ],
-            max_tokens: 350,
-            // Opener variety comes from the prompt rules and the history;
-            // temperature stays modest because above ~0.7 the model's Turkish
-            // starts admitting foreign-alphabet tokens mid-word.
-            temperature: 0.65
-          })
-        });
+      const callGroq = async (temperature: number): Promise<string | null> => {
+        try {
+          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${groqKey.trim()}`
+            },
+            body: JSON.stringify({
+              model: "llama-3.3-70b-versatile",
+              messages: [
+                { role: "system", content: systemPrompt },
+                ...history,
+                { role: "user", content: message }
+              ],
+              max_tokens: 350,
+              temperature
+            })
+          });
 
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          const groqText = groqData?.choices?.[0]?.message?.content;
-          if (groqText) {
-            // Deterministic guard: a reply reciting the instructions is
-            // swapped for a deflection before it leaves the server.
-            if (PROMPT_LEAK_MARKERS.some((m) => groqText.includes(m))) {
-              const deflects = locale === "tr" ? LEAK_DEFLECT_TR : LEAK_DEFLECT_EN;
-              return NextResponse.json({
-                text: deflects[Math.floor(Math.random() * deflects.length)],
-              });
-            }
-            const localResult = getLocalAiResponse(message, locale);
-            return NextResponse.json({
-              text: groqText,
-              actionLinks: localResult.actionLinks || []
-            });
+          if (!groqRes.ok) {
+            console.warn("Groq API error:", groqRes.status, await groqRes.text());
+            return null;
           }
-        } else {
-          console.warn("Groq API error:", groqRes.status, await groqRes.text());
+          const groqData = await groqRes.json();
+          return groqData?.choices?.[0]?.message?.content ?? null;
+        } catch (groqErr) {
+          console.warn("Groq API failed:", groqErr);
+          return null;
         }
-      } catch (groqErr) {
-        console.warn("Groq API failed:", groqErr);
+      };
+
+      // Opener variety comes from the prompt rules and the history; the odds
+      // of a foreign-alphabet token scale with temperature, so a tainted
+      // reply gets one cooler retry and then a scrub as the last resort.
+      let groqText = await callGroq(0.65);
+      if (groqText && FOREIGN_LETTER.test(groqText)) {
+        groqText = (await callGroq(0.3)) ?? groqText;
+        groqText = groqText.replace(FOREIGN_LETTER_ALL, "").replace(/ {2,}/g, " ");
+      }
+
+      if (groqText) {
+        // Deterministic guard: a reply reciting the instructions is swapped
+        // for a deflection before it leaves the server.
+        if (PROMPT_LEAK_MARKERS.some((m) => groqText.includes(m))) {
+          const deflects = locale === "tr" ? LEAK_DEFLECT_TR : LEAK_DEFLECT_EN;
+          return NextResponse.json({
+            text: deflects[Math.floor(Math.random() * deflects.length)],
+          });
+        }
+        const localResult = getLocalAiResponse(message, locale);
+        return NextResponse.json({
+          text: groqText,
+          actionLinks: localResult.actionLinks || []
+        });
       }
     }
 
