@@ -104,6 +104,8 @@ const WHOLE_WORD_KEYWORDS = new Set([
   // Prefix matching would fire these on "his", "him", "high", "whose".
   "hi",
   "who",
+  // Folded to "yas", a prefix match would fire on "yasaklı"/"yasal".
+  "yaş",
 ]);
 
 /**
@@ -177,7 +179,9 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     });
 
   // 0. YAŞ & DOĞUM TARİHİ
-  if (has("yaş", "kaç yaşında", "doğum", "2003", "age", "old")) {
+  // "yaşı" catches the inflected forms ("yaşında", "yaşın kaç") that the
+  // whole-word "yaş" no longer reaches.
+  if (has("yaş", "yaşı", "kaç yaşında", "doğum", "2003", "age", "old")) {
     if (locale === "tr") {
       return {
         text: "Mert Ceren 2003 doğumludur ve şu an 23 yaşındadır 😄 (2026 yılı itibarıyla). Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisidir 🚀",
