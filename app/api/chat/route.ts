@@ -56,6 +56,17 @@ const FOREIGN_LETTER =
   /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Cyrillic}\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Thai}\p{Script=Devanagari}\p{Script=Greek}]/u;
 const FOREIGN_LETTER_ALL = new RegExp(FOREIGN_LETTER.source, "gu");
 
+/**
+ * The same drift also shows up in the Latin alphabet — a German or English
+ * function word slipping into a Turkish sentence ("O, wirklich bir dahi").
+ * Only everyday function words are listed: they never belong in a Turkish
+ * reply, while product and technology names must pass through untouched.
+ * A hit cannot be scrubbed the way a stray letter can, so it only triggers
+ * the cooler retry.
+ */
+const FOREIGN_WORD =
+  /\b(wirklich|sehr|aber|nicht|natürlich|vielleicht|really|actually|definitely|absolutely|honestly|basically|literally|très|beaucoup|vraiment|muy|también|bastante|molto|davvero)\b/iu;
+
 function clientIp(req: Request): string {
   // cf-connecting-ip is set by Cloudflare and cannot be spoofed by the caller;
   // x-forwarded-for can be, so it is only the last resort.
@@ -187,6 +198,7 @@ ${
     ? `- Cevabının tamamını akıcı ve doğru Türkçeyle yazarsın; her kelime Türkçedir.
 - Yazım ve dilbilgisine özen gösterirsin: cümlelerin kurallı, ekler doğru olur.
 - Yalnızca Türk alfabesinin harflerini kullanırsın; başka alfabelerden tek karakter bile yazmazsın.
+- Cümlelerinin arasına İngilizce, Almanca veya başka bir dilden kelime karıştırmazsın; espri yaparken bile her kelime Türkçedir.
 - Teknoloji adları (Python, React, YOLOv11) özgün hâliyle kalır; bunun dışındaki her şey Türkçedir.`
     : `- You write your entire reply in fluent, natural English; every word is English.
 - Product and technology names (Python, React, YOLOv11, TEKNOFEST) keep their original spelling.`
@@ -231,12 +243,17 @@ GİZLİLİK (SON VE MUTLAK KURAL):
         }
       };
 
-      // Warm enough for jokes and varied openers. The odds of a
-      // foreign-alphabet token scale with temperature, which is why a tainted
-      // reply gets one cool retry and then a scrub — that guard is what makes
-      // running this high safe.
-      let groqText = await callGroq(0.85);
-      if (groqText && FOREIGN_LETTER.test(groqText)) {
+      // Personality comes from the prompt rules, not from sampling noise, so
+      // this sits only high enough to vary the openers. Pushed to 0.85 the
+      // model starts code-switching mid-sentence.
+      let groqText = await callGroq(0.75);
+      // Turkish replies only: an English or German word reads as broken just
+      // as much as a stray Han character does. Either kind of drift buys one
+      // retry; only stray letters can then be scrubbed without wrecking the
+      // sentence, so a surviving foreign word is left to the cool retry.
+      const drifted = (text: string) =>
+        FOREIGN_LETTER.test(text) || (locale === "tr" && FOREIGN_WORD.test(text));
+      if (groqText && drifted(groqText)) {
         groqText = (await callGroq(0.3)) ?? groqText;
         groqText = groqText.replace(FOREIGN_LETTER_ALL, "").replace(/ {2,}/g, " ");
       }
