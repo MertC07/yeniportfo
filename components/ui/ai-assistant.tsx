@@ -90,30 +90,42 @@ export function AiAssistant() {
     }
   };
 
-  const alignToTop = () => {
-    if (latestAiRef.current && messagesContainerRef.current) {
-      const topPos = latestAiRef.current.offsetTop - 12;
-      messagesContainerRef.current.scrollTo({
-        top: Math.max(0, topPos),
-        behavior: "smooth",
-      });
-    }
+  /**
+   * Where an element starts within the scrollable body. `offsetTop` cannot be
+   * used: the body is not a positioned element, so offsets are measured from
+   * the drawer instead and come out a header's height too low.
+   */
+  const offsetWithinBody = (element: HTMLElement, container: HTMLElement) =>
+    element.getBoundingClientRect().top -
+    container.getBoundingClientRect().top +
+    container.scrollTop;
+
+  /** Brings the top of the newest reply to the top of the view. */
+  const alignToTop = (behavior: ScrollBehavior = "smooth") => {
+    const container = messagesContainerRef.current;
+    const element = latestAiRef.current;
+    if (!container || !element) return;
+    container.scrollTo({
+      top: Math.max(0, offsetWithinBody(element, container) - 12),
+      behavior,
+    });
   };
 
+  /**
+   * Holds that alignment while the reply types itself out, so it can be read
+   * from its first line. Deliberately does NOT chase the last character: that
+   * dragged the reader down the message and past everything already written.
+   * Until enough text exists below it the scroll cannot reach the target, so
+   * it is re-asserted as room appears.
+   */
   const handleTypewriterProgress = () => {
-    // Only auto-follow scroll if user has NOT manually dragged or swiped
-    if (!isUserInteractingRef.current && latestAiRef.current && messagesContainerRef.current) {
-      const container = messagesContainerRef.current;
-      const element = latestAiRef.current;
-      const elementBottom = element.offsetTop + element.offsetHeight;
-      const visibleBottom = container.scrollTop + container.clientHeight;
+    const container = messagesContainerRef.current;
+    const element = latestAiRef.current;
+    if (isUserInteractingRef.current || !container || !element) return;
 
-      if (elementBottom > visibleBottom - 20) {
-        container.scrollTo({
-          top: elementBottom - container.clientHeight + 40,
-          behavior: "smooth",
-        });
-      }
+    const target = Math.max(0, offsetWithinBody(element, container) - 12);
+    if (Math.abs(container.scrollTop - target) > 8) {
+      container.scrollTo({ top: target, behavior: "auto" });
     }
   };
 
