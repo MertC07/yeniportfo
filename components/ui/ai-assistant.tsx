@@ -56,13 +56,11 @@ function TypewriterText({
   speed = 14,
   isTyping,
   onComplete,
-  onProgress,
 }: {
   text: string;
   speed?: number;
   isTyping: boolean;
   onComplete?: () => void;
-  onProgress?: () => void;
 }) {
   const [displayed, setDisplayed] = useState(isTyping ? "" : text);
 
@@ -77,7 +75,6 @@ function TypewriterText({
       idx += 1;
       if (idx <= text.length) {
         setDisplayed(text.slice(0, idx));
-        if (idx % 4 === 0) onProgress?.();
       } else {
         clearInterval(interval);
         onComplete?.();
@@ -118,7 +115,6 @@ export function AiAssistant() {
   ]);
 
   const [typingMsgId, setTypingMsgId] = useState<string | null>(null);
-  const latestAiRef = useRef<HTMLDivElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserInteractingRef = useRef(false);
@@ -136,43 +132,34 @@ export function AiAssistant() {
   };
 
   /**
-   * Where an element starts within the scrollable body. `offsetTop` cannot be
-   * used: the body is not a positioned element, so offsets are measured from
-   * the drawer instead and come out a header's height too low.
+   * Trails the newest content instead of jumping to it: every frame the body
+   * closes a fraction of the remaining distance, so as the reply types itself
+   * out the view drifts down with the line being written. Runs from the moment
+   * a question is sent until the reply finishes, and gives way the instant the
+   * visitor scrolls for themselves.
+   *
+   * A per-frame ease rather than scrollTo({behavior:"smooth"}): that restarts
+   * its animation on every call, which against a constantly moving target
+   * reads as a series of jumps.
    */
-  const offsetWithinBody = (element: HTMLElement, container: HTMLElement) =>
-    element.getBoundingClientRect().top -
-    container.getBoundingClientRect().top +
-    container.scrollTop;
+  useEffect(() => {
+    if (!typingMsgId && !loading) return;
 
-  /** Brings the top of the newest reply to the top of the view. */
-  const alignToTop = (behavior: ScrollBehavior = "smooth") => {
-    const container = messagesContainerRef.current;
-    const element = latestAiRef.current;
-    if (!container || !element) return;
-    container.scrollTo({
-      top: Math.max(0, offsetWithinBody(element, container) - 12),
-      behavior,
+    let frame = requestAnimationFrame(function step() {
+      const container = messagesContainerRef.current;
+      if (container && !isUserInteractingRef.current) {
+        const distance =
+          container.scrollHeight - container.clientHeight - container.scrollTop;
+        if (distance > 0.5) {
+          // Floor keeps the last pixels from crawling; cap stops an overshoot.
+          container.scrollTop += Math.min(distance, Math.max(distance * 0.08, 0.5));
+        }
+      }
+      frame = requestAnimationFrame(step);
     });
-  };
 
-  /**
-   * Holds that alignment while the reply types itself out, so it can be read
-   * from its first line. Deliberately does NOT chase the last character: that
-   * dragged the reader down the message and past everything already written.
-   * Until enough text exists below it the scroll cannot reach the target, so
-   * it is re-asserted as room appears.
-   */
-  const handleTypewriterProgress = () => {
-    const container = messagesContainerRef.current;
-    const element = latestAiRef.current;
-    if (isUserInteractingRef.current || !container || !element) return;
-
-    const target = Math.max(0, offsetWithinBody(element, container) - 12);
-    if (Math.abs(container.scrollTop - target) > 8) {
-      container.scrollTo({ top: target, behavior: "auto" });
-    }
-  };
+    return () => cancelAnimationFrame(frame);
+  }, [typingMsgId, loading]);
 
   const handleWheelOrScroll = () => {
     isUserInteractingRef.current = true;
@@ -263,7 +250,6 @@ export function AiAssistant() {
 
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
-    setTimeout(() => scrollToBottom(false), 50);
 
     try {
       const res = await fetch("/api/chat", {
@@ -294,8 +280,6 @@ export function AiAssistant() {
         setMessages((prev) => [...prev, botMsg]);
         setTypingMsgId(botMsg.id);
         isUserInteractingRef.current = false;
-        setTimeout(() => alignToTop(), 50);
-        setTimeout(() => alignToTop(), 200);
       } else {
         throw new Error("API error");
       }
@@ -312,8 +296,6 @@ export function AiAssistant() {
       setMessages((prev) => [...prev, botMsg]);
       setTypingMsgId(botMsg.id);
       isUserInteractingRef.current = false;
-      setTimeout(() => alignToTop(), 50);
-      setTimeout(() => alignToTop(), 200);
     } finally {
       setLoading(false);
     }
@@ -497,7 +479,6 @@ export function AiAssistant() {
                 return (
                   <div
                     key={msg.id}
-                    ref={!isUser && msg.id === messages[messages.length - 1]?.id ? latestAiRef : null}
                     className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
                   >
                     <div
@@ -515,7 +496,6 @@ export function AiAssistant() {
                           speed={14}
                           isTyping={isTypingThisMsg}
                           onComplete={() => setTypingMsgId(null)}
-                          onProgress={handleTypewriterProgress}
                         />
                       )}
 
