@@ -7,6 +7,8 @@ import { type ChatMessage, type ActionLink, getLocalAiResponse } from "@/lib/ai-
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+/** Breathing room kept under the line currently being written. */
+const FOLLOW_MARGIN = 16;
 /** Gap left between the panel and the keyboard once it is up. */
 const KEYBOARD_GAP = 12;
 /** Smaller shifts are the URL bar sliding away, not a keyboard. */
@@ -84,7 +86,13 @@ function TypewriterText({
     return () => clearInterval(interval);
   }, [text, speed, isTyping]);
 
-  return <p className="whitespace-pre-wrap">{displayed}</p>;
+  // Marked while typing so the scroll follower can track the line being
+  // written rather than the bottom of the bubble.
+  return (
+    <p data-typing={isTyping || undefined} className="whitespace-pre-wrap">
+      {displayed}
+    </p>
+  );
 }
 
 export function AiAssistant() {
@@ -141,6 +149,11 @@ export function AiAssistant() {
    * A per-frame ease rather than scrollTo({behavior:"smooth"}): that restarts
    * its animation on every call, which against a constantly moving target
    * reads as a series of jumps.
+   *
+   * It follows the line being written, not the bottom of the content. Chasing
+   * the bottom meant a short reply carrying a tall row of action buttons was
+   * scrolled past — the view settled on the buttons while the text was still
+   * being written above the fold.
    */
   useEffect(() => {
     if (!typingMsgId && !loading) return;
@@ -148,8 +161,24 @@ export function AiAssistant() {
     let frame = requestAnimationFrame(function step() {
       const container = messagesContainerRef.current;
       if (container && !isUserInteractingRef.current) {
-        const distance =
-          container.scrollHeight - container.clientHeight - container.scrollTop;
+        const typing = container.querySelector<HTMLElement>("[data-typing]");
+        const bottom = typing
+          ? typing.getBoundingClientRect().bottom -
+            container.getBoundingClientRect().top +
+            container.scrollTop +
+            FOLLOW_MARGIN
+          : container.scrollHeight;
+
+        const target = Math.max(
+          0,
+          Math.min(
+            container.scrollHeight - container.clientHeight,
+            bottom - container.clientHeight
+          )
+        );
+
+        const distance = target - container.scrollTop;
+        // Downwards only: pulling back up would be the jump this replaced.
         if (distance > 0.5) {
           // Floor keeps the last pixels from crawling; cap stops an overshoot.
           container.scrollTop += Math.min(distance, Math.max(distance * 0.08, 0.5));
