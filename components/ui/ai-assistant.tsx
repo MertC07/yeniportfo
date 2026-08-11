@@ -7,6 +7,50 @@ import { type ChatMessage, type ActionLink, getLocalAiResponse } from "@/lib/ai-
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+/** Gap left between the panel and the keyboard once it is up. */
+const KEYBOARD_GAP = 12;
+/** Smaller shifts are the URL bar sliding away, not a keyboard. */
+const KEYBOARD_MIN = 80;
+
+/**
+ * How much of the screen the on-screen keyboard is covering, and how much is
+ * left above it.
+ *
+ * iOS does not shrink the layout viewport when the keyboard opens, so dvh
+ * units never react to it and a panel pinned to the bottom is left underneath.
+ * visualViewport is the only thing that reports the covered strip. Android
+ * does shrink the layout viewport, so there both numbers move together and
+ * this correctly reports nothing to compensate for.
+ */
+function useKeyboardInset() {
+  const [keyboard, setKeyboard] = useState({ inset: 0, available: 0 });
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    // Deliberately not measured on mount: the drawer is opened by tapping a
+    // button, so the keyboard is always down by then, and reading it here
+    // would mean setting state straight out of an effect.
+    const update = () => {
+      const covered = window.innerHeight - vv.height - vv.offsetTop;
+      setKeyboard({
+        inset: covered > KEYBOARD_MIN ? Math.round(covered) : 0,
+        available: Math.round(vv.height),
+      });
+    };
+
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
+  }, []);
+
+  return keyboard;
+}
+
 function TypewriterText({
   text,
   speed = 14,
@@ -49,6 +93,7 @@ function TypewriterText({
 export function AiAssistant() {
   const locale = useLocale();
   const isTr = locale === "tr";
+  const keyboard = useKeyboardInset();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -364,9 +409,17 @@ export function AiAssistant() {
             onWheel={(e) => e.stopPropagation()}
             onTouchMove={(e) => e.stopPropagation()}
             /* Pinned by insets rather than a 100vw width: 100vw counts the
-               scrollbar, which pushed the panel off-centre. max-h in dvh so
-               the panel shrinks when the phone keyboard opens instead of
-               hiding the input behind it. */
+               scrollbar, which pushed the panel off-centre. dvh covers the
+               browsers that shrink the layout viewport for the keyboard; the
+               inline style below covers iOS, which does not. */
+            style={
+              keyboard.inset > 0
+                ? {
+                    bottom: keyboard.inset + KEYBOARD_GAP,
+                    maxHeight: keyboard.available - KEYBOARD_GAP * 2,
+                  }
+                : undefined
+            }
             className="fixed bottom-24 inset-x-4 z-40 flex h-[540px] max-h-[70dvh] flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-2xl sm:inset-x-auto sm:right-6 sm:w-[420px] sm:max-h-[80vh]"
           >
             {/* Header */}
