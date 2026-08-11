@@ -7,8 +7,6 @@ import { type ChatMessage, type ActionLink, getLocalAiResponse } from "@/lib/ai-
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** Breathing room kept under the line currently being written. */
-const FOLLOW_MARGIN = 16;
 /** Gap left between the panel and the keyboard once it is up. */
 const KEYBOARD_GAP = 12;
 /** Smaller shifts are the URL bar sliding away, not a keyboard. */
@@ -86,13 +84,7 @@ function TypewriterText({
     return () => clearInterval(interval);
   }, [text, speed, isTyping]);
 
-  // Marked while typing so the scroll follower can track the line being
-  // written rather than the bottom of the bubble.
-  return (
-    <p data-typing={isTyping || undefined} className="whitespace-pre-wrap">
-      {displayed}
-    </p>
-  );
+  return <p className="whitespace-pre-wrap">{displayed}</p>;
 }
 
 export function AiAssistant() {
@@ -140,45 +132,28 @@ export function AiAssistant() {
   };
 
   /**
-   * Trails the newest content instead of jumping to it: every frame the body
-   * closes a fraction of the remaining distance, so as the reply types itself
-   * out the view drifts down with the line being written. Runs from the moment
-   * a question is sent until the reply finishes, and gives way the instant the
-   * visitor scrolls for themselves.
+   * Keeps the body settled on its newest content the way any chat does, but
+   * eased: each frame closes a fraction of the remaining distance, so the view
+   * drifts down with the line being written instead of jumping. It idles at no
+   * cost once caught up, and gives way the moment the visitor scrolls.
    *
    * A per-frame ease rather than scrollTo({behavior:"smooth"}): that restarts
    * its animation on every call, which against a constantly moving target
    * reads as a series of jumps.
    *
-   * It follows the line being written, not the bottom of the content. Chasing
-   * the bottom meant a short reply carrying a tall row of action buttons was
-   * scrolled past — the view settled on the buttons while the text was still
-   * being written above the fold.
+   * This can chase the true bottom because action buttons are held back until
+   * the reply has finished typing — otherwise their block, taller than the
+   * body itself, would sit under a half-written answer and drag the view off
+   * the text.
    */
   useEffect(() => {
-    if (!typingMsgId && !loading) return;
+    if (!isOpen) return;
 
     let frame = requestAnimationFrame(function step() {
       const container = messagesContainerRef.current;
       if (container && !isUserInteractingRef.current) {
-        const typing = container.querySelector<HTMLElement>("[data-typing]");
-        const bottom = typing
-          ? typing.getBoundingClientRect().bottom -
-            container.getBoundingClientRect().top +
-            container.scrollTop +
-            FOLLOW_MARGIN
-          : container.scrollHeight;
-
-        const target = Math.max(
-          0,
-          Math.min(
-            container.scrollHeight - container.clientHeight,
-            bottom - container.clientHeight
-          )
-        );
-
-        const distance = target - container.scrollTop;
-        // Downwards only: pulling back up would be the jump this replaced.
+        const distance =
+          container.scrollHeight - container.clientHeight - container.scrollTop;
         if (distance > 0.5) {
           // Floor keeps the last pixels from crawling; cap stops an overshoot.
           container.scrollTop += Math.min(distance, Math.max(distance * 0.08, 0.5));
@@ -188,7 +163,7 @@ export function AiAssistant() {
     });
 
     return () => cancelAnimationFrame(frame);
-  }, [typingMsgId, loading]);
+  }, [isOpen]);
 
   const handleWheelOrScroll = () => {
     isUserInteractingRef.current = true;
@@ -528,8 +503,12 @@ export function AiAssistant() {
                         />
                       )}
 
-                      {/* Action Links */}
-                      {msg.actionLinks && msg.actionLinks.length > 0 && (
+                      {/* Action links — held back until the reply has finished
+                          typing, the way every chat assistant reveals its
+                          suggestions. Shown alongside a half-written answer
+                          their block is taller than the message body itself,
+                          which pushed the text being written out of view. */}
+                      {!isTypingThisMsg && msg.actionLinks && msg.actionLinks.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-foreground/10">
                           {msg.actionLinks.map((link, idx) => (
                             <button
