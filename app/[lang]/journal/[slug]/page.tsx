@@ -58,7 +58,7 @@ export default async function JournalPostPage({
           <div className="flex items-baseline justify-between border-t hairline pt-4">
             <Link
               href={`${localePath(lang, "/")}#journal`}
-              className="microlabel transition-colors duration-300 hover:text-accent"
+              className="microlabel tap-target transition-colors duration-300 hover:text-accent"
             >
               {ui.post.back}
             </Link>

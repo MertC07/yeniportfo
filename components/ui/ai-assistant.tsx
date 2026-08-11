@@ -351,7 +351,11 @@ export function AiAssistant() {
             data-lenis-prevent
             onWheel={(e) => e.stopPropagation()}
             onTouchMove={(e) => e.stopPropagation()}
-            className="fixed bottom-24 right-4 sm:right-6 z-40 flex h-[540px] max-h-[80vh] w-[calc(100vw-2rem)] sm:w-[420px] flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-2xl"
+            /* Pinned by insets rather than a 100vw width: 100vw counts the
+               scrollbar, which pushed the panel off-centre. max-h in dvh so
+               the panel shrinks when the phone keyboard opens instead of
+               hiding the input behind it. */
+            className="fixed bottom-24 inset-x-4 z-40 flex h-[540px] max-h-[70dvh] flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-2xl sm:inset-x-auto sm:right-6 sm:w-[420px] sm:max-h-[80vh]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b hairline px-5 py-4 bg-surface/90">
@@ -394,7 +398,7 @@ export function AiAssistant() {
                       },
                     ]);
                   }}
-                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors cursor-pointer"
+                  className="tap-target flex size-9 items-center justify-center rounded-full text-muted hover:text-foreground transition-colors cursor-pointer sm:size-8"
                   title={isTr ? "Sohbeti Temizle" : "Clear Chat"}
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -404,7 +408,8 @@ export function AiAssistant() {
                 <button
                   type="button"
                   onClick={() => updateIsOpen(false)}
-                  className="rounded-full p-1.5 text-muted hover:text-foreground transition-colors cursor-pointer"
+                  aria-label={isTr ? "Sohbeti kapat" : "Close chat"}
+                  className="tap-target flex size-9 items-center justify-center rounded-full text-muted hover:text-foreground transition-colors cursor-pointer sm:size-8"
                 >
                   ✕
                 </button>
@@ -461,7 +466,7 @@ export function AiAssistant() {
                                 e.stopPropagation();
                                 handleActionClick(link);
                               }}
-                              className="rounded-full bg-accent/15 px-3 py-1.5 font-mono text-[0.6875rem] font-semibold text-accent border border-accent/30 transition-all hover:bg-accent hover:text-accent-ink hover:border-accent cursor-pointer"
+                              className="rounded-full bg-accent/15 px-3 py-2.5 font-mono text-[0.6875rem] font-semibold text-accent border border-accent/30 transition-all hover:bg-accent hover:text-accent-ink hover:border-accent cursor-pointer sm:py-1.5"
                             >
                               {link.label}
                             </button>
@@ -495,7 +500,7 @@ export function AiAssistant() {
                   key={i}
                   type="button"
                   onClick={() => handleSend(prompt.text)}
-                  className="rounded-full border hairline bg-surface/90 px-3 py-1.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="rounded-full border hairline bg-surface/90 px-3 py-2.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer flex items-center gap-1.5 sm:py-1.5"
                 >
                   <span>{prompt.emoji}</span>
                   <span>{prompt.text}</span>
@@ -516,12 +521,14 @@ export function AiAssistant() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={isTr ? "Bir şey sorun..." : "Ask a question..."}
-                className="flex-1 rounded-full border hairline bg-surface-elevated px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none transition-colors"
+                /* 16px on mobile: iOS Safari zooms the whole page in when a
+                   focused input's type is smaller than that. */
+                className="min-w-0 flex-1 rounded-full border hairline bg-surface-elevated px-4 py-2.5 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none transition-colors sm:text-sm"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink disabled:opacity-40 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink disabled:opacity-40 transition-all hover:scale-105 active:scale-95 cursor-pointer sm:h-10 sm:w-10"
                 aria-label="Gönder"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

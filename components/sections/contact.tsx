@@ -66,7 +66,7 @@ export function Contact() {
 
           <a
             href={`mailto:${profile.email}`}
-            className="microlabel transition-colors duration-300 hover:text-accent"
+            className="microlabel tap-target transition-colors duration-300 hover:text-accent"
           >
             {ui.sections.contact.orWrite}
           </a>
@@ -107,7 +107,7 @@ export function Contact() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="microlabel relative text-foreground after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 hover:after:origin-left hover:after:scale-x-100"
+                className="microlabel tap-target relative text-foreground before:absolute before:-bottom-1 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-accent before:transition-transform before:duration-300 hover:before:origin-left hover:before:scale-x-100"
               >
                 {social.label}
               </a>
@@ -140,7 +140,9 @@ export function Contact() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="relative z-10 flex h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-xl"
+              /* dvh, not vh: vh is the URL-bar-hidden height on phones, which
+                 pushes the download buttons below the visible area. */
+              className="relative z-10 flex h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-xl"
             >
               {/* Header */}
               <div className="flex items-center justify-between border-b hairline p-5 sm:p-6 bg-surface/80">
@@ -155,7 +157,7 @@ export function Contact() {
                 <button
                   type="button"
                   onClick={() => setIsCvModalOpen(false)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-surface/90 text-foreground transition-colors hover:border-accent hover:text-accent"
+                  className="tap-target flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-surface/90 text-foreground transition-colors hover:border-accent hover:text-accent"
                   aria-label="Kapat"
                 >
                   ✕
@@ -168,7 +170,7 @@ export function Contact() {
                 <img
                   src="/Mert_Ceren_CV.jpg"
                   alt={`${profile.name} Özgeçmiş CV`}
-                  className="max-h-[72vh] w-auto object-contain rounded-xl shadow-2xl border hairline"
+                  className="max-h-full w-auto max-w-full object-contain rounded-xl shadow-2xl border hairline"
                 />
               </div>
 
@@ -183,7 +185,7 @@ export function Contact() {
                     href="/Mert_Ceren_CV.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="microlabel inline-flex items-center gap-2 rounded-full border hairline px-5 py-2.5 text-xs text-foreground transition-colors hover:border-accent hover:text-accent"
+                    className="microlabel tap-target inline-flex items-center gap-2 rounded-full border hairline px-5 py-3 text-xs text-foreground transition-colors hover:border-accent hover:text-accent sm:py-2.5"
                   >
                     <span>{isTr ? "Yeni Sekmede Aç ↗" : "Open in New Tab ↗"}</span>
                   </a>
@@ -191,7 +193,7 @@ export function Contact() {
                   <a
                     href="/Mert_Ceren_CV.pdf"
                     download="Mert_Ceren_CV.pdf"
-                    className="microlabel inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent-ink transition-opacity hover:opacity-90 shadow-md shadow-accent/20"
+                    className="microlabel tap-target inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent-ink transition-opacity hover:opacity-90 shadow-md shadow-accent/20 sm:py-2.5"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

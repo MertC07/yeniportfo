@@ -32,7 +32,7 @@ export function Footer() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="microlabel transition-colors duration-300 hover:text-accent"
+                className="microlabel tap-target transition-colors duration-300 hover:text-accent"
               >
                 {social.label}
               </a>
@@ -42,7 +42,7 @@ export function Footer() {
         <button
           type="button"
           onClick={backToTop}
-          className="microlabel transition-colors duration-300 hover:text-accent"
+          className="microlabel tap-target transition-colors duration-300 hover:text-accent"
         >
           {ui.footer.backToTop}
         </button>

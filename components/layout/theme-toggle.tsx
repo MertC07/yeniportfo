@@ -22,7 +22,7 @@ export function ThemeToggle() {
             : ui.theme.switchToDark
           : ui.theme.toggle
       }
-      className="group flex items-center gap-2 rounded-full border hairline px-3.5 py-2 transition-colors duration-300 hover:border-foreground/40"
+      className="tap-target group flex items-center gap-2 rounded-full border hairline px-3.5 py-2 transition-colors duration-300 hover:border-foreground/40"
     >
       <span
         aria-hidden

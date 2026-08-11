@@ -102,7 +102,7 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
             e.stopPropagation();
             onSelect(certificate);
           }}
-          className="inline-flex items-center gap-1 text-foreground transition-colors duration-300 group-hover:text-accent font-semibold"
+          className="tap-target inline-flex items-center gap-1 text-foreground transition-colors duration-300 group-hover:text-accent font-semibold"
         >
           {viewLabel}
         </button>
@@ -220,7 +220,10 @@ export function Certificates() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 20 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="relative z-10 flex h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-xl"
+              /* dvh, not vh: on phones vh is the URL-bar-hidden height, so a
+                 vh-sized dialog hangs below the visible area and takes its
+                 footer with it. */
+              className="relative z-10 flex h-[90dvh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-xl"
             >
               {/* Modal Header */}
               <div className="flex flex-col gap-4 border-b hairline p-5 sm:p-6 bg-surface/80">
@@ -236,7 +239,7 @@ export function Certificates() {
                   <button
                     type="button"
                     onClick={() => setIsAllModalOpen(false)}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-surface/90 text-foreground transition-colors hover:border-accent hover:text-accent"
+                    className="tap-target flex h-10 w-10 shrink-0 items-center justify-center rounded-full border hairline bg-surface/90 text-foreground transition-colors hover:border-accent hover:text-accent"
                     aria-label="Kapat"
                   >
                     ✕
@@ -263,7 +266,9 @@ export function Certificates() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Sertifika veya kurum adı ile filtrele (örn. BTK Akademi, C#, Claude, edX, Python...)"
-                    className="w-full rounded-2xl border hairline bg-surface/60 py-3 pl-11 pr-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    /* 16px on mobile so iOS Safari does not zoom the page in
+                       when the field takes focus. */
+                    className="w-full rounded-2xl border hairline bg-surface/60 py-3 pl-11 pr-4 text-base text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:text-sm"
                   />
                   {searchQuery && (
                     <button
@@ -338,7 +343,7 @@ export function Certificates() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: EASE }}
-              className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 p-6 shadow-2xl backdrop-blur-xl"
+              className="relative z-10 flex max-h-[90dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 p-4 shadow-2xl backdrop-blur-xl sm:p-6"
             >
               {/* Header */}
               <div className="flex items-start justify-between gap-4 border-b hairline pb-4">
@@ -353,7 +358,7 @@ export function Certificates() {
                 <button
                   type="button"
                   onClick={() => setSelectedCert(null)}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border hairline bg-surface/80 text-foreground transition-colors hover:border-accent hover:text-accent"
+                  className="tap-target flex h-9 w-9 shrink-0 items-center justify-center rounded-full border hairline bg-surface/80 text-foreground transition-colors hover:border-accent hover:text-accent"
                   aria-label="Kapat"
                 >
                   ✕
@@ -361,13 +366,13 @@ export function Certificates() {
               </div>
 
               {/* Certificate Image View */}
-              <div className="my-4 flex-1 overflow-auto rounded-2xl border hairline bg-black/60 p-2 flex items-center justify-center min-h-[300px]">
+              <div className="my-4 flex-1 overflow-auto rounded-2xl border hairline bg-black/60 p-2 flex items-center justify-center min-h-[180px] sm:min-h-[300px]">
                 {selectedCert.image ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={selectedCert.image}
                     alt={selectedCert.title}
-                    className="max-h-[65vh] w-auto object-contain rounded-lg shadow-lg"
+                    className="max-h-full w-auto max-w-full object-contain rounded-lg shadow-lg"
                   />
                 ) : (
                   <p className="text-muted text-sm">Sertifika görseli yükleniyor...</p>
@@ -383,7 +388,7 @@ export function Certificates() {
                       href={selectedCert.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="microlabel inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-[0.7rem] text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-ink"
+                      className="microlabel tap-target inline-flex items-center gap-2 rounded-full border hairline px-4 py-3 text-[0.7rem] text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-ink sm:py-2"
                     >
                       Resmi Doğrulama Bağlantısı ↗
                     </a>
@@ -393,7 +398,7 @@ export function Certificates() {
                       href={selectedCert.image}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="microlabel inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[0.7rem] text-accent-ink transition-opacity hover:opacity-90 font-semibold"
+                      className="microlabel tap-target inline-flex items-center gap-2 rounded-full bg-accent px-4 py-3 text-[0.7rem] text-accent-ink transition-opacity hover:opacity-90 font-semibold sm:py-2"
                     >
                       Tam Boyut İncele ↗
                     </a>

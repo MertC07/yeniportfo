@@ -132,7 +132,7 @@ export function GithubStats() {
                         className={`h-full ${lang.color}`}
                       />
                     </div>
-                    <p className="microlabel text-[0.65rem] text-muted">{lang.note}</p>
+                    <p className="microlabel text-[0.6875rem] text-muted sm:text-[0.65rem]">{lang.note}</p>
                   </div>
                 ))}
               </div>
@@ -168,14 +168,14 @@ export function GithubStats() {
                         {repo.name}
                       </h5>
                     </div>
-                    <span className="rounded-full border hairline px-2.5 py-0.5 font-mono text-[0.65rem] text-muted group-hover:border-accent/40 group-hover:text-foreground transition-colors">
+                    <span className="rounded-full border hairline px-2.5 py-0.5 font-mono text-[0.6875rem] text-muted group-hover:border-accent/40 group-hover:text-foreground transition-colors sm:text-[0.65rem]">
                       {repo.badge}
                     </span>
                   </div>
 
                   <p className="text-xs text-muted line-clamp-2">{repo.description}</p>
 
-                  <div className="flex items-center justify-between pt-1 border-t hairline text-[0.65rem] text-muted">
+                  <div className="flex items-center justify-between pt-1 border-t hairline text-[0.6875rem] text-muted sm:text-[0.65rem]">
                     <span>{repo.language}</span>
                     <span className="group-hover:text-accent transition-colors">GitHub'da Gör ↗</span>
                   </div>

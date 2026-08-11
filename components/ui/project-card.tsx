@@ -135,7 +135,7 @@ export function ProjectCard({
           </p>
           <div className="flex items-center gap-3">
             {project.status && (
-              <span className="flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white backdrop-blur-sm">
+              <span className="flex items-center gap-2 rounded-full border border-white/25 bg-black/25 px-3 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-white backdrop-blur-sm sm:text-[0.625rem]">
                 <span className="relative flex size-1.5">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-70" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-accent" />
@@ -162,7 +162,7 @@ export function ProjectCard({
               {project.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="rounded-full border border-white/20 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white/80"
+                  className="rounded-full border border-white/20 px-3 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-white/80 sm:text-[0.625rem]"
                 >
                   {tag}
                 </li>

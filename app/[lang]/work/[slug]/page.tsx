@@ -61,7 +61,7 @@ export default async function CaseStudyPage({
         <div className="flex items-baseline justify-between border-t hairline pt-4">
           <Link
             href={`${localePath(lang, "/")}#work`}
-            className="microlabel transition-colors duration-300 hover:text-accent"
+            className="microlabel tap-target transition-colors duration-300 hover:text-accent"
           >
             {ui.caseStudy.back}
           </Link>
@@ -89,7 +89,7 @@ export default async function CaseStudyPage({
             {project.tags.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full border hairline px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-muted"
+                className="rounded-full border hairline px-3 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted sm:text-[0.625rem]"
               >
                 {tag}
               </li>

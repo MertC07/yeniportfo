@@ -64,7 +64,7 @@ export function Skills() {
                   setPinned((current) => (current === discipline ? null : discipline))
                 }
                 className={cn(
-                  "rounded-full border px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-all duration-300 cursor-pointer select-none",
+                  "rounded-full border px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-all duration-300 cursor-pointer select-none sm:py-2",
                   isPinned
                     ? "border-accent bg-accent text-accent-ink font-semibold"
                     : isHovered
@@ -80,7 +80,7 @@ export function Skills() {
             <button
               type="button"
               onClick={() => setPinned(null)}
-              className="rounded-full border hairline px-3 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted hover:border-foreground/40 hover:text-foreground transition-colors duration-300 cursor-pointer"
+              className="rounded-full border hairline px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted hover:border-foreground/40 hover:text-foreground transition-colors duration-300 cursor-pointer sm:px-3 sm:py-2"
             >
               ✕
             </button>

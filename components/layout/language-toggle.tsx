@@ -27,7 +27,7 @@ export function LanguageToggle() {
       // First control after the nav, so the header chick uses it as the far
       // end of its walk — otherwise it wanders under these buttons.
       data-chick-limit=""
-      className="flex items-center rounded-full border hairline px-3.5 py-2 transition-colors duration-300 hover:border-foreground/40"
+      className="tap-target flex items-center rounded-full border hairline px-3.5 py-2 transition-colors duration-300 hover:border-foreground/40"
     >
       <span className="microlabel text-foreground">{ui.langToggle.label}</span>
     </a>

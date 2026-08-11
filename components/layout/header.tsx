@@ -100,7 +100,7 @@ export function Header() {
             href="#main"
             onClick={goTop}
             aria-label={`${profile.wordmark}. ${profile.name} — ${ui.backToTopAria}`}
-            className="font-display text-lg font-extrabold lowercase tracking-tight"
+            className="tap-target font-display text-lg font-extrabold lowercase tracking-tight"
           >
             {profile.wordmark}
             <span className="text-accent">.</span>
@@ -130,7 +130,7 @@ export function Header() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? ui.menu.close : ui.menu.open}
-              className="relative flex size-10 items-center justify-center rounded-xl border hairline bg-surface/40 lg:hidden"
+              className="tap-target relative flex size-10 items-center justify-center rounded-xl border hairline bg-surface/40 lg:hidden"
             >
               <span
                 className={cn(
@@ -186,7 +186,7 @@ export function Header() {
             menuOpen ? "opacity-100" : "opacity-0"
           )}
         >
-          <a href={`mailto:${profile.email}`} className="font-mono hover:text-accent transition-colors">
+          <a href={`mailto:${profile.email}`} className="tap-target font-mono hover:text-accent transition-colors">
             {profile.email}
           </a>
           <p className="font-mono">{profile.location}</p>

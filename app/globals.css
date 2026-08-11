@@ -335,5 +335,28 @@ html.custom-cursor [data-cursor="chick"][data-dragging="true"] * {
   color: var(--muted);
 }
 
+/* Small mono links read as ~14px tall, which is a poor thumb target. The
+   overlay grows the hit area to 44px without touching layout, so the type
+   stays as designed. Width only ever grows for links narrower than 44px,
+   so neighbours in a row are not swallowed. Coarse pointers only —
+   on a mouse the visible box is already precise enough. */
+@utility tap-target {
+  @media (pointer: coarse) {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      min-width: 44px;
+      min-height: 44px;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
 /* Animations run for everyone by design — prefers-reduced-motion is
    intentionally not honored (owner's decision, 2026-07-03). */
