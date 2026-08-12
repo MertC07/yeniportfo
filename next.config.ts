@@ -2,14 +2,15 @@ import type { NextConfig } from "next";
 
 /**
  * Everything this site loads is same-origin: next/font self-hosts the fonts,
- * images live in /public, the chat widget posts to /api/chat, and the
- * Cloudflare scripts in front of it (Rocket Loader, RUM, challenge platform)
- * are served from /cdn-cgi on this same host. So 'self' covers the lot.
+ * images live in /public, the chat widget posts to /api/chat, and Cloudflare's
+ * challenge platform is served from /cdn-cgi on this same host. So 'self'
+ * covers the lot.
  *
  * 'unsafe-inline' is unavoidable for now: Next.js emits inline hydration
- * scripts, Cloudflare Rocket Loader rewrites tags inline, and Framer Motion
- * writes inline styles. The policy still blocks script loads from any other
- * origin, framing, form posts elsewhere, and plugin content.
+ * scripts, the opening overlay is skipped by an inline script in the document
+ * head, and Framer Motion writes inline styles. The policy still blocks script
+ * loads from any other origin, framing, form posts elsewhere, and plugin
+ * content.
  */
 // React's development build uses eval() for debugging tooling (stack
 // reconstruction, hot reload). The production build never does, so the
