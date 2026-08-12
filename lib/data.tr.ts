@@ -4,7 +4,7 @@
  * English source so both locales share the same routes and visuals.
  */
 
-import type { Certificate, ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
+import type { Certificate, ExperienceEntry, Project, SkillTier, Ui } from "./data";
 
 export const profile = {
   name: "Mert Ceren",
@@ -224,8 +224,6 @@ export const skillTiers: SkillTier[] = [
   },
 ];
 
-export const posts: Post[] = [];
-
 export const navItems = [
   { label: "Projeler", href: "#work" },
   { label: "Hakkımda", href: "#about" },
@@ -265,10 +263,6 @@ export const ui: Ui = {
       portrait: "Portre — d. 2003",
     },
     skills: { label: "Yetenekler & Stack", meta: "Hiçbir ilerleme çubuğu zarar görmedi" },
-    testimonials: {
-      label: "Referanslar",
-      meta: "İş birlikçilerden sinyaller",
-    },
     awards: {
       label: "Ödüller & Başarılar",
       meta: "Dış onaylar",
@@ -287,12 +281,6 @@ export const ui: Ui = {
       reposTitle: "Aktif Depolar & Projeler",
       commitsNote: "Düzenli commit'ler ve aktif kod geliştirme süreci",
     },
-    journal: {
-      label: "Günlük",
-      meta: "Zanaat üzerine notlar",
-      readSuffix: "okuma",
-      readCta: "Oku ↗",
-    },
     contact: {
       label: "İletişim",
       meta: "24 saat içinde yanıt",
@@ -308,7 +296,6 @@ export const ui: Ui = {
     next: "Sıradaki proje",
     blocks: { challenge: "Zorluk", approach: "Yaklaşım", outcome: "Sonuç" },
   },
-  post: { back: "← Günlük", readSuffix: "okuma", next: "Sıradaki yazı" },
   copyEmail: {
     copy: "Kopyala",
     copied: "Kopyalandı ✓",
@@ -325,19 +312,6 @@ export const ui: Ui = {
     cta: "Açılış sahnesine dön",
   },
 };
-
-export const testimonials = [
-  {
-    quote: "Mert, sadece kod yazmakla kalmayıp sistem mimarisini de çok iyi anlayan, hızlı, temiz ve güvenilir çözümler üreten nadir öğrenci mühendislerden biridir.",
-    name: "Dr. Kadir C.",
-    role: "BANÜ Yazılım Mühendisliği Öğretim Üyesi",
-  },
-  {
-    quote: "Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarimizi yönetimi kolaylaştıran özel bir panele dönüştürerek bize saatlerce zaman kazandırdı.",
-    name: "Hasan K.",
-    role: "İşletme Sahibi, Rosso Lounge Bistro",
-  },
-];
 
 export const awards = [
   {

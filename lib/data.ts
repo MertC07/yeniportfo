@@ -287,27 +287,6 @@ export const techMarquee = [
   "Prompt Engineering",
 ];
 
-export type Testimonial = {
-  quote: string;
-  name: string;
-  role: string;
-};
-
-// Empty until real quotes exist. Add entries here, then mount
-// <Testimonials /> again in app/page.tsx (and renumber sections).
-export const testimonials: Testimonial[] = [
-  {
-    quote: "Mert is a rare student engineer who doesn't just write code — he understands system architecture and delivers fast, clean, and reliable solutions.",
-    name: "Dr. Kadir C.",
-    role: "Professor at BANÜ Software Engineering",
-  },
-  {
-    quote: "Working with Mert on the Rosso Lounge Bistro platform was exceptional. He turned our requirements into an easy-to-use custom panel that saved us hours of management time.",
-    name: "Hasan K.",
-    role: "Owner, Rosso Lounge Bistro",
-  },
-];
-
 export type Award = {
   year: string;
   title: string;
@@ -499,21 +478,6 @@ export const certificates: Certificate[] = [
   },
 ];
 
-export type Post = {
-  slug: string;
-  title: string;
-  date: string;
-  readingTime: string;
-  tag: string;
-  excerpt: string;
-  /** Article paragraphs, rendered on /journal/[slug]. */
-  body: string[];
-};
-
-// EDIT: these three essays were drafted for you — rewrite them in your
-// own voice or replace them with your own posts.
-export const posts: Post[] = [];
-
 export const navItems = [
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
@@ -548,10 +512,6 @@ export const ui = {
       portrait: "Portrait — est. 2003",
     },
     skills: { label: "Skills & Stack", meta: "Technologies, frameworks, and development tools I work with" },
-    testimonials: {
-      label: "Testimonials",
-      meta: "Signal from collaborators",
-    },
     awards: {
       label: "Awards & Recognition",
       meta: "External validations",
@@ -570,12 +530,6 @@ export const ui = {
       reposTitle: "Active Repositories",
       commitsNote: "Continuous commits & active development activity",
     },
-    journal: {
-      label: "Journal",
-      meta: "Notes on craft",
-      readSuffix: "read",
-      readCta: "Read ↗",
-    },
     contact: {
       label: "Contact",
       meta: "Replies within 24h",
@@ -591,7 +545,6 @@ export const ui = {
     next: "Next project",
     blocks: { challenge: "Challenge", approach: "Approach", outcome: "Outcome" },
   },
-  post: { back: "← Journal", readSuffix: "read", next: "Next entry" },
   copyEmail: {
     copy: "Copy",
     copied: "Copied ✓",

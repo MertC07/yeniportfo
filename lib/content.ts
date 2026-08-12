@@ -1,12 +1,12 @@
 /**
  * Locale plumbing: bundles the English (lib/data.ts) and Turkish
  * (lib/data.tr.ts) content behind getContent(), plus URL helpers.
- * English lives at the root URLs, Turkish under /tr.
+ * Turkish is the default and lives at the root URLs, English under /en.
  */
 
 import * as en from "./data";
 import * as tr from "./data.tr";
-import type { ExperienceEntry, Post, Project, SkillTier, Ui } from "./data";
+import type { ExperienceEntry, Project, SkillTier, Ui } from "./data";
 
 export const locales = ["en", "tr"] as const;
 export type Locale = (typeof locales)[number];
@@ -24,10 +24,8 @@ export type Content = {
   about: { manifesto: string; paragraphs: string[] };
   experience: ExperienceEntry[];
   skillTiers: SkillTier[];
-  posts: Post[];
   site: typeof en.site;
   ui: Ui;
-  testimonials: typeof en.testimonials;
   awards: typeof en.awards;
   certificates: typeof en.certificates;
 };
@@ -41,10 +39,8 @@ const bundles: Record<Locale, Content> = {
     about: en.about,
     experience: en.experience,
     skillTiers: en.skillTiers,
-    posts: en.posts,
     site: en.site,
     ui: en.ui,
-    testimonials: en.testimonials,
     awards: en.awards,
     certificates: en.certificates,
   },
@@ -56,10 +52,8 @@ const bundles: Record<Locale, Content> = {
     about: tr.about,
     experience: tr.experience,
     skillTiers: tr.skillTiers,
-    posts: tr.posts,
     site: tr.site,
     ui: tr.ui,
-    testimonials: tr.testimonials,
     awards: tr.awards,
     certificates: tr.certificates,
   },

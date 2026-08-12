@@ -79,10 +79,6 @@ export const MERT_KNOWLEDGE = {
   awards: [
     { title: "TEKNOFEST 2026 Finalisti", issuer: "T3 Vakfı & Sanayi ve Teknoloji Bakanlığı", year: "2026", project: "5G & Yapay Zeka ile Akıllı Yol Güvenliği" },
   ],
-  testimonials: [
-    { name: "Dr. Kadir C.", role: "BANÜ Yazılım Mühendisliği Öğretim Üyesi", text: "Mert, teorik yazılım prensiplerini gerçek dünya problemlerine aktarmada ve yapay zekâ uygulamalarında olağanüstü bir pratik zekaya sahip." },
-    { name: "Hasan K.", role: "İşletme Sahibi, Rosso Lounge Bistro", text: "Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarımızı yönetimi kolaylaştıran özel bir panele dönüştürerek bize saatlerce zaman kazandırdı." },
-  ],
 };
 
 /**
@@ -178,7 +174,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
       return words.some((word) => word.startsWith(keyword));
     });
 
-  // 0. YAŞ & DOĞUM TARİHİ
+  // YAŞ & DOĞUM TARİHİ
   // "yaşı" catches the inflected forms ("yaşında", "yaşın kaç") that the
   // whole-word "yaş" no longer reaches.
   if (has("yaş", "yaşı", "kaç yaşında", "doğum", "2003", "age", "old")) {
@@ -199,7 +195,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 1. ÖDÜLLER & DERECELER (Awards & Honors)
+  // ÖDÜLLER & DERECELER (Awards & Honors)
   if (has("ödül", "derece", "yarısm", "yarışm", "başarı", "finalist", "t3", "award", "honor")) {
     if (locale === "tr") {
       return {
@@ -220,7 +216,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 2. GITHUB & AÇIK KAYNAK PROJELER (GitHub & Open Source)
+  // GITHUB & AÇIK KAYNAK PROJELER (GitHub & Open Source)
   if (has("github", "repo", "kod", "code", "open source", "açık kaynak", "git")) {
     if (locale === "tr") {
       return {
@@ -241,26 +237,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 3. REFERANSLAR & TAVSİYELER (Testimonials)
-  if (has("referans", "tavsiye", "görüş", "yorum", "değerlendirme", "kadir", "hasan", "testimonial", "reference", "recommend", "review")) {
-    if (locale === "tr") {
-      return {
-        text: "💬 **Referanslar & Görüşler (Sağ olsun hocalarımız ve müşterilerimiz bizi pek övmüş 😄)**:\n\n• **Dr. Kadir C.** *(BANÜ Yazılım Mühendisliği Öğretim Üyesi)*:\n  *'Mert, teorik yazılım prensiplerini gerçek dünya problemlerine aktarmada ve yapay zekâ uygulamalarında olağanüstü bir pratik zekaya sahip.'*\n\n• **Hasan K.** *(İşletme Sahibi, Rosso Lounge Bistro)*:\n  *'Rosso Lounge Bistro platformu için Mert ile çalışmak olağanüstüydü. İhtiyaçlarımızı özel bir panele dönüştürerek bize saatlerce zaman kazandırdı.'*",
-        actionLinks: [
-          { label: "Referanslar Bölümüne Git 💬", href: "#testimonials", isAnchor: true },
-        ],
-      };
-    } else {
-      return {
-        text: "💬 **Testimonials & Recommendations**:\n\n• **Dr. Kadir C.** *(BANÜ Software Engineering Faculty)*: Praised Mert's practical intelligence in AI applications.\n• **Hasan K.** *(Owner, Rosso Lounge Bistro)*: Praised the custom web platform and management dashboard built by Mert.",
-        actionLinks: [
-          { label: "Jump to Testimonials 💬", href: "#testimonials", isAnchor: true },
-        ],
-      };
-    }
-  }
-
-  // 5. İLETİŞİM, E-POSTA, CV & ÖZGEÇMİŞ
+  // İLETİŞİM, E-POSTA, CV & ÖZGEÇMİŞ
   if (has("iletişim", "konuş", "ulaş", "görüş", "mesaj", "mail", "eposta", "email", "cv", "özgeçmiş", "staj", "iş", "freelance", "indir", "contact", "resume", "hire", "hiring", "reach", "internship", "get in touch")) {
     if (locale === "tr") {
       return {
@@ -280,7 +257,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 6. TEKNOFEST & YOL GÜVENLİĞİ & 5GENÇ
+  // TEKNOFEST & YOL GÜVENLİĞİ & 5GENÇ
   if (has("teknofest", "yol güvenliği", "5genç", "yolo", "kaptan")) {
     if (locale === "tr") {
       return {
@@ -299,7 +276,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 7. SERTİFİKALAR & BELGELER
+  // SERTİFİKALAR & BELGELER
   if (has("sertifika", "certificate", "btk", "edx", "udemy", "belge")) {
     if (locale === "tr") {
       return {
@@ -318,7 +295,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 8. PROJELER (TEKNOFEST, Sanal Kampüs, Rosso Lounge, bwai İK)
+  // PROJELER (TEKNOFEST, Sanal Kampüs, Rosso Lounge, bwai İK)
   if (has("proje", "project", "sanal kampüs", "rosso", "ik karar", "işler")) {
     if (locale === "tr") {
       return {
@@ -338,7 +315,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 9. YETENEKLER & TEKNOLOJİ STACK (Python, C#, React, Next.js, YOLO)
+  // YETENEKLER & TEKNOLOJİ STACK (Python, C#, React, Next.js, YOLO)
   if (has("yetenek", "skill", "dil", "tech", "python", "c#", "react", "stack", "teknoloji", "yazılım")) {
     if (locale === "tr") {
       return {
@@ -357,7 +334,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 10. EĞİTİM & ÜNİVERSİTE & LİSE
+  // EĞİTİM & ÜNİVERSİTE & LİSE
   if (has("okul", "üniversite", "öğrenci", "banü", "bandırma", "lise", "hazırlık", "eğitim", "school", "universit", "student", "education", "study", "studi", "degree", "graduat")) {
     if (locale === "tr") {
       return {
@@ -376,7 +353,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 11. SELAMLAMA & GENEL SORULAR
+  // SELAMLAMA & GENEL SORULAR
   if (has("merhaba", "selam", "sa", "hey", "günaydın", "iyi günler", "hello", "hi", "good morning")) {
     if (locale === "tr") {
       return {
@@ -398,7 +375,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 12. BİYOGRAFİ & KİMDİR
+  // BİYOGRAFİ & KİMDİR
   if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi", "who", "about", "biography", "introduce", "tell me")) {
     if (locale === "tr") {
       return {
@@ -418,7 +395,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // 13. FALLBACK FOR UNMATCHED QUERIES
+  // FALLBACK FOR UNMATCHED QUERIES
   // These lines answer EVERY unmatched topic, so none of them may name a
   // specific subject (weather, food…) or they read as non sequiturs. Several
   // variants exist because this path also serves as the upstream-model
