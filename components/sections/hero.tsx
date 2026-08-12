@@ -78,7 +78,7 @@ export function Hero() {
             <span key={i} aria-hidden className="block overflow-hidden">
               <span
                 className={cn(
-                  "block will-change-transform animate-[rise_1s_cubic-bezier(0.16,1,0.3,1)_both]",
+                  "block animate-[rise_1s_cubic-bezier(0.16,1,0.3,1)_both]",
                   i % 2 === 1 && "text-right"
                 )}
                 style={{ animationDelay: `${0.25 + i * 0.1}s` }}

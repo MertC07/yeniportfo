@@ -119,8 +119,21 @@ export function Cursor() {
   const [isMuted, setIsMuted] = useState(false);
   const [sulkyMessage, setSulkyMessage] = useState<string | null>(null);
 
-  const [dotPos, setDotPos] = useState({ x: -100, y: -100 });
-  const [ringPos, setRingPos] = useState({ x: -100, y: -100 });
+  /**
+   * Where the speech bubble sits. Only set when a message appears, so the
+   * bubble is placed once rather than re-measured on every mouse move.
+   */
+  const [bubbleAnchor, setBubbleAnchor] = useState({ x: -100, y: -100 });
+
+  /**
+   * The dot and the ring are moved by writing transforms straight onto these
+   * nodes from the animation loop. Routing a pointer position through React
+   * state instead would re-render this whole component on every mouse move
+   * and again on every frame — a few thousand renders a minute, all of them
+   * throwing away identical markup.
+   */
+  const dotElRef = useRef<HTMLDivElement | null>(null);
+  const ringElRef = useRef<HTMLDivElement | null>(null);
 
   const mouseRef = useRef({ x: -100, y: -100 });
   const ringRef = useRef({ x: -100, y: -100 });
@@ -151,6 +164,7 @@ export function Cursor() {
       ? "Fine! I'll shut up! 🙄 Not saying a single word, happy?!"
       : "Öff tamam sustum ya! 🙄 HİÇ konuşmuyorum tamam mı!";
 
+    setBubbleAnchor({ ...mouseRef.current });
     setSulkyMessage(tripMsg);
 
     setTimeout(() => {
@@ -181,6 +195,7 @@ export function Cursor() {
       ? "Yayy! Finally letting me talk again! 😄🎉"
       : "Yeyy! Sonunda konuşturdun beni! 😄🎉";
 
+    setBubbleAnchor({ ...mouseRef.current });
     setSulkyMessage(happyMsg);
     setTimeout(() => {
       setSulkyMessage(null);
@@ -207,22 +222,31 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
-    // Smooth Lerp loop for trailing ring
-    const updateRingPosition = () => {
+    /**
+     * Moves both pieces once a frame: the dot pinned to the pointer, the ring
+     * easing after it. Transforms are written straight to the nodes, so a
+     * mouse crossing the screen costs no React work at all.
+     */
+    const paint = () => {
       if (activeRef.current) {
         const factor = hoveringRef.current ? 1.0 : 0.12;
         ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
         ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
 
-        setRingPos({
-          x: Math.round(ringRef.current.x * 10) / 10,
-          y: Math.round(ringRef.current.y * 10) / 10,
-        });
+        const dot = dotElRef.current;
+        if (dot) {
+          dot.style.transform = `translate3d(${mouseRef.current.x}px, ${mouseRef.current.y}px, 0) translate(-50%, -50%)`;
+        }
+
+        const ring = ringElRef.current;
+        if (ring) {
+          ring.style.transform = `translate3d(${ringRef.current.x}px, ${ringRef.current.y}px, 0) translate(-50%, -50%)`;
+        }
       }
-      animFrameRef.current = requestAnimationFrame(updateRingPosition);
+      animFrameRef.current = requestAnimationFrame(paint);
     };
 
-    animFrameRef.current = requestAnimationFrame(updateRingPosition);
+    animFrameRef.current = requestAnimationFrame(paint);
 
     const getNextIndex = () => {
       if (queueRef.current.length === 0) {
@@ -284,6 +308,7 @@ export function Cursor() {
           !isMutedRef.current
         ) {
           lastReactionAt = now;
+          setBubbleAnchor({ ...mouseRef.current });
           setReactionMessage(velocity > 0 ? pickScrollDown() : pickScrollUp());
           if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current);
           reactionTimerRef.current = setTimeout(
@@ -306,6 +331,7 @@ export function Cursor() {
 
       idleTimerRef.current = setTimeout(() => {
         const nextIndex = getNextIndex();
+        setBubbleAnchor({ ...mouseRef.current });
         setIdleMessage(messages[nextIndex]);
       }, 2500); // 2.5 seconds idle trigger
     };
@@ -315,18 +341,15 @@ export function Cursor() {
       const clientY = e.clientY;
 
       mouseRef.current = { x: clientX, y: clientY };
-      setDotPos({ x: clientX, y: clientY });
 
       if (!activeRef.current) {
         ringRef.current = { x: clientX, y: clientY };
-        setRingPos({ x: clientX, y: clientY });
         activeRef.current = true;
         setActive(true);
       }
 
       if (hoveringRef.current) {
         ringRef.current = { x: clientX, y: clientY };
-        setRingPos({ x: clientX, y: clientY });
       }
 
       resetIdleTimer();
@@ -349,7 +372,6 @@ export function Cursor() {
 
       if (isHover && !hoveringRef.current) {
         ringRef.current = { x: mouseRef.current.x, y: mouseRef.current.y };
-        setRingPos({ x: mouseRef.current.x, y: mouseRef.current.y });
       }
 
       hoveringRef.current = isHover;
@@ -378,10 +400,10 @@ export function Cursor() {
   const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
 
-  const isNearLeft = dotPos.x < 220;
-  const isNearRight = dotPos.x > vw - 220;
-  const isNearTop = dotPos.y < 120;
-  const isNearBottom = dotPos.y > vh - 120;
+  const isNearLeft = bubbleAnchor.x < 220;
+  const isNearRight = bubbleAnchor.x > vw - 220;
+  const isNearTop = bubbleAnchor.y < 120;
+  const isNearBottom = bubbleAnchor.y > vh - 120;
 
   let animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
   let bubbleClass =
@@ -435,19 +457,17 @@ export function Cursor() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-[999999] hidden md:block"
     >
-      {/* 1. Instant Center Accent Dot */}
+      {/* 1. Instant Center Accent Dot — positioned by the frame loop */}
       <div
-        style={{
-          transform: `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`,
-        }}
+        ref={dotElRef}
+        style={{ transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)" }}
         className="absolute left-0 top-0 size-1.5 rounded-full bg-accent transition-opacity duration-200"
       />
 
-      {/* 2. Silky Smooth Trailing Ring */}
+      {/* 2. Silky Smooth Trailing Ring — likewise */}
       <div
-        style={{
-          transform: `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`,
-        }}
+        ref={ringElRef}
+        style={{ transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)" }}
         className="absolute left-0 top-0"
       >
         <div
@@ -465,8 +485,8 @@ export function Cursor() {
         {(sulkyMessage || ((reactionMessage || idleMessage) && !isMuted)) && (
           <motion.div
             style={{
-              left: `${dotPos.x}px`,
-              top: `${dotPos.y}px`,
+              left: `${bubbleAnchor.x}px`,
+              top: `${bubbleAnchor.y}px`,
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={animateProps}

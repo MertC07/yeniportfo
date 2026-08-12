@@ -40,7 +40,10 @@ export function RevealText({
           className="block overflow-hidden"
         >
           <motion.span
-            className={cn("block will-change-transform", lineClassName)}
+            // No will-change here: the reveal plays once and the hint would
+            // then pin a compositor layer per line for the life of the page.
+            // Motion sets it for the duration of the animation on its own.
+            className={cn("block", lineClassName)}
             initial={{ y: "110%" }}
             animate={inView ? { y: "0%" } : { y: "110%" }}
             transition={{
