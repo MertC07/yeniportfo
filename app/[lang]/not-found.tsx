@@ -1,16 +1,18 @@
-import Link from "next/link";
-import { headers } from "next/headers";
-import { Header } from "@/components/layout/header";
-import { defaultLocale, getContent, isLocale, localePath } from "@/lib/content";
+"use client";
 
-// not-found receives no params, so the locale comes from the x-locale
-// header the proxy sets. Server-rendered on purpose: a client 404 would
-// CSR the whole document and lose the pre-rendered markup.
-export default async function NotFound() {
-  const headerList = await headers();
-  const headerLocale = headerList.get("x-locale") ?? "";
-  const locale = isLocale(headerLocale) ? headerLocale : defaultLocale;
-  const { ui } = getContent(locale);
+import Link from "next/link";
+import { Header } from "@/components/layout/header";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
+import { localePath } from "@/lib/content";
+
+// not-found receives no params, so the locale comes from the provider the
+// layout already feeds with params.lang — right on the server render, with no
+// flash. Reading it from the request headers instead opts every route under
+// app/[lang] into dynamic rendering, which costs the whole site its
+// prerendered HTML for the sake of one error page.
+export default function NotFound() {
+  const locale = useLocale();
+  const { ui } = useContent();
 
   return (
     <>

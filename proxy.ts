@@ -22,19 +22,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
-  const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
-
-  // not-found.tsx receives no params, so the locale travels as a header.
-  const headers = new Headers(request.headers);
-  headers.set("x-locale", isEnglish ? "en" : "tr");
-
-  if (isEnglish) {
-    return NextResponse.next({ request: { headers } });
+  // English already sits at the /en paths app/[lang] expects.
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
+    return NextResponse.next();
   }
 
   const url = request.nextUrl.clone();
   url.pathname = `/tr${pathname}`;
-  return NextResponse.rewrite(url, { request: { headers } });
+  return NextResponse.rewrite(url);
 }
 
 export const config = {
