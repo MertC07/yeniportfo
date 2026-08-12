@@ -93,6 +93,29 @@ html.custom-cursor * {
   cursor: none !important;
 }
 
+/* The opening overlay ships in the server HTML and leaves on a CSS timeline,
+   so it covers the page from the very first paint and neither its arrival nor
+   its exit waits on hydration. While it was mounted by React instead, a
+   deferred bundle let the page show first and dropped the intro on top of it
+   a second or two later. Timing here is the source of truth — INTRO_MS in
+   components/ui/preloader.tsx mirrors it. */
+.intro-overlay {
+  animation: intro-exit 0.7s cubic-bezier(0.83, 0, 0.17, 1) 0.95s forwards;
+}
+
+@keyframes intro-exit {
+  to {
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+}
+
+/* Second visit in the same tab: the inline script in the document head stamps
+   this before the body paints, so the intro never appears at all. */
+html[data-intro-seen] .intro-overlay {
+  display: none;
+}
+
 @keyframes loadbar {
   from {
     transform: scaleX(0);

@@ -135,15 +135,29 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Runs before the body paints: the opening overlay is part of the
+            server HTML now, so a second visit in the same tab has to be told
+            to skip it here rather than after hydration. data-cfasync keeps
+            Cloudflare's Rocket Loader from deferring it along with the
+            bundle, which would defeat the point. */}
+        <script
+          data-cfasync="false"
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem("intro-seen"))document.documentElement.dataset.introSeen="1"}catch(e){}`,
+          }}
+        />
       </head>
       <body>
         <LocaleProvider locale={lang}>
           <ThemeProvider>
+            {/* First element in the body so it is parsed — and painted — before
+                the page behind it, which incremental rendering would otherwise
+                show first. */}
+            <Preloader />
             <SmoothScroll>
               {children}
               <ScrollProgress />
               <AiAssistant />
-              <Preloader />
               <GrainOverlay />
               <Cursor />
               <IdleMode />
