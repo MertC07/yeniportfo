@@ -103,7 +103,9 @@ export function GithubStats() {
         </motion.div>
 
         {/* Code Stack Breakdown & Repos Grid */}
-        <div className="grid gap-6 lg:grid-cols-12">
+        {/* Wider gap on a phone, where these two stack: 24px under a 466px
+            panel is not enough to read as a break between them. */}
+        <div className="grid gap-10 sm:gap-6 lg:grid-cols-12">
           {/* Left: Language Stack Metrics */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
