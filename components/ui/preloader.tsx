@@ -7,6 +7,23 @@ import { useContent } from "@/components/providers/locale-provider";
 const INTRO_MS = 1650;
 
 /**
+ * Records that the intro has played, in both places that matter: sessionStorage
+ * for the next page load, and the attribute the stylesheet hides the overlay
+ * off for the rest of this one. The head script only ever runs on a full load,
+ * so without the attribute being written here too, anything that remounts this
+ * component mid-session — switching language re-renders the [lang] layout —
+ * would find the overlay unhidden and replay the opening.
+ */
+function markIntroSeen() {
+  document.documentElement.dataset.introSeen = "1";
+  try {
+    window.sessionStorage.setItem("intro-seen", "1");
+  } catch {
+    // Locked-down privacy modes throw; the attribute still covers this page.
+  }
+}
+
+/**
  * Cinematic opening, shown once per session. The markup is server-rendered so
  * the overlay is on screen at first paint, and it leaves on a CSS animation —
  * neither half depends on hydration. React only clears up afterwards: it drops
@@ -26,9 +43,12 @@ export function Preloader() {
     } catch {
       // Storage can throw in locked-down privacy modes; play the intro.
     }
-    // A repeat visit is already hidden by the stylesheet, off the attribute the
-    // head script stamps, so there is nothing here left to time or unlock.
-    if (seen) return;
+    // Already played: the stylesheet hides the overlay off the attribute, so
+    // there is nothing here left to time or unlock.
+    if (seen) {
+      markIntroSeen();
+      return;
+    }
 
     // The overlay started its timeline at first paint rather than at mount, so
     // what is left of it is measured from page load. Hydration arriving after
@@ -40,11 +60,7 @@ export function Preloader() {
 
     const timer = setTimeout(() => {
       document.body.style.overflow = "";
-      try {
-        window.sessionStorage.setItem("intro-seen", "1");
-      } catch {
-        // Same as above — worst case the intro plays again next navigation.
-      }
+      markIntroSeen();
       setDone(true);
     }, remaining);
 
