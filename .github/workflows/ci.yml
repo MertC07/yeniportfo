@@ -1,0 +1,41 @@
+name: CI
+
+# Vercel builds on every push anyway, but it fails silently into a dashboard
+# nobody is watching and it has failed transiently more than once. This runs
+# the same three gates on GitHub, where a red mark is visible on the commit.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      # Advisory, not a gate. Four errors predate this workflow — one
+      # document.body write in header.tsx and three localStorage reads that
+      # set state on mount (cursor.tsx, cursor-mute-toggle.tsx,
+      # ai-assistant.tsx), all flagged by the React Compiler rules that
+      # eslint-config-next 16 turned on. The code works; deciding between
+      # rewriting it and suppressing the rule is a separate call. Drop
+      # continue-on-error once that is settled and lint becomes a real gate.
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true
+
+      # No secrets needed: GROQ_API_KEY is read inside the chat route at
+      # request time, never during the build.
+      - name: Build
+        run: npm run build

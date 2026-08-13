@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { Syne, Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LocaleProvider } from "@/components/providers/locale-provider";
@@ -165,6 +166,16 @@ export default async function RootLayout({
             </SmoothScroll>
           </ThemeProvider>
         </LocaleProvider>
+        {/* Cookieless page counts. In production the script and its beacons
+            are first-party — /_vercel/insights/* on this same host — so the
+            existing 'self' CSP already covers them and nothing had to be
+            opened up.
+
+            Left out of development entirely: there the package reaches for
+            va.vercel-scripts.com instead, which this CSP blocks, and the
+            only result was four console errors on every page load. Local
+            page views are not data anyone wants counted either way. */}
+        {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
   );
