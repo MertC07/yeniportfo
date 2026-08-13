@@ -101,14 +101,20 @@ export function Skills() {
                 <h3 className="font-display text-2xl font-bold">{tier.tier}</h3>
                 <p className="mt-1 text-sm text-muted">{tier.blurb}</p>
               </div>
-              <ul className="mt-6 space-y-3">
+              {/* Plain rows on a phone, cards from sm up. Ten bordered, filled
+                  boxes stacked 12px apart is the densest thing on the page at
+                  that width and most of why it reads as congested; a hairline
+                  between rows separates them just as well and leaves the type
+                  to carry the section. Same idiom the awards list already
+                  uses. */}
+              <ul className="mt-6 sm:space-y-3">
                 {tier.skills.map((skill) => {
                   const dimmed = active !== null && skill.discipline !== active;
                   return (
                     <li
                       key={skill.name}
                       className={cn(
-                        "flex items-baseline justify-between gap-4 rounded-xl border hairline bg-surface/50 px-4 py-3.5 transition-all duration-400",
+                        "flex items-baseline justify-between gap-4 border-t hairline py-4 transition-all duration-400 sm:rounded-xl sm:border sm:bg-surface/50 sm:px-4 sm:py-3.5",
                         dimmed
                           ? "opacity-30"
                           : "opacity-100 hover:-translate-y-0.5 hover:border-accent/60"
