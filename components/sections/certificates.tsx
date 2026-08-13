@@ -80,6 +80,7 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
           <img
             src={certificate.image}
             alt={certificate.title}
+            loading="lazy"
             className="h-full w-full object-cover object-top opacity-85 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
@@ -165,7 +166,17 @@ export function Certificates() {
     <section id="certificates" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading index="05" label={copy.label} meta={copy.meta} />
 
-      <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* 40px between cards on a phone, not 24. A 327px card with 24px under
+          it gives the gap 7% of the card's own height, which is why the six
+          of them read as one block rather than six things.
+
+          Three of them on a phone, six from sm up. One card per row means six
+          of them is six screens of the same card, which is the repetition the
+          owner was seeing; the button below already leads to all 22. Hidden in
+          CSS rather than sliced in JS so the server and the client render the
+          same list, and the thumbnails are lazy so the three that are hidden
+          cost nothing to fetch. */}
+      <ul className="mt-10 grid gap-10 [&>*:nth-child(n+4)]:hidden sm:grid-cols-2 sm:gap-6 sm:[&>*:nth-child(n+4)]:flex lg:grid-cols-3">
         {featured.map((certificate, i) => (
           <CertificateCard
             key={`${certificate.issued}-${certificate.title}`}
