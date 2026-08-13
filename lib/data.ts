@@ -379,6 +379,12 @@ export type Certificate = {
 // Titles are translated for this locale; issuer names stay as issued.
 export const certificates: Certificate[] = [
   {
+    title: "Version Control: Git and GitHub",
+    issuer: "BTK Akademi",
+    issued: "Aug 2026",
+    image: "/certificates/btk-versiyon-kontrolleri-git-github.jpg",
+  },
+  {
     title: "Generative AI for Games Development",
     issuer: "HP & edX",
     issued: "Jul 2026",

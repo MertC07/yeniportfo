@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocale } from "@/components/providers/locale-provider";
-import { type ChatMessage, type ActionLink, getLocalAiResponse } from "@/lib/ai-knowledge";
+import { type ChatMessage, type ActionLink, getLocalAiResponse, MERT_KNOWLEDGE } from "@/lib/ai-knowledge";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -383,7 +383,7 @@ export function AiAssistant() {
     ? [
         { emoji: "🚀", text: "TEKNOFEST Projesi" },
         { emoji: "💻", text: "Teknolojiler & Stack" },
-        { emoji: "📜", text: "22 Sertifikası" },
+        { emoji: "📜", text: `${MERT_KNOWLEDGE.certificatesCount} Sertifikası` },
         { emoji: "✉️", text: "Staj / İletişim" },
       ]
     : [

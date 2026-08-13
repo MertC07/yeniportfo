@@ -332,6 +332,12 @@ export const awards = [
 // EDIT: örnek satırlar — canlıya almadan gerçek sertifikalarınla değiştir.
 export const certificates: Certificate[] = [
   {
+    title: "Versiyon Kontrolleri: Git ve GitHub",
+    issuer: "BTK Akademi",
+    issued: "Ağu 2026",
+    image: "/certificates/btk-versiyon-kontrolleri-git-github.jpg",
+  },
+  {
     title: "Generative AI for Games Development",
     issuer: "HP & edX",
     issued: "Tem 2026",
@@ -463,6 +469,14 @@ export const certificates: Certificate[] = [
     issuer: "BTK Akademi",
     issued: "Kas 2023",
     image: "/certificates/siber-guvenlik-5-kasim-2023.png",
+  },
+  // Was missing here while the English list carried it, so the Turkish site
+  // — the default one — showed one certificate fewer than the English.
+  {
+    title: "Udemy Yazılım Mühendisliği Sertifikası",
+    issuer: "Udemy",
+    issued: "2024",
+    image: "/certificates/uc-e1fa22eb-86d3-4ebc-94b6-1b3f6d638308.jpg",
   },
 ];
 

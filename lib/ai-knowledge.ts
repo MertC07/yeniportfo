@@ -2,6 +2,8 @@
  * Knowledge Base & Local Smart Response Engine for Mert Ceren AI Assistant
  */
 
+import { certificates } from "./data";
+
 export type ActionLink = {
   label: string;
   href: string;
@@ -81,7 +83,10 @@ export const MERT_KNOWLEDGE = {
     tools: ["Git & GitHub", "Microsoft Office (Word, Excel, PowerPoint)"],
     personal: ["Analitik düşünme & problem çözme", "Etkinlik koordinasyonu", "Takım çalışması & proje yönetimi"],
   },
-  certificatesCount: 22,
+  /* Counted from the list rather than typed: it was stuck at 22 while the
+     English data had 23 and the Turkish 22, so every answer quoting it was
+     wrong for at least one locale. */
+  certificatesCount: certificates.length,
   awards: [
     { title: "TEKNOFEST 2026 Finalisti", issuer: "T3 Vakfı & Sanayi ve Teknoloji Bakanlığı", year: "2026", project: "5G & Yapay Zeka ile Akıllı Yol Güvenliği" },
   ],
@@ -286,16 +291,16 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (has("sertifika", "certificate", "btk", "edx", "udemy", "belge")) {
     if (locale === "tr") {
       return {
-        text: "📜 **Sertifikalar (Tam 22 tane onaylı sertifika topladık! 😄)**:\n\nMert Ceren'in yapay zekâ ve yazılım alanında **22 adet onaylı sertifikası** var.\n\n• **Google & BTK Akademi**: Uygulamalı Yapay Zekâ Eğitimi\n• **BTK Akademi**: Bilgisayarlı Görü ve YOLO\n• **edX & HP**: Generative AI for Games Development ✨",
+        text: `📜 **Sertifikalar (Tam ${MERT_KNOWLEDGE.certificatesCount} tane onaylı sertifika topladık! 😄)**:\n\nMert Ceren'in yapay zekâ ve yazılım alanında **${MERT_KNOWLEDGE.certificatesCount} adet onaylı sertifikası** var.\n\n• **BTK Akademi**: Versiyon Kontrolleri — Git ve GitHub\n• **BTK Akademi**: Bilgisayarlı Görü ve YOLO\n• **edX & HP**: Generative AI for Games Development ✨`,
         actionLinks: [
-          { label: "Sertifikalar Galerisini Aç (22) 📜", href: "#certificates", isAnchor: true },
+          { label: `Sertifikalar Galerisini Aç (${MERT_KNOWLEDGE.certificatesCount}) 📜`, href: "#certificates", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "📜 **Certificates Summary**:\n\nMert Ceren holds **22 verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey credentials include Google & BTK Applied AI, BTK YOLO Computer Vision, and edX HP AI & Data Science.",
+        text: `📜 **Certificates Summary**:\n\nMert Ceren holds **${MERT_KNOWLEDGE.certificatesCount} verified professional certificates** in AI, Computer Vision, and Software Engineering.\n\nKey credentials include BTK Version Control with Git and GitHub, BTK YOLO Computer Vision, and edX HP Generative AI.`,
         actionLinks: [
-          { label: "Open Certificates Gallery (22) 📜", href: "#certificates", isAnchor: true },
+          { label: `Open Certificates Gallery (${MERT_KNOWLEDGE.certificatesCount}) 📜`, href: "#certificates", isAnchor: true },
         ],
       };
     }
@@ -419,7 +424,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
             { label: "Projeleri İncele 🚀", href: "#work", isAnchor: true },
             { label: "Ödüller & Dereceler 🏆", href: "#awards", isAnchor: true },
             { label: "GitHub Repoları 🐙", href: "#github", isAnchor: true },
-            { label: "Sertifikalar (22) 📜", href: "#certificates", isAnchor: true },
+            { label: `Sertifikalar (${MERT_KNOWLEDGE.certificatesCount}) 📜`, href: "#certificates", isAnchor: true },
             { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
           ]
         : [
