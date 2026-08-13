@@ -397,7 +397,15 @@ export function AiAssistant() {
             /* Pinned by insets rather than a 100vw width: 100vw counts the
                scrollbar, which pushed the panel off-centre. dvh covers the
                browsers that shrink the layout viewport for the keyboard; the
-               inline style below covers iOS, which does not. */
+               inline style below covers iOS, which does not.
+
+               On a phone the height fills what is actually free: everything
+               but the 6rem it floats above the button, the site header it
+               must stay clear of, and a little air between the two. A flat
+               540px left 103px of the screen unused above it. Height, not a
+               top inset — setting both top and bottom would over-constrain
+               the box and make the keyboard's inline max-height grow it
+               downwards, back under the keyboard. */
             style={
               keyboard.inset > 0
                 ? {
@@ -406,7 +414,7 @@ export function AiAssistant() {
                   }
                 : undefined
             }
-            className="fixed bottom-24 inset-x-4 z-40 flex h-[540px] max-h-[70dvh] flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-2xl sm:inset-x-auto sm:right-6 sm:w-[420px] sm:max-h-[80vh]"
+            className="fixed bottom-24 inset-x-4 z-40 flex h-[calc(100dvh-11.5rem)] flex-col overflow-hidden rounded-3xl border hairline bg-surface/95 shadow-2xl backdrop-blur-2xl sm:inset-x-auto sm:right-6 sm:h-[540px] sm:w-[420px] sm:max-h-[80vh]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b hairline px-5 py-4 bg-surface/90">
@@ -546,14 +554,18 @@ export function AiAssistant() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Prompts Bar */}
-            <div className="border-t hairline p-3 bg-surface/50 flex flex-wrap gap-2">
+            {/* Quick Prompts Bar — one row, scrolled sideways. Wrapped, these
+                four chips ran to three lines and took 155px of a 540px panel,
+                leaving the conversation itself only 240px. The scrollbar is
+                hidden because the panel is too narrow to spare its height;
+                the chip clipped at the edge is what says there is more. */}
+            <div className="flex gap-2 overflow-x-auto overscroll-x-contain border-t hairline bg-surface/50 p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {quickPrompts.map((prompt, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => handleSend(prompt.text)}
-                  className="rounded-full border hairline bg-surface/90 px-3 py-2.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer flex items-center gap-1.5 sm:py-1.5"
+                  className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border hairline bg-surface/90 px-3 py-2.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer sm:py-1.5"
                 >
                   <span>{prompt.emoji}</span>
                   <span>{prompt.text}</span>
