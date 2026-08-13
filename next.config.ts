@@ -57,7 +57,22 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      {
+        // The CV is the one file here that gets replaced in place, and it
+        // shipped with the 62-day max-age Vercel gives static assets. A
+        // visitor who opened it once would keep seeing that copy for two
+        // months, whatever we deployed — which defeats the point of
+        // updating it. Revalidating on every request costs almost nothing:
+        // the ETag turns an unchanged file into a 304, and the CDN still
+        // caches it at the edge.
+        source: "/:file(Mert_Ceren_CV\\.(?:pdf|jpg))",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
+      },
+    ];
   },
 };
 
