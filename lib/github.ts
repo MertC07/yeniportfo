@@ -50,7 +50,7 @@ const LANGUAGE_STYLE: Record<string, { color: string; note: string }> = {
   TypeScript: { color: "bg-amber-400", note: "AI-assisted web development" },
   JavaScript: { color: "bg-yellow-400", note: "Web platforms & tooling" },
   "C#": { color: "bg-blue-500", note: "Object-oriented programming" },
-  Python: { color: "bg-accent", note: "YOLOv8, computer vision" },
+  Python: { color: "bg-accent", note: "YOLOv11, computer vision" },
   HTML: { color: "bg-orange-400", note: "Markup & templating" },
   CSS: { color: "bg-sky-400", note: "Styling & responsive layout" },
   Jupyter: { color: "bg-fuchsia-400", note: "Model training notebooks" },

@@ -76,7 +76,7 @@ export const MERT_KNOWLEDGE = {
    */
   skills: {
     languages: ["C#", "Python"],
-    ai: ["YOLOv8", "Bilgisayarlı Görü / Nesne Tespiti", "Prompt Mühendisliği (Gemini, Claude)", "Yapay Zekâ Destekli Yazılım Geliştirme"],
+    ai: ["YOLOv8 / YOLOv11", "Bilgisayarlı Görü / Nesne Tespiti", "Prompt Mühendisliği (Gemini, Claude)", "Yapay Zekâ Destekli Yazılım Geliştirme"],
     frontend: ["HTML", "CSS"],
     tools: ["Git & GitHub", "Microsoft Office (Word, Excel, PowerPoint)"],
     personal: ["Analitik düşünme & problem çözme", "Etkinlik koordinasyonu", "Takım çalışması & proje yönetimi"],
@@ -325,14 +325,14 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (has("yetenek", "skill", "dil", "tech", "python", "c#", "react", "stack", "teknoloji", "yazılım")) {
     if (locale === "tr") {
       return {
-        text: "🛠️ **Yetenekler**:\n\n• **Diller**: C#, Python\n• **Yapay Zekâ & Görü**: YOLOv8 ile nesne tespiti, prompt mühendisliği (Gemini, Claude), yapay zekâ destekli yazılım geliştirme\n• **Arayüz**: HTML, CSS\n• **Araçlar**: Git & GitHub, Microsoft Office\n• **Kişisel**: Analitik düşünme, takım çalışması, etkinlik koordinasyonu ✨",
+        text: "🛠️ **Yetenekler**:\n\n• **Diller**: C#, Python\n• **Yapay Zekâ & Görü**: YOLOv8 / YOLOv11 ile nesne tespiti, prompt mühendisliği (Gemini, Claude), yapay zekâ destekli yazılım geliştirme\n• **Arayüz**: HTML, CSS\n• **Araçlar**: Git & GitHub, Microsoft Office\n• **Kişisel**: Analitik düşünme, takım çalışması, etkinlik koordinasyonu ✨",
         actionLinks: [
           { label: "Yetenekler Bölümünü Gör 🛠️", href: "#skills", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "🛠️ **Skills**:\n\n• **Languages**: C#, Python\n• **AI & Computer Vision**: object detection with YOLOv8, prompt engineering (Gemini, Claude), AI-assisted software development\n• **Interface**: HTML, CSS\n• **Tools**: Git & GitHub, Microsoft Office\n• **Professional**: analytical thinking, teamwork, event coordination",
+        text: "🛠️ **Skills**:\n\n• **Languages**: C#, Python\n• **AI & Computer Vision**: object detection with YOLOv8 / YOLOv11, prompt engineering (Gemini, Claude), AI-assisted software development\n• **Interface**: HTML, CSS\n• **Tools**: Git & GitHub, Microsoft Office\n• **Professional**: analytical thinking, teamwork, event coordination",
         actionLinks: [
           { label: "Jump to Skills Section 🛠️", href: "#skills", isAnchor: true },
         ],
@@ -385,7 +385,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi", "who", "about", "biography", "introduce", "tell me")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nBilgisayarlı görü (YOLOv8), C#, Python ve yapay zekâ destekli yazılım geliştirme üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
+        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nBilgisayarlı görü (YOLOv11), C#, Python ve yapay zekâ destekli yazılım geliştirme üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
         actionLinks: [
           { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
           { label: "Seçilmiş Projeleri Gör 🚀", href: "#work", isAnchor: true },

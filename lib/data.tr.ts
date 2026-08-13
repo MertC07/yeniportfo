@@ -207,7 +207,7 @@ export const skillTiers: SkillTier[] = [
     tier: "Yapay Zekâ & Görüntü İşleme",
     blurb: "Proje işlerimin çoğunun geçtiği yer — tespit modelleri ve yapay zekâ destekli geliştirme.",
     skills: [
-      { name: "YOLOv8", discipline: "AI / ML", note: "Nesne tespiti uygulamaları" },
+      { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Nesne tespiti uygulamaları" },
       { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "Görüntü akışında nesne tanıma" },
       { name: "Prompt Mühendisliği", discipline: "AI / ML", note: "Gemini, Claude" },
       { name: "AI Destekli Geliştirme", discipline: "Tooling", note: "Dil modelleriyle yazılım geliştirme" },

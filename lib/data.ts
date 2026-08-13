@@ -264,7 +264,10 @@ export const skillTiers: SkillTier[] = [
     tier: "AI & Computer Vision",
     blurb: "Where most of my project work sits — detection models and AI-assisted development.",
     skills: [
-      { name: "YOLOv8", discipline: "AI / ML", note: "Object detection applications" },
+      // Both versions, deliberately: the models were trained on v8 first and
+      // the TEKNOFEST system runs v11. The CV says only v8 and is the one
+      // that needs correcting, not this.
+      { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Object detection applications" },
       { name: "Computer Vision", discipline: "AI / ML", note: "Recognising objects in a video feed" },
       { name: "Prompt Engineering", discipline: "AI / ML", note: "Gemini, Claude" },
       { name: "AI-Assisted Development", discipline: "Tooling", note: "Building software alongside LLMs" },
@@ -285,7 +288,7 @@ export const skillTiers: SkillTier[] = [
 export const techMarquee = [
   "Python",
   "C#",
-  "YOLOv8",
+  "YOLOv11",
   "Computer Vision",
   "Object Detection",
   "HTML",

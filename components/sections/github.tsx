@@ -34,7 +34,7 @@ export function GithubStats({
     { name: "TypeScript", percentage: 30, note: "AI-assisted web development", color: "bg-amber-400" },
     { name: "JavaScript", percentage: 28, note: "Web platforms & tooling", color: "bg-yellow-400" },
     { name: "C#", percentage: 22, note: "Object-oriented programming", color: "bg-blue-500" },
-    { name: "Python", percentage: 20, note: "YOLOv8, computer vision", color: "bg-accent" },
+    { name: "Python", percentage: 20, note: "YOLOv11, computer vision", color: "bg-accent" },
   ];
 
   /* Written here rather than read from GitHub because these repositories
