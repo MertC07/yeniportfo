@@ -1,28 +1,38 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
-import { localePath } from "@/lib/content";
+import { locales, localePath } from "@/lib/content";
+
+/**
+ * Any locale segment at the front of the path, whether the visitor's URL
+ * carries it (/en/...) or the proxy put it there rewriting the bare Turkish
+ * paths (/ → /tr). usePathname() reports the rewritten path, so both have to
+ * come off before the other locale's prefix goes on — stripping only /en left
+ * the /tr in place and sent the switch to /en/tr.
+ */
+const LOCALE_PREFIX = new RegExp(`^/(?:${locales.join("|")})(?=/|$)`);
 
 /**
  * EN ↔ TR switch: links to the same page in the other locale.
- * Deliberately a plain <a>, not next/link — switching locale swaps the
- * root layout (<html lang>), and a soft navigation would client-rerender
- * the document tree (React then warns about the theme <script> tag).
+ *
+ * Navigates client-side and keeps the scroll position, so switching language
+ * reads like the theme toggle rather than dropping the visitor back at the
+ * top of the page.
  */
 export function LanguageToggle() {
   const locale = useLocale();
   const { ui } = useContent();
   const pathname = usePathname() ?? "/";
 
-  // Strip any locale prefix to the bare path, then re-prefix for the other
-  // locale. Turkish lives at the root, English under /en.
-  const bare = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const bare = pathname.replace(LOCALE_PREFIX, "") || "/";
   const target = localePath(locale === "tr" ? "en" : "tr", bare);
 
   return (
-    <a
+    <Link
       href={target}
+      scroll={false}
       aria-label={ui.langToggle.aria}
       // First control after the nav, so the header chick uses it as the far
       // end of its walk — otherwise it wanders under these buttons.
@@ -30,6 +40,6 @@ export function LanguageToggle() {
       className="tap-target flex items-center rounded-full border hairline px-3.5 py-2 transition-colors duration-300 hover:border-foreground/40"
     >
       <span className="microlabel text-foreground">{ui.langToggle.label}</span>
-    </a>
+    </Link>
   );
 }
