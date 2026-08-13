@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { socials } from "@/lib/data";
+import { cvVersion } from "@/lib/cv-version";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealText } from "@/components/ui/reveal-text";
@@ -173,7 +174,7 @@ export function Contact() {
                     and read rather than glanced at, so it is served
                     generously; AVIF still lands far under the raw JPEG. */}
                 <Image
-                  src="/Mert_Ceren_CV.jpg"
+                  src={`/Mert_Ceren_CV-${cvVersion}.jpg`}
                   alt={`${profile.name} Özgeçmiş CV`}
                   width={1653}
                   height={2339}
@@ -190,7 +191,7 @@ export function Contact() {
 
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <a
-                    href="/Mert_Ceren_CV.pdf"
+                    href={`/Mert_Ceren_CV.pdf?v=${cvVersion}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="microlabel tap-target inline-flex items-center gap-2 rounded-full border hairline px-5 py-3 text-xs text-foreground transition-colors hover:border-accent hover:text-accent sm:py-2.5"
@@ -199,7 +200,7 @@ export function Contact() {
                   </a>
                   
                   <a
-                    href="/Mert_Ceren_CV.pdf"
+                    href={`/Mert_Ceren_CV.pdf?v=${cvVersion}`}
                     download="Mert_Ceren_CV.pdf"
                     className="microlabel tap-target inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent-ink transition-opacity hover:opacity-90 shadow-md shadow-accent/20 sm:py-2.5"
                   >

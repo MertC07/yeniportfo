@@ -55,28 +55,37 @@ const nextConfig: NextConfig = {
     // (certificates, award photos, project screenshots), which is most of
     // what this site weighs.
     formats: ["image/avif", "image/webp"],
+    // No `localPatterns` here on purpose. Next 16 needs it only to allow a
+    // local src carrying a query string, and it is an allowlist: switching it
+    // on blocks every path it does not also name, so one forgotten entry
+    // turns an image into a 400 that nothing else warns about. The CV preview
+    // takes its version in the filename instead, which leaves every src on
+    // the site query-free and this config with nothing to keep in sync.
   },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
-      // The CV is the one file here that gets replaced in place, and it
-      // shipped with the 62-day max-age Vercel gives static assets. A
-      // visitor who opened it once would keep seeing that copy for two
-      // months, whatever we deployed — which defeats the point of updating
-      // it. Revalidating on every request costs almost nothing: the ETag
-      // turns an unchanged file into a 304, and the CDN still holds it.
+      // The PDF is the one file here that keeps its path while its contents
+      // change, and it shipped with the 62-day max-age Vercel gives static
+      // assets — so anyone holding a saved link would keep getting the copy
+      // they first opened. Revalidating every request costs almost nothing:
+      // the ETag turns an unchanged file into a 304, and the CDN still holds
+      // it at the edge.
       //
-      // Spelled out as two literal paths. A single `/:file(...)` source with
-      // an alternation inside it matched in `next dev` but silently did not
-      // survive the translation to Vercel's routing, so the header never
-      // reached production. Do not "tidy" these back into one pattern
-      // without checking the live response.
-      ...["/Mert_Ceren_CV.pdf", "/Mert_Ceren_CV.jpg"].map((source) => ({
-        source,
+      // A literal source, deliberately. Writing this as one `/:file(...)`
+      // pattern with an alternation inside matched in `next dev` but did not
+      // survive translation to Vercel's routing, so the header never reached
+      // production while the neighbouring rule's did. Check the live
+      // response before making this cleverer.
+      //
+      // The preview image needs no rule: its filename carries the version,
+      // so a long cache is the correct answer for it.
+      {
+        source: "/Mert_Ceren_CV.pdf",
         headers: [
           { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
         ],
-      })),
+      },
     ];
   },
 };
