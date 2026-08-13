@@ -59,19 +59,24 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
-      {
-        // The CV is the one file here that gets replaced in place, and it
-        // shipped with the 62-day max-age Vercel gives static assets. A
-        // visitor who opened it once would keep seeing that copy for two
-        // months, whatever we deployed — which defeats the point of
-        // updating it. Revalidating on every request costs almost nothing:
-        // the ETag turns an unchanged file into a 304, and the CDN still
-        // caches it at the edge.
-        source: "/:file(Mert_Ceren_CV\\.(?:pdf|jpg))",
+      // The CV is the one file here that gets replaced in place, and it
+      // shipped with the 62-day max-age Vercel gives static assets. A
+      // visitor who opened it once would keep seeing that copy for two
+      // months, whatever we deployed — which defeats the point of updating
+      // it. Revalidating on every request costs almost nothing: the ETag
+      // turns an unchanged file into a 304, and the CDN still holds it.
+      //
+      // Spelled out as two literal paths. A single `/:file(...)` source with
+      // an alternation inside it matched in `next dev` but silently did not
+      // survive the translation to Vercel's routing, so the header never
+      // reached production. Do not "tidy" these back into one pattern
+      // without checking the live response.
+      ...["/Mert_Ceren_CV.pdf", "/Mert_Ceren_CV.jpg"].map((source) => ({
+        source,
         headers: [
           { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
         ],
-      },
+      })),
     ];
   },
 };
