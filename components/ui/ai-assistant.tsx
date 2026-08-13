@@ -602,12 +602,23 @@ export function AiAssistant() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Prompts Bar — one row, scrolled sideways. Wrapped, these
-                four chips ran to three lines and took 155px of a 540px panel,
-                leaving the conversation itself only 240px. The scrollbar is
-                hidden because the panel cannot spare its height; the soft edge
-                and the arrow say there is more, and both go away at the end of
-                the row rather than pointing at nothing.
+            {/* Quick Prompts Bar. Two different problems above and below sm,
+                so two different layouts.
+
+                On a phone the panel is as tall as the viewport allows and
+                every pixel the chips take is a pixel off the conversation:
+                wrapped, these four ran to three lines and left the thread
+                240px. So they stay on one sideways-scrolling row there, with
+                the scrollbar hidden — the panel cannot spare its height — and
+                a soft edge plus an arrow to say the row continues.
+
+                From sm the panel is a fixed 420x540 box that is not competing
+                with anything, and hiding half the options behind a scroll
+                nobody asked for is the worse trade. They wrap.
+
+                The mask and the arrow need no breakpoint of their own: once
+                the row wraps there is no horizontal overflow, so the effect
+                collapses to a plain opaque gradient and the arrow unmounts.
 
                 The border and background sit on the outer element so the mask
                 only ever fades the chips — masking the whole bar would take
@@ -616,7 +627,7 @@ export function AiAssistant() {
               <div
                 ref={chipRowRef}
                 style={{ maskImage: chipMask, WebkitMaskImage: chipMask }}
-                className="flex gap-2 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex gap-2 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-x-visible"
               >
                 {quickPrompts.map((prompt, i) => (
                   <button
