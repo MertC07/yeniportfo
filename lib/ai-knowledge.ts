@@ -48,18 +48,18 @@ export const MERT_KNOWLEDGE = {
       title: "Sanal Kampüs (Virtual Campus)",
       role: "Yazılım Mühendisliği Öğrencisi",
       category: "Eğitim Teknolojisi & 360° Web Platformu",
-      tech: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
+      tech: ["Yapay zekâ destekli geliştirme", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
       summary:
-        "Ziyaretçiler için 360° panoramik sanal kampüs turu ve üniversite idaresi için oda tabanlı envanter yönetim sistemi. İki bağımsız ihtiyacı PostgreSQL üzerinde tek bir veri şemasında birleştiren platform.",
+        "Ziyaretçiler için 360° panoramik sanal kampüs turu ve üniversite idaresi için oda tabanlı envanter yönetim sistemi. Mimarisini Mert kurdu, uygulaması dil modelleriyle birlikte yazıldı; iki bağımsız ihtiyacı PostgreSQL üzerinde tek bir veri şemasında birleştiriyor.",
       href: "/work/virtual-campus",
     },
     {
       title: "Rosso Lounge Bistro Web Platformu",
       role: "Yazılım Mühendisliği Öğrencisi",
       category: "İşletme & Web Platformu",
-      tech: ["React", ".NET Core", "SQL Server", "TailwindCSS"],
+      tech: ["Yapay zekâ destekli geliştirme", "HTML", "C#", "CSS"],
       summary:
-        "Rosso Lounge Bistro için özel geliştirilen dinamik dijital menü, rezervasyon yönetimi ve yönetim paneli çözümü.",
+        "Rosso Lounge Bistro için özel geliştirilen dinamik dijital menü, rezervasyon yönetimi ve yönetim paneli çözümü. Yapay zekâ destekli geliştirmeyle kurgulanıp teslim edildi.",
       href: "/work/rosso-lounge",
     },
   ],
@@ -385,7 +385,7 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (has("kimdir", "kim", "hakkında", "tanıt", "biyografi", "who", "about", "biography", "introduce", "tell me")) {
     if (locale === "tr") {
       return {
-        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nYapay zekâ, bilgisayarlı görü (YOLOv11), C#/.NET Core ve modern web platformları üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
+        text: "Mert Ceren, **Bandırma Onyedi Eylül Üniversitesi (BANÜ) Yazılım Mühendisliği** öğrencisi ve TEKNOFEST 2026 **5Genç** takımının **Takım Kaptanıdır** 😄\n\nBilgisayarlı görü (YOLOv8), C#, Python ve yapay zekâ destekli yazılım geliştirme üzerine çalışır 🚀 Merak ettiğin her şeyi sorabilirsin ✨",
         actionLinks: [
           { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
           { label: "Seçilmiş Projeleri Gör 🚀", href: "#work", isAnchor: true },

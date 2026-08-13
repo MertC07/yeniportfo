@@ -49,7 +49,7 @@ export const projects: Project[] = [
       challenge:
         "Destekli ve otonom sürüş sistemlerinin tehlikeleri — araçları, yayaları, beklenmedik engelleri — gerçek zamanlı görmesi gerekir; geç gelen bir tespit, hiç gelmemiş bir tespittir. Sistem, düşük gecikmeli 5G iletimini yol hızında anlam taşıyacak kadar hızlı görü modelleriyle birleştirmek zorundaydı.",
       approach:
-        "Algı katmanını YOLO ailesi modeller (önce YOLOv8, sonra YOLOv11) üzerine kurduk; senaryoya özel veri setleriyle Python'da eğitip yineledik. 5G ağ entegrasyonu tespitleri minimum gecikmeyle taşıyor; böylece uyarılar araçlara ve altyapıya hâlâ işe yarar durumdayken ulaşabiliyor. Takım kaptanı ve koordinatör olarak mimariyi uçtan uca ben üstleniyorum — model eğitim döngülerinden parçaların ağ üzerinde nasıl konuştuğuna kadar.",
+        "Algı katmanı doğrudan benim elimden çıkıyor: YOLO ailesi modelleri, senaryoya özel veri setleriyle Python'da eğitip yol hızında ayakta kalana kadar yineliyorum. Bu tespitleri taşıyan 5G tarafı takımın altyapı işi; kaptan olarak iki yarının nerede buluştuğunu koordine ediyorum — modeller ne üretiyor, ağ ne bekliyor ve teslim tarihi gerçekte nerede duruyor.",
       outcome:
         "Sistem üzerinde aktif geliştirme süreci devam etmekte olup, model eğitimleri ve 5G entegrasyonu aşamaları 5Genç takımıyla TEKNOFEST 2026 sezonu için hazırlanmaktadır. Gerçek zamanlı tespit başarım oranlarını artırmak için yeni senaryolar üzerinde çalışmaya devam ediyoruz.",
     },
@@ -60,8 +60,8 @@ export const projects: Project[] = [
     year: "2026",
     category: "Eğitim Teknolojisi · Web Platformu",
     description:
-      "Envanter takip sistemiyle bütünleşik 360° panoramik kampüs deneyimi — önde React, Photo Sphere Viewer ve Leaflet, arkada PostgreSQL üzerinde Express ve Prisma. Kampüsü her yerden gez; içindekileri tek panelden yönet.",
-    tags: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
+      "Envanter takip sistemiyle bütünleşik, yapay zekâ destekli geliştirmeyle kurulmuş 360° panoramik kampüs deneyimi — önde React, Photo Sphere Viewer ve Leaflet, arkada PostgreSQL üzerinde Express ve Prisma. Kampüsü her yerden gez; içindekileri tek panelden yönet.",
+    tags: ["AI destekli", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
     href: "#",
     image: "/projects/virtual-campus.png",
     status: "Geliştirme aşamasında",
@@ -71,6 +71,7 @@ export const projects: Project[] = [
         "Kampüs, daha varmadan gezebilmen gereken bir yerdir — ve birinin dürüst tutmak zorunda olduğu bir demirbaş listesidir. Sanal Kampüs ikisini de aynı platformdan yapıyor.",
       facts: [
         { label: "Rol", value: "Yazılım Mühendisliği Öğrencisi" },
+        { label: "Nasıl geliştirildi", value: "Yapay zekâ destekli geliştirme" },
         { label: "Frontend", value: "React + Vite, Tailwind CSS" },
         { label: "360° & harita", value: "Photo Sphere Viewer + Leaflet" },
         { label: "Backend", value: "Node.js üzerinde Express + Prisma" },
@@ -80,9 +81,9 @@ export const projects: Project[] = [
       challenge:
         "Aday öğrenciler kampüsü yerinde gezmeden görmek istiyor; idarenin ise aynı binalardaki envanteri takip etmesi gerekiyor — genellikle birbirinden kopuk iki araçla çözülen iki problem. Hedef tek platformdu: her cihazda akıcı 360° gezinme, arkasında yapılandırılmış, sorgulanabilir veri.",
       approach:
-        "Photo Sphere Viewer panoramik sahneleri Vite ile kurulmuş React kabuğu içinde işliyor, Leaflet ise kampüs haritasını taşıyor; böylece ziyaretçi genel görünümle bir oda arasında bağı kaybetmeden gezinebiliyor. Prisma destekli Express API'si sahne ve envanter verisini PostgreSQL'den sunuyor — ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında yaşayan odanın ta kendisi. Tek doğruluk kaynağı, birbirinden çok farklı iki kitle.",
+        "Bunu artık web işlerimin çoğunu kurduğum yöntemle geliştirdim: mimariyi ve veri modelini kendim belirleyip, her katmanı elle yazmak yerine dil modelleriyle birlikte yazdım. Benim payıma düşen işin şekli — neyin neyle konuştuğu, hangi odanın hangi kayda karşılık geldiği — ve bütünü tutarlı tutan gözden geçirme. Photo Sphere Viewer panoramik sahneleri Vite ile kurulmuş React kabuğunda işliyor, Leaflet kampüs haritasını taşıyor, Prisma destekli Express API'si sahne ve envanter verisini PostgreSQL'den sunuyor; böylece ziyaretçinin gezdiği oda, ekipman kayıtları veritabanında duran odanın ta kendisi oluyor.",
       outcome:
-        "Hâlâ geliştirme aşamasında. Temel mimari ayakta — panoramik sahneler, kampüs haritası ve Prisma destekli envanter API'si birbiriyle konuşuyor — şimdiki iş yeni kampüs konumlarını çekmek ve yönetim panelini detaylandırmak.",
+        "Hâlâ geliştirme aşamasında. Temel mimari ayakta — panoramik sahneler, kampüs haritası ve Prisma destekli envanter API'si birbiriyle konuşuyor — şimdiki iş yeni kampüs konumlarını çekmek ve yönetim panelini detaylandırmak. Bu yöntemin bir projeyi nereye kadar taşıdığını, kararın nerede hâlâ bana kaldığını da burada öğrendim.",
     },
   },
   {
@@ -101,13 +102,14 @@ export const projects: Project[] = [
         "Bir restoranın sitesi, menü değiştiği ve kimsenin güncelleyemediği gün ölür. Rosso Lounge, ekibin kendi başına yönetebildiği bir site aldı.",
       facts: [
         { label: "Rol", value: "Yazılım Mühendisliği Öğrencisi" },
+        { label: "Nasıl geliştirildi", value: "Yapay zekâ destekli geliştirme" },
         { label: "Müşteri", value: "Rosso Lounge Bistro" },
         { label: "Öne çıkan", value: "Özel yönetim paneli" },
       ],
       challenge:
         "Küçük işletme sitelerinin çoğu statik broşürdür: açılışta doğru görünür, birkaç hafta içinde güncelliğini yitirir. Bistronun hem vitrine hem pratikliğe ihtiyacı vardı — markayı taşıyan herkese açık bir site ve teknik olmayan ekibin müşterinin gördüğünü yönettiği özel bir panel.",
       approach:
-        "Platformu, merkezinde özel bir yönetim paneliyle uçtan uca geliştirdim: menü, içerik ve işletme bilgileri tek yerden düzenlenebiliyor, geliştirici gerekmiyor. Yapay zekâ destekli geliştirme akışları projeyi mimari taslaklardan uygulamaya kod kalitesinden ödün vermeden hızla taşıdı.",
+        "Platformu, merkezinde özel bir yönetim paneliyle uçtan uca ben kurguladım: menü, içerik ve işletme bilgileri tek yerden düzenlenebiliyor, geliştirici gerekmiyor. Uygulama dil modelleriyle birlikte yazıldı — mimariyi ben belirledim, geleni gözden geçirdim ve müşterinin gerçek ihtiyacını aracın önünde tuttum. Projeyi taslaktan çalışan bir teslimata bir öğrencinin takviminde taşıyan da bu oldu.",
       outcome:
         "Bistro web varlığını kendisi işletiyor — eskiden geliştirici gerektiren güncellemeler artık panelde bir dakika sürüyor. Proje aynı zamanda yapay zekâ destekli akışların gerçek müşteri teslimatına nasıl oturduğu konusunda şablonum hâline geldi.",
     },

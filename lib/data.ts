@@ -75,7 +75,7 @@ export const projects: Project[] = [
       challenge:
         "Assisted and autonomous driving systems need to see hazards — vehicles, pedestrians, unexpected obstacles — in real time, and a detection that arrives late is a detection that never happened. The system had to combine low-latency 5G transport with vision models fast enough to matter at road speed.",
       approach:
-        "We built the perception layer on YOLO-family models (YOLOv8, then YOLOv11), trained and iterated in Python on scenario-specific datasets. 5G network integration carries detections with minimal latency, so alerts can reach vehicles and infrastructure while they are still actionable. As team captain and coordinator, I own the architecture end to end — from model training loops to how the pieces talk over the network.",
+        "The perception layer is my own hands-on work: YOLO-family models, trained and iterated in Python on scenario-specific datasets until they hold up at road speed. The 5G transport that carries those detections is the team's infrastructure side, and as captain I coordinate how the two halves meet — what the models emit, what the network expects, and where the deadline actually sits.",
       outcome:
         "Active development is ongoing, focusing on training models and integrating low-latency 5G pipelines for the TEKNOFEST 2026 season. We are continuously testing new road scenarios to improve real-time detection accuracy.",
     },
@@ -86,8 +86,8 @@ export const projects: Project[] = [
     year: "2026",
     category: "EdTech · Web Platform",
     description:
-      "A 360° panoramic campus experience with an integrated inventory tracking system — React, Photo Sphere Viewer and Leaflet on the front, Express and Prisma over PostgreSQL behind it. Walk the campus from anywhere; manage what's inside it from one panel.",
-    tags: ["React", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
+      "A 360° panoramic campus experience with an integrated inventory tracking system, built with AI-assisted development — React, Photo Sphere Viewer and Leaflet on the front, Express and Prisma over PostgreSQL behind it. Walk the campus from anywhere; manage what's inside it from one panel.",
+    tags: ["AI-assisted", "Photo Sphere Viewer", "Leaflet", "Express", "PostgreSQL"],
     href: "#",
     image: "/projects/virtual-campus.png",
     status: "In development",
@@ -97,6 +97,7 @@ export const projects: Project[] = [
         "A campus is a place you should be able to visit before you arrive — and an asset list someone has to keep honest. Virtual Campus does both from the same platform.",
       facts: [
         { label: "Role", value: "Software Engineering Student" },
+        { label: "How it was built", value: "AI-assisted development" },
         { label: "Frontend", value: "React + Vite, Tailwind CSS" },
         { label: "360° & maps", value: "Photo Sphere Viewer + Leaflet" },
         { label: "Backend", value: "Express + Prisma on Node.js" },
@@ -106,9 +107,9 @@ export const projects: Project[] = [
       challenge:
         "Prospective students want to see the campus without traveling to it, and administration needs to track inventory across the same buildings — two problems usually solved by two disconnected tools. The goal was one platform: smooth 360° navigation on any device, backed by structured, queryable data.",
       approach:
-        "Photo Sphere Viewer renders the panoramic scenes inside a React shell built with Vite, and Leaflet carries the campus map, so a visitor can move between an overview and a room without losing the thread. An Express API backed by Prisma serves scene and inventory data from PostgreSQL, so the same room a visitor tours is the room whose equipment records live in the database — one source of truth, two very different audiences.",
+        "I built this the way I build most web work now: deciding the architecture and the data model myself, then writing it alongside language models rather than hand-rolling every layer. My part is the shape of the thing — what talks to what, which room maps to which record — and the review that keeps it coherent. Photo Sphere Viewer renders the panoramic scenes inside a React shell built with Vite, Leaflet carries the campus map, and an Express API backed by Prisma serves scene and inventory data from PostgreSQL, so the room a visitor tours is the room whose equipment records live in the database.",
       outcome:
-        "Still in development. The core architecture is standing — panoramic scenes, the campus map and the Prisma-backed inventory API all talk to each other — and the work now is capturing new campus locations and building out the admin dashboard.",
+        "Still in development. The core architecture is standing — panoramic scenes, the campus map and the Prisma-backed inventory API all talk to each other — and the work now is capturing new campus locations and building out the admin dashboard. It is also where I learned how far this way of working carries a project, and where the judgement still has to be mine.",
     },
   },
   {
@@ -127,13 +128,14 @@ export const projects: Project[] = [
         "A restaurant's website dies the day the menu changes and nobody can update it. Rosso Lounge got a site the staff can run themselves.",
       facts: [
         { label: "Role", value: "Software Engineering Student" },
+        { label: "How it was built", value: "AI-assisted development" },
         { label: "Client", value: "Rosso Lounge Bistro" },
         { label: "Highlight", value: "Custom admin panel" },
       ],
       challenge:
         "Most small-business sites are static brochures: they look right at launch and drift out of date within weeks. The bistro needed presence and practicality — a public site that carries the brand, and a private panel where non-technical staff manage what customers see.",
       approach:
-        "I built the platform end to end with a custom management panel at its core: menu, content, and business information are all editable from one place, no developer required. AI-assisted development workflows carried the project from architecture drafts to implementation quickly without giving up code quality.",
+        "I specified the platform end to end with a custom management panel at its core: menu, content, and business information all editable from one place, no developer required. The implementation was written alongside language models — I set the architecture, reviewed what came back, and kept the client's actual needs in front of the tooling. That is what took it from drafts to a working delivery on a student's schedule.",
       outcome:
         "The bistro operates its own web presence — updates that used to require a developer now take a minute in the panel. The project also became my template for how AI-assisted workflows fit into real client delivery.",
     },
