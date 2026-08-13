@@ -98,6 +98,86 @@ const FAST_SCROLL_PX_PER_SEC = 2000;
 const SCROLL_REACTION_COOLDOWN = 9000;
 const SCROLL_REACTION_MS = 2600;
 
+/** How close to an edge the cursor has to be for the bubble to move aside. */
+const BUBBLE_EDGE_X = 220;
+const BUBBLE_EDGE_Y = 120;
+
+const TAIL_BASE = "absolute size-2 rotate-45 border-accent/30 bg-background/95";
+
+/**
+ * Where the bubble hangs off the cursor, per corner or edge it is near: the
+ * offset, whether the box is centred / right-aligned on the cursor, and which
+ * side the little tail points from.
+ */
+const BUBBLE_PLACEMENTS = {
+  default: {
+    x: 0,
+    y: -58,
+    align: "-translate-x-1/2",
+    tail: "-bottom-1 left-1/2 -translate-x-1/2 border-b border-r",
+  },
+  top: {
+    x: 0,
+    y: 25,
+    align: "-translate-x-1/2",
+    tail: "-top-1 left-1/2 -translate-x-1/2 border-t border-l",
+  },
+  left: {
+    x: 25,
+    y: -18,
+    align: "",
+    tail: "-left-1 top-1/2 -translate-y-1/2 border-b border-l",
+  },
+  right: {
+    x: -25,
+    y: -18,
+    align: "-translate-x-full",
+    tail: "-right-1 top-1/2 -translate-y-1/2 border-t border-r",
+  },
+  "top-left": {
+    x: 20,
+    y: 20,
+    align: "",
+    tail: "-top-1 left-3 border-t border-l",
+  },
+  "top-right": {
+    x: -20,
+    y: 20,
+    align: "-translate-x-full",
+    tail: "-top-1 right-3 border-t border-r",
+  },
+  "bottom-left": {
+    x: 20,
+    y: -45,
+    align: "",
+    tail: "-bottom-1 left-3 border-b border-l",
+  },
+  "bottom-right": {
+    x: -20,
+    y: -45,
+    align: "-translate-x-full",
+    tail: "-bottom-1 right-3 border-b border-r",
+  },
+} as const;
+
+type BubbleZone = keyof typeof BUBBLE_PLACEMENTS;
+
+function zoneFor(x: number, y: number, vw: number, vh: number): BubbleZone {
+  const left = x < BUBBLE_EDGE_X;
+  const right = x > vw - BUBBLE_EDGE_X;
+  const top = y < BUBBLE_EDGE_Y;
+  const bottom = y > vh - BUBBLE_EDGE_Y;
+
+  if (top && left) return "top-left";
+  if (top && right) return "top-right";
+  if (bottom && left) return "bottom-left";
+  if (bottom && right) return "bottom-right";
+  if (left) return "left";
+  if (right) return "right";
+  if (top) return "top";
+  return "default";
+}
+
 /**
  * Custom cursor: instant accent dot + silky smooth lerp trailing ring.
  * Displays a playful speech bubble with a header Mute / Unmute emoji toggle.
@@ -120,20 +200,28 @@ export function Cursor() {
   const [sulkyMessage, setSulkyMessage] = useState<string | null>(null);
 
   /**
-   * Where the speech bubble sits. Only set when a message appears, so the
-   * bubble is placed once rather than re-measured on every mouse move.
+   * Which side of the cursor the bubble hangs off. The bubble itself rides
+   * along by transform like the dot does, so this only has to change when the
+   * cursor crosses into a different edge of the viewport — a handful of
+   * renders while a message is up, rather than one per frame.
    */
-  const [bubbleAnchor, setBubbleAnchor] = useState({ x: -100, y: -100 });
+  const [bubbleZone, setBubbleZone] = useState<BubbleZone>("default");
 
   /**
-   * The dot and the ring are moved by writing transforms straight onto these
-   * nodes from the animation loop. Routing a pointer position through React
-   * state instead would re-render this whole component on every mouse move
-   * and again on every frame — a few thousand renders a minute, all of them
-   * throwing away identical markup.
+   * The dot, the ring and the bubble are moved by writing transforms straight
+   * onto these nodes from the animation loop. Routing a pointer position
+   * through React state instead would re-render this whole component on every
+   * mouse move and again on every frame — a few thousand renders a minute, all
+   * of them throwing away identical markup.
    */
   const dotElRef = useRef<HTMLDivElement | null>(null);
   const ringElRef = useRef<HTMLDivElement | null>(null);
+  const bubbleElRef = useRef<HTMLDivElement | null>(null);
+
+  /** Live zone and viewport, kept by the frame loop so no render depends on them. */
+  const zoneRef = useRef<BubbleZone>("default");
+  const viewportRef = useRef({ w: 1200, h: 800 });
+  const bubbleShownRef = useRef(false);
 
   const mouseRef = useRef({ x: -100, y: -100 });
   const ringRef = useRef({ x: -100, y: -100 });
@@ -164,7 +252,7 @@ export function Cursor() {
       ? "Fine! I'll shut up! 🙄 Not saying a single word, happy?!"
       : "Öff tamam sustum ya! 🙄 HİÇ konuşmuyorum tamam mı!";
 
-    setBubbleAnchor({ ...mouseRef.current });
+    setBubbleZone(zoneRef.current);
     setSulkyMessage(tripMsg);
 
     setTimeout(() => {
@@ -195,7 +283,7 @@ export function Cursor() {
       ? "Yayy! Finally letting me talk again! 😄🎉"
       : "Yeyy! Sonunda konuşturdun beni! 😄🎉";
 
-    setBubbleAnchor({ ...mouseRef.current });
+    setBubbleZone(zoneRef.current);
     setSulkyMessage(happyMsg);
     setTimeout(() => {
       setSulkyMessage(null);
@@ -222,25 +310,46 @@ export function Cursor() {
 
     const messages = isEnglish ? IDLE_MESSAGES_EN : IDLE_MESSAGES_TR;
 
+    const readViewport = () => {
+      viewportRef.current = { w: window.innerWidth, h: window.innerHeight };
+    };
+    readViewport();
+
     /**
-     * Moves both pieces once a frame: the dot pinned to the pointer, the ring
-     * easing after it. Transforms are written straight to the nodes, so a
-     * mouse crossing the screen costs no React work at all.
+     * Moves all three pieces once a frame: the dot pinned to the pointer, the
+     * ring easing after it, the bubble riding along with the dot. Transforms
+     * are written straight to the nodes, so a mouse crossing the screen costs
+     * no React work at all — only crossing into a different edge of the
+     * viewport does, and only while a message is actually up.
      */
     const paint = () => {
       if (activeRef.current) {
+        const { x, y } = mouseRef.current;
         const factor = hoveringRef.current ? 1.0 : 0.12;
-        ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * factor;
-        ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * factor;
+        ringRef.current.x += (x - ringRef.current.x) * factor;
+        ringRef.current.y += (y - ringRef.current.y) * factor;
 
         const dot = dotElRef.current;
         if (dot) {
-          dot.style.transform = `translate3d(${mouseRef.current.x}px, ${mouseRef.current.y}px, 0) translate(-50%, -50%)`;
+          dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         }
 
         const ring = ringElRef.current;
         if (ring) {
           ring.style.transform = `translate3d(${ringRef.current.x}px, ${ringRef.current.y}px, 0) translate(-50%, -50%)`;
+        }
+
+        const bubble = bubbleElRef.current;
+        if (bubble) {
+          bubble.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        }
+
+        const zone = zoneFor(x, y, viewportRef.current.w, viewportRef.current.h);
+        if (zone !== zoneRef.current) {
+          zoneRef.current = zone;
+          // With nothing on screen the ref is enough: the next message reads
+          // it as it appears, so the placement is right on its first frame.
+          if (bubbleShownRef.current) setBubbleZone(zone);
         }
       }
       animFrameRef.current = requestAnimationFrame(paint);
@@ -308,7 +417,7 @@ export function Cursor() {
           !isMutedRef.current
         ) {
           lastReactionAt = now;
-          setBubbleAnchor({ ...mouseRef.current });
+          setBubbleZone(zoneRef.current);
           setReactionMessage(velocity > 0 ? pickScrollDown() : pickScrollUp());
           if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current);
           reactionTimerRef.current = setTimeout(
@@ -331,7 +440,7 @@ export function Cursor() {
 
       idleTimerRef.current = setTimeout(() => {
         const nextIndex = getNextIndex();
-        setBubbleAnchor({ ...mouseRef.current });
+        setBubbleZone(zoneRef.current);
         setIdleMessage(messages[nextIndex]);
       }, 2500); // 2.5 seconds idle trigger
     };
@@ -381,6 +490,7 @@ export function Cursor() {
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerover", onOver, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", readViewport, { passive: true });
     document.addEventListener("mouseleave", onLeave, { passive: true });
     document.documentElement.classList.add("custom-cursor");
 
@@ -391,64 +501,19 @@ export function Cursor() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", readViewport);
       document.removeEventListener("mouseleave", onLeave);
       document.documentElement.classList.remove("custom-cursor");
     };
   }, [isEnglish]);
 
-  // Smart Viewport Edge Detection for Speech Bubble
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+  const bubbleMessage = sulkyMessage ?? (isMuted ? null : reactionMessage ?? idleMessage);
+  const placement = BUBBLE_PLACEMENTS[bubbleZone];
 
-  const isNearLeft = bubbleAnchor.x < 220;
-  const isNearRight = bubbleAnchor.x > vw - 220;
-  const isNearTop = bubbleAnchor.y < 120;
-  const isNearBottom = bubbleAnchor.y > vh - 120;
-
-  let animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
-  let bubbleClass =
-    "absolute whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md pointer-events-none";
-  let tailClass =
-    "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
-
-  if (isNearTop && isNearLeft) {
-    animateProps = { opacity: 1, scale: 1, x: 20, y: 20 };
-    tailClass =
-      "absolute -top-1 left-3 size-2 rotate-45 border-t border-l border-accent/30 bg-background/95";
-  } else if (isNearTop && isNearRight) {
-    animateProps = { opacity: 1, scale: 1, x: -20, y: 20 };
-    bubbleClass += " -translate-x-full";
-    tailClass =
-      "absolute -top-1 right-3 size-2 rotate-45 border-t border-r border-accent/30 bg-background/95";
-  } else if (isNearBottom && isNearLeft) {
-    animateProps = { opacity: 1, scale: 1, x: 20, y: -45 };
-    tailClass =
-      "absolute -bottom-1 left-3 size-2 rotate-45 border-b border-l border-accent/30 bg-background/95";
-  } else if (isNearBottom && isNearRight) {
-    animateProps = { opacity: 1, scale: 1, x: -20, y: -45 };
-    bubbleClass += " -translate-x-full";
-    tailClass =
-      "absolute -bottom-1 right-3 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
-  } else if (isNearLeft) {
-    animateProps = { opacity: 1, scale: 1, x: 25, y: -18 };
-    tailClass =
-      "absolute -left-1 top-1/2 -translate-y-1/2 size-2 rotate-45 border-b border-l border-accent/30 bg-background/95";
-  } else if (isNearRight) {
-    animateProps = { opacity: 1, scale: 1, x: -25, y: -18 };
-    bubbleClass += " -translate-x-full";
-    tailClass =
-      "absolute -right-1 top-1/2 -translate-y-1/2 size-2 rotate-45 border-t border-r border-accent/30 bg-background/95";
-  } else if (isNearTop) {
-    animateProps = { opacity: 1, scale: 1, x: 0, y: 25 };
-    bubbleClass += " -translate-x-1/2";
-    tailClass =
-      "absolute -top-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-t border-l border-accent/30 bg-background/95";
-  } else {
-    animateProps = { opacity: 1, scale: 1, x: 0, y: -58 };
-    bubbleClass += " -translate-x-1/2";
-    tailClass =
-      "absolute -bottom-1 left-1/2 -translate-x-1/2 size-2 rotate-45 border-b border-r border-accent/30 bg-background/95";
-  }
+  // Lets the frame loop know whether a zone change is worth a render.
+  useEffect(() => {
+    bubbleShownRef.current = bubbleMessage !== null;
+  }, [bubbleMessage]);
 
   if (!active || overChick) return null;
 
@@ -480,28 +545,32 @@ export function Cursor() {
         />
       </div>
 
-      {/* 3. Playful Speech Bubble on Idle (With Sulky Trip Feature) */}
-      <AnimatePresence>
-        {(sulkyMessage || ((reactionMessage || idleMessage) && !isMuted)) && (
-          <motion.div
-            style={{
-              left: `${bubbleAnchor.x}px`,
-              top: `${bubbleAnchor.y}px`,
-            }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={animateProps}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className={bubbleClass}
-          >
-            <div className="relative flex items-center gap-2">
-              <span>{sulkyMessage || reactionMessage || idleMessage}</span>
-            </div>
-            {/* Speech bubble tail pointer */}
-            <div className={tailClass} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* 3. Playful Speech Bubble — the wrapper rides the cursor with the dot,
+          so a message stays attached while the pointer keeps moving. */}
+      <div
+        ref={bubbleElRef}
+        style={{ transform: "translate3d(-100px, -100px, 0)" }}
+        className="absolute left-0 top-0"
+      >
+        <AnimatePresence>
+          {bubbleMessage && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1, x: placement.x, y: placement.y }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 500, damping: 28 }}
+              className={cn(
+                "absolute left-0 top-0 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3.5 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md",
+                placement.align
+              )}
+            >
+              {bubbleMessage}
+              {/* Speech bubble tail pointer */}
+              <div className={cn(TAIL_BASE, placement.tail)} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
