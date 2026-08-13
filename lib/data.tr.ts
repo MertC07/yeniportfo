@@ -23,7 +23,7 @@ export const profile = {
 
 export const heroStatement = {
   lines: ["Mert", "Ceren", "Yazılım", "Öğrencisi"],
-  sub: "Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisiyim. YOLO ve Python ile bilgisayarlı görü sistemleri geliştiriyor, React ve .NET Core ile web platformları inşa ediyorum.",
+  sub: "Bandırma Onyedi Eylül Üniversitesi Yazılım Mühendisliği öğrencisiyim. YOLO ve Python ile bilgisayarlı görü sistemleri geliştiriyor, yapay zekâ destekli geliştirmeyle web platformları kuruyorum.",
 };
 
 export const projects: Project[] = [
@@ -119,7 +119,7 @@ export const about = {
     "Gerçek problemleri çözen, temiz, yüksek performanslı ve güvenilir çalışan yazılımlar geliştirmeye odaklanıyorum.",
   paragraphs: [
     "Projeler üreterek öğrenen bir yazılım mühendisliği öğrencisiyim. Otonom sürüş için bilgisayarlı görü tabanlı yol güvenliği sistemi, geliştirmekte olduğum envanter takip entegrasyonlu 360° sanal tur platformu ve yerel işletmeler için özel yönetim panelleri üzerinde çalışıyorum.",
-    "Ağırlık merkezim yapay zekânın canlı sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta ASP.NET Core ve React platformları. Şu sıralar İSKİ Yazılım Şube Müdürlüğü'nde 20 günlük zorunlu stajımı gerçekleştiriyorum.",
+    "Ağırlık merkezim yapay zekânın çalışan sistemlerle buluştuğu alanlar — bir tarafta Python ve YOLO modelleri, diğer tarafta dil modelleriyle birlikte kurduğum web platformları. Şu sıralar İSKİ Yazılım Şube Müdürlüğü'nde 20 günlük zorunlu stajımı gerçekleştiriyorum.",
   ],
 };
 
@@ -188,38 +188,37 @@ export const experience: ExperienceEntry[] = [
   },
 ];
 
+// Bkz. lib/data.ts'teki aynı listenin başındaki not: 2026-08-13'te CV ile
+// birebir eşleşecek şekilde yeniden yazıldı.
 export const skillTiers: SkillTier[] = [
   {
-    tier: "Ana Yetenekler & Uzmanlık",
-    blurb: "Projelerimde aktif olarak geliştirdiğim temel programlama dilleri ve yapay zekâ mimarileri.",
+    tier: "Yazılım & Diller",
+    blurb: "Kod yazdığım diller ve işimi sürümlediğim araçlar.",
     skills: [
-      { name: "Python", discipline: "AI / ML", note: "Bilgisayarlı görü & model eğitimi" },
-      { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Gerçek zamanlı nesne tespiti" },
-      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core servisleri & API" },
-      { name: "React / Next.js", discipline: "Frontend", note: "Modern web uygulamaları" },
-      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Veritabanı tasarımı ve sorgular" },
+      { name: "C#", discipline: "Languages", note: "Nesne yönelimli programlama" },
+      { name: "Python", discipline: "Languages", note: "Görüntü işleme & otomasyon" },
+      { name: "HTML & CSS", discipline: "Frontend", note: "Modern arayüz geliştirme" },
+      { name: "Git & GitHub", discipline: "Tooling", note: "Versiyon kontrolü & depo yönetimi" },
     ],
   },
   {
-    tier: "Framework & Kütüphaneler",
-    blurb: "Uygulamalarımın backend, frontend ve yapay zekâ altyapısında kullandığım araçlar.",
+    tier: "Yapay Zekâ & Görüntü İşleme",
+    blurb: "Proje işlerimin çoğunun geçtiği yer — tespit modelleri ve yapay zekâ destekli geliştirme.",
     skills: [
-      { name: "Node.js / Express", discipline: "Backend", note: "Prisma ORM ile REST API'ler" },
-      { name: "SignalR", discipline: "Backend", note: "Gerçek zamanlı veri akışı & bildirimler" },
-      { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "OpenCV & canlı görüntü analizi" },
-      { name: "Sistem Mimarisi", discipline: "Tooling", note: "Modüler ve ölçeklenebilir tasarım" },
-      { name: "Prompt Mühendisliği", discipline: "Tooling", note: "AI destekli geliştirme süreçleri" },
+      { name: "YOLOv8", discipline: "AI / ML", note: "Nesne tespiti uygulamaları" },
+      { name: "Bilgisayarlı Görü", discipline: "AI / ML", note: "Görüntü akışında nesne tanıma" },
+      { name: "Prompt Mühendisliği", discipline: "AI / ML", note: "Gemini, Claude" },
+      { name: "AI Destekli Geliştirme", discipline: "Tooling", note: "Dil modelleriyle yazılım geliştirme" },
     ],
   },
   {
-    tier: "Geliştirme Araçları & Teknolojiler",
-    blurb: "Kodlama, versiyon kontrolü ve yayına alma süreçlerinde yararlandığım ekosistem.",
+    tier: "Ofis & Profesyonel",
+    blurb: "İnsanlarla çalışma biçimim ve işin ürettiği belgeler.",
     skills: [
-      { name: "5G & Edge Computing", discipline: "Tooling", note: "TEKNOFEST akıllı ulaşım altyapısı" },
-      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramik sanal tur deneyimleri" },
-      { name: "Model Optimizasyonu", discipline: "AI / ML", note: "Düşük gecikmeli nesne tespiti" },
-      { name: "Git & GitHub", discipline: "Tooling", note: "Versiyon kontrolü & proje yönetimi" },
-      { name: "Docker & Linux", discipline: "Tooling", note: "Konteynerleştirme ve sunucu ortamı" },
+      { name: "Microsoft Office", discipline: "Tooling", note: "Word, Excel, PowerPoint" },
+      { name: "Analitik Düşünme", discipline: "Professional", note: "Problem çözme" },
+      { name: "Takım Çalışması", discipline: "Professional", note: "Proje yönetimi" },
+      { name: "Etkinlik Koordinasyonu", discipline: "Professional", note: "Organizasyon ve planlama" },
     ],
   },
 ];

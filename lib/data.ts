@@ -20,7 +20,7 @@ export const profile = {
 
 export const heroStatement = {
   lines: ["Mert", "Ceren", "Software", "Student"],
-  sub: "I am a software engineering student at Bandırma Onyedi Eylül University. I build computer vision systems using YOLO and Python, and develop web platforms with React and .NET Core.",
+  sub: "I am a software engineering student at Bandırma Onyedi Eylül University. I build computer vision systems using YOLO and Python, and put web platforms together with AI-assisted development.",
 };
 
 export const socials = [
@@ -145,7 +145,7 @@ export const about = {
     "I focus on building clean, high-performance software that solves real problems and works reliably in production.",
   paragraphs: [
     "I am a software engineering student who learns by building projects. I have developed a computer vision road safety system for autonomous driving, an ongoing 360° virtual tour platform with inventory tracking, and custom management panels for local businesses.",
-    "My focus is on the intersection of AI and production-ready systems — using Python and YOLO on one hand, and ASP.NET Core and React on the other. Currently, I am completing my 20-day mandatory software engineering internship at İSKİ Software Branch Directorate.",
+    "My focus is on the intersection of AI and working systems — Python and YOLO on one side, and building web platforms alongside language models on the other. Currently, I am completing my 20-day mandatory software engineering internship at İSKİ Software Branch Directorate.",
   ],
 };
 
@@ -223,9 +223,16 @@ export const experience: ExperienceEntry[] = [
   },
 ];
 
+/**
+ * Disciplines double as the filter chips above the grid, so the set is
+ * deliberately small. It changed on 2026-08-13 when the skills below were
+ * rewritten to match the owner's actual CV: "Backend" went away because
+ * nothing here is backend work, and "Professional" arrived to carry the
+ * non-technical row the CV lists.
+ */
 export type Skill = {
   name: string;
-  discipline: "AI / ML" | "Backend" | "Frontend" | "Tooling";
+  discipline: "AI / ML" | "Languages" | "Frontend" | "Tooling" | "Professional";
   note: string;
 };
 
@@ -235,56 +242,58 @@ export type SkillTier = {
   skills: Skill[];
 };
 
+// Rewritten 2026-08-13 to match the owner's CV exactly, plus Git & GitHub.
+// The previous list claimed .NET Core, React/Next.js, PostgreSQL, Express,
+// Prisma, SignalR, Docker, Linux and 5G edge computing — a stack he had not
+// worked in, drafted before the real content landed. A skills grid he could
+// not be questioned on is worth more than a longer one he could.
 export const skillTiers: SkillTier[] = [
   {
-    tier: "Core Skills & AI",
-    blurb: "Primary programming languages and core artificial intelligence architectures.",
+    tier: "Software & Languages",
+    blurb: "The languages I write in and the tooling I version my work with.",
     skills: [
-      { name: "Python", discipline: "AI / ML", note: "Computer vision & model training" },
-      { name: "YOLOv8 / v11", discipline: "AI / ML", note: "Real-time object detection" },
-      { name: "C# / .NET Core", discipline: "Backend", note: "ASP.NET Core APIs & services" },
-      { name: "React / Next.js", discipline: "Frontend", note: "Modern web applications" },
-      { name: "PostgreSQL / SQL", discipline: "Backend", note: "Database design & queries" },
+      { name: "C#", discipline: "Languages", note: "Object-oriented programming" },
+      { name: "Python", discipline: "Languages", note: "Computer vision & automation" },
+      { name: "HTML & CSS", discipline: "Frontend", note: "Modern interface development" },
+      { name: "Git & GitHub", discipline: "Tooling", note: "Version control & repositories" },
     ],
   },
   {
-    tier: "Frameworks & Libraries",
-    blurb: "Frameworks, ORMs, and backend/frontend libraries powering my applications.",
+    tier: "AI & Computer Vision",
+    blurb: "Where most of my project work sits — detection models and AI-assisted development.",
     skills: [
-      { name: "Node.js / Express", discipline: "Backend", note: "REST APIs with Prisma ORM" },
-      { name: "SignalR", discipline: "Backend", note: "Real-time notifications & streaming" },
-      { name: "Computer Vision", discipline: "AI / ML", note: "OpenCV & live video analysis" },
-      { name: "System Architecture", discipline: "Tooling", note: "Modular and scalable design" },
-      { name: "Prompt Engineering", discipline: "Tooling", note: "AI-assisted development workflows" },
+      { name: "YOLOv8", discipline: "AI / ML", note: "Object detection applications" },
+      { name: "Computer Vision", discipline: "AI / ML", note: "Recognising objects in a video feed" },
+      { name: "Prompt Engineering", discipline: "AI / ML", note: "Gemini, Claude" },
+      { name: "AI-Assisted Development", discipline: "Tooling", note: "Building software alongside LLMs" },
     ],
   },
   {
-    tier: "Tools & Ecosystem",
-    blurb: "Development tools, version control systems, and deployment infrastructure.",
+    tier: "Office & Professional",
+    blurb: "How I work with other people and the documents the work produces.",
     skills: [
-      { name: "5G & Edge Computing", discipline: "Tooling", note: "TEKNOFEST smart mobility infrastructure" },
-      { name: "Photo Sphere Viewer / 360°", discipline: "Frontend", note: "Panoramic virtual tour experiences" },
-      { name: "Model Optimization", discipline: "AI / ML", note: "Low-latency detection inference" },
-      { name: "Git & GitHub", discipline: "Tooling", note: "Version control & project management" },
-      { name: "Docker & Linux", discipline: "Tooling", note: "Containerization & server environment" },
+      { name: "Microsoft Office", discipline: "Tooling", note: "Word, Excel, PowerPoint" },
+      { name: "Analytical Thinking", discipline: "Professional", note: "Problem solving" },
+      { name: "Teamwork", discipline: "Professional", note: "Project management" },
+      { name: "Event Coordination", discipline: "Professional", note: "Organising and planning" },
     ],
   },
 ];
 
 export const techMarquee = [
   "Python",
-  "YOLOv11",
-  "Computer Vision",
   "C#",
-  ".NET Core",
-  "ASP.NET Core",
-  "React",
-  "SignalR",
-  "PostgreSQL",
-  "Express",
-  "Prisma",
-  "SQL",
+  "YOLOv8",
+  "Computer Vision",
+  "Object Detection",
+  "HTML",
+  "CSS",
+  "Git",
+  "GitHub",
   "Prompt Engineering",
+  "Gemini",
+  "Claude",
+  "AI-Assisted Development",
 ];
 
 export type Award = {

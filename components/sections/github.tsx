@@ -28,11 +28,13 @@ export function GithubStats({
 
   const githubSection = ui.sections.github;
 
+  /* Only shown when the API call fails. Kept close to what the live figures
+     actually report so the fallback is not a different, rosier claim. */
   const curatedLanguages = [
-    { name: "Python", percentage: 45, note: "YOLOv8, Computer Vision & AI Models", color: "bg-accent" },
-    { name: "C# / .NET Core", percentage: 30, note: "ASP.NET Core & Enterprise APIs", color: "bg-blue-500" },
-    { name: "TypeScript / React", percentage: 20, note: "Next.js 16 & Modern Web Applications", color: "bg-amber-400" },
-    { name: "SQL & PostgreSQL", percentage: 5, note: "Relational Schemas & Query Optimization", color: "bg-emerald-400" },
+    { name: "TypeScript", percentage: 30, note: "AI-assisted web development", color: "bg-amber-400" },
+    { name: "JavaScript", percentage: 28, note: "Web platforms & tooling", color: "bg-yellow-400" },
+    { name: "C#", percentage: 22, note: "Object-oriented programming", color: "bg-blue-500" },
+    { name: "Python", percentage: 20, note: "YOLOv8, computer vision", color: "bg-accent" },
   ];
 
   /* Written here rather than read from GitHub because these repositories

@@ -47,10 +47,10 @@ const MAX_LANGUAGES = 4;
  * name.
  */
 const LANGUAGE_STYLE: Record<string, { color: string; note: string }> = {
-  TypeScript: { color: "bg-amber-400", note: "Next.js 16 & Modern Web Applications" },
-  JavaScript: { color: "bg-yellow-400", note: "Full-stack web platforms & tooling" },
-  "C#": { color: "bg-blue-500", note: "ASP.NET Core & Enterprise APIs" },
-  Python: { color: "bg-accent", note: "YOLOv8, Computer Vision & AI Models" },
+  TypeScript: { color: "bg-amber-400", note: "AI-assisted web development" },
+  JavaScript: { color: "bg-yellow-400", note: "Web platforms & tooling" },
+  "C#": { color: "bg-blue-500", note: "Object-oriented programming" },
+  Python: { color: "bg-accent", note: "YOLOv8, computer vision" },
   HTML: { color: "bg-orange-400", note: "Markup & templating" },
   CSS: { color: "bg-sky-400", note: "Styling & responsive layout" },
   Jupyter: { color: "bg-fuchsia-400", note: "Model training notebooks" },

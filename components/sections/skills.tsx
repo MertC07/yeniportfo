@@ -17,9 +17,10 @@ import { cn } from "@/lib/utils";
 const EASE = [0.16, 1, 0.3, 1] as const;
 const DISCIPLINES: Array<Skill["discipline"]> = [
   "AI / ML",
-  "Backend",
+  "Languages",
   "Frontend",
   "Tooling",
+  "Professional",
 ];
 
 export function Skills() {

@@ -68,12 +68,18 @@ export const MERT_KNOWLEDGE = {
     { name: "RossoLoungeWeb", desc: "Rosso Lounge Bistro Web Platformu Kaynak Kodları", href: "https://github.com/mertcerendev/RossoLoungeWeb" },
     { name: "yeniportfo", desc: "Mert Ceren Kişisel Portfolyo Web Uygulaması", href: "https://github.com/mertcerendev/yeniportfo" },
   ],
+  /**
+   * Kept in step with skillTiers in lib/data.ts — this is what the assistant
+   * answers when a visitor asks what he knows, so it is the one place an
+   * inflated list would actually be tested. Rewritten 2026-08-13 to match
+   * his CV; do not re-add frameworks he has not worked in.
+   */
   skills: {
-    languages: ["Python", "C#", "TypeScript", "JavaScript", "SQL"],
-    ai: ["YOLOv8 / YOLOv11", "Bilgisayarlı Görü (OpenCV)", "Model Eğitimi & Optimizasyonu", "Prompt Mühendisliği"],
-    backend: [".NET Core / ASP.NET", "Node.js / Express", "PostgreSQL", "SignalR"],
-    frontend: ["React", "Next.js", "TailwindCSS", "Photo Sphere Viewer (360°)"],
-    tools: ["Git & GitHub", "Docker", "Linux", "5G & Edge Computing"],
+    languages: ["C#", "Python"],
+    ai: ["YOLOv8", "Bilgisayarlı Görü / Nesne Tespiti", "Prompt Mühendisliği (Gemini, Claude)", "Yapay Zekâ Destekli Yazılım Geliştirme"],
+    frontend: ["HTML", "CSS"],
+    tools: ["Git & GitHub", "Microsoft Office (Word, Excel, PowerPoint)"],
+    personal: ["Analitik düşünme & problem çözme", "Etkinlik koordinasyonu", "Takım çalışması & proje yönetimi"],
   },
   certificatesCount: 22,
   awards: [
@@ -315,18 +321,18 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // YETENEKLER & TEKNOLOJİ STACK (Python, C#, React, Next.js, YOLO)
+  // YETENEKLER & TEKNOLOJİ STACK (C#, Python, YOLO, prompt mühendisliği)
   if (has("yetenek", "skill", "dil", "tech", "python", "c#", "react", "stack", "teknoloji", "yazılım")) {
     if (locale === "tr") {
       return {
-        text: "🛠️ **Yetenekler (C#, Python, YOLO, React... Ne ararsan var! 😄)**:\n\n• **Yapay Zekâ & Görü**: Python, YOLOv8/v11, OpenCV, PyTorch, Model Optimizasyonu\n• **Backend Servisleri**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend & Web**: React, Next.js, TypeScript, TailwindCSS, Photo Sphere Viewer (360°)\n• **Geliştirme Araçları**: Git & GitHub, Docker, Linux, 5G & Edge Computing ✨",
+        text: "🛠️ **Yetenekler**:\n\n• **Diller**: C#, Python\n• **Yapay Zekâ & Görü**: YOLOv8 ile nesne tespiti, prompt mühendisliği (Gemini, Claude), yapay zekâ destekli yazılım geliştirme\n• **Arayüz**: HTML, CSS\n• **Araçlar**: Git & GitHub, Microsoft Office\n• **Kişisel**: Analitik düşünme, takım çalışması, etkinlik koordinasyonu ✨",
         actionLinks: [
-          { label: "Yetenekler & Stack Bölümünü Gör 🛠️", href: "#skills", isAnchor: true },
+          { label: "Yetenekler Bölümünü Gör 🛠️", href: "#skills", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "🛠️ **Tech Stack Summary**:\n\n• **AI & Computer Vision**: Python, YOLOv8/v11, OpenCV, PyTorch\n• **Backend**: C# / .NET Core, Node.js / Express, PostgreSQL, SignalR\n• **Frontend**: React, Next.js, TypeScript, TailwindCSS\n• **Tools**: Git, Docker, Linux, 5G & Edge",
+        text: "🛠️ **Skills**:\n\n• **Languages**: C#, Python\n• **AI & Computer Vision**: object detection with YOLOv8, prompt engineering (Gemini, Claude), AI-assisted software development\n• **Interface**: HTML, CSS\n• **Tools**: Git & GitHub, Microsoft Office\n• **Professional**: analytical thinking, teamwork, event coordination",
         actionLinks: [
           { label: "Jump to Skills Section 🛠️", href: "#skills", isAnchor: true },
         ],

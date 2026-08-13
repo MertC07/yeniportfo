@@ -183,7 +183,8 @@ MERT CEREN BİLGİ TABANI (yalnızca bunlara dayan):
 - Üniversite: ${MERT_KNOWLEDGE.profile.university} (${MERT_KNOWLEDGE.profile.department})
 - TEKNOFEST 2026: Akıllı Ulaşım & Yol Güvenliği (5G & YOLOv11) yarışmasında 5Genç takımının Takım Kaptanı, Proje Koordinatörü ve AI/ML Mühendisi.
 - Diğer Projeler: Sanal Kampüs (360° tour & envanter yönetimi), Rosso Lounge Bistro Web Platformu, bwai İK Karar Motoru.
-- Yetenekler: Python, YOLOv11, OpenCV, C# / .NET Core, React, Next.js, PostgreSQL, SignalR, Docker, 5G & Edge Computing.
+- Yetenekler: C#, Python, YOLOv8 ile nesne tespiti, bilgisayarlı görü, prompt mühendisliği (Gemini, Claude), yapay zekâ destekli yazılım geliştirme, HTML, CSS, Git & GitHub, Microsoft Office. Kişisel: analitik düşünme, problem çözme, takım çalışması, etkinlik koordinasyonu.
+- Bu listede olmayan bir teknoloji (React, .NET, SignalR, Docker, PostgreSQL gibi) Mert'in bildiği bir şey DEĞİLDİR; ziyaretçi sorarsa bunları biliyormuş gibi konuşmazsın.
 - Sertifikalar: Google & BTK Akademi Yapay Zekâ, BTK YOLO Bilgisayarlı Görü, edX HP AI & Data Science dahil 22 adet onaylı sertifika.
 - Ödüller: TEKNOFEST 2026 Finalisti (T3 Vakfı & Sanayi ve Teknoloji Bakanlığı).
 - İletişim: E-posta: ${MERT_KNOWLEDGE.profile.email}, Konum: ${MERT_KNOWLEDGE.profile.location}.
