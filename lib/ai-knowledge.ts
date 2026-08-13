@@ -29,7 +29,7 @@ export const MERT_KNOWLEDGE = {
     highSchool: "Eyüpsultan Anadolu Lisesi (Sayısal, 2018 - 2022)",
     location: "İstanbul / Bandırma, Türkiye",
     email: "mertceren.2003.mc@gmail.com",
-    github: "https://github.com/MertC07",
+    github: "https://github.com/mertcerendev",
     linkedin: "https://linkedin.com/in/mertceren",
     status: "Staj ve freelance iş birliklerine açık",
   },
@@ -64,9 +64,9 @@ export const MERT_KNOWLEDGE = {
     },
   ],
   openSourceRepos: [
-    { name: "bwai-IK-Karar-Motoru", desc: "İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)", href: "https://github.com/MertC07/bwai-IK-Karar-Motoru" },
-    { name: "RossoLoungeWeb", desc: "Rosso Lounge Bistro Web Platformu Kaynak Kodları", href: "https://github.com/MertC07/RossoLoungeWeb" },
-    { name: "yeniportfo", desc: "Mert Ceren Kişisel Portfolyo Web Uygulaması", href: "https://github.com/MertC07/yeniportfo" },
+    { name: "bwai-IK-Karar-Motoru", desc: "İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)", href: "https://github.com/mertcerendev/bwai-IK-Karar-Motoru" },
+    { name: "RossoLoungeWeb", desc: "Rosso Lounge Bistro Web Platformu Kaynak Kodları", href: "https://github.com/mertcerendev/RossoLoungeWeb" },
+    { name: "yeniportfo", desc: "Mert Ceren Kişisel Portfolyo Web Uygulaması", href: "https://github.com/mertcerendev/yeniportfo" },
   ],
   skills: {
     languages: ["Python", "C#", "TypeScript", "JavaScript", "SQL"],
@@ -220,18 +220,18 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
   if (has("github", "repo", "kod", "code", "open source", "açık kaynak", "git")) {
     if (locale === "tr") {
       return {
-        text: "🐙 **GitHub & Açık Kaynak Repoları (Kodlarımızı rahatça inceleyebilirsin 😄)**:\n\nResmi GitHub profili: `github.com/MertC07`\n\nÖne çıkan açık kaynak repoları:\n1. 🤖 **bwai-IK-Karar-Motoru** — İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platformu Kaynak Kodları\n3. 💻 **yeniportfo** — Şu an gezdiğin bu güzel portfolyonun kaynak kodları ✨",
+        text: "🐙 **GitHub & Açık Kaynak Repoları (Kodlarımızı rahatça inceleyebilirsin 😄)**:\n\nResmi GitHub profili: `github.com/mertcerendev`\n\nÖne çıkan açık kaynak repoları:\n1. 🤖 **bwai-IK-Karar-Motoru** — İnsan Kaynakları Karar Destek Motoru (Python / Yapay Zekâ)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platformu Kaynak Kodları\n3. 💻 **yeniportfo** — Şu an gezdiğin bu güzel portfolyonun kaynak kodları ✨",
         actionLinks: [
           { label: "GitHub Repolarına Git 🐙", href: "#github", isAnchor: true },
-          { label: "GitHub Profilini Aç ↗", href: "https://github.com/MertC07" },
+          { label: "GitHub Profilini Aç ↗", href: "https://github.com/mertcerendev" },
         ],
       };
     } else {
       return {
-        text: "🐙 **GitHub & Open Source Repositories**:\n\nOfficial GitHub Profile: `github.com/MertC07`\n\nFeatured open-source repositories:\n1. 🤖 **bwai-IK-Karar-Motoru** — HR Decision Support Engine (Python / AI)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platform\n3. 💻 **yeniportfo** — Personal Portfolio Web App",
+        text: "🐙 **GitHub & Open Source Repositories**:\n\nOfficial GitHub Profile: `github.com/mertcerendev`\n\nFeatured open-source repositories:\n1. 🤖 **bwai-IK-Karar-Motoru** — HR Decision Support Engine (Python / AI)\n2. 🍷 **RossoLoungeWeb** — Rosso Lounge Bistro Web Platform\n3. 💻 **yeniportfo** — Personal Portfolio Web App",
         actionLinks: [
           { label: "Jump to GitHub Section 🐙", href: "#github", isAnchor: true },
-          { label: "Open GitHub Profile ↗", href: "https://github.com/MertC07" },
+          { label: "Open GitHub Profile ↗", href: "https://github.com/mertcerendev" },
         ],
       };
     }

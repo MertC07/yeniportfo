@@ -157,8 +157,8 @@ export function ContextMenu() {
       await navigator.clipboard.writeText(text);
       triggerToast(
         isEnglish
-          ? "🤫 Copying? At least give credit: @MertC07!"
-          : "🤫 Hop hemşerim nereye kopyalıyorsun? Kaynak göster bari: @MertC07!"
+          ? "🤫 Copying? At least give credit: @mertcerendev!"
+          : "🤫 Hop hemşerim nereye kopyalıyorsun? Kaynak göster bari: @mertcerendev!"
       );
     } catch {
       // Clipboard unavailable (permissions / insecure context)

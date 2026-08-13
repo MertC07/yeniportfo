@@ -119,7 +119,7 @@ export default async function RootLayout({
       "name": "Bandırma Onyedi Eylül Üniversitesi",
     },
     "sameAs": [
-      "https://github.com/MertC07",
+      "https://github.com/mertcerendev",
       "https://www.linkedin.com/in/mert-ceren-1a7b10297",
     ],
   };

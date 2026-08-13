@@ -1,7 +1,7 @@
 /**
  * Live figures for the GitHub section.
  *
- * The section has always been headed "live data from @MertC07" while the
+ * The section has always been headed "live data from @mertcerendev" while the
  * numbers under it were typed by hand. This closes that gap: the language
  * split, the per-repository stack and the counts are read from the public
  * GitHub API at build time and refreshed hourly by ISR.
@@ -18,7 +18,7 @@
 
 import { featuredRepos } from "./data";
 
-const USER = "MertC07";
+const USER = "mertcerendev";
 const API = "https://api.github.com";
 
 /**

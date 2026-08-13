@@ -24,7 +24,7 @@ export const heroStatement = {
 };
 
 export const socials = [
-  { label: "GitHub", href: "https://github.com/MertC07" },
+  { label: "GitHub", href: "https://github.com/mertcerendev" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/mert-ceren-1a7b10297" },
 ] as const;
 
@@ -552,9 +552,9 @@ export const ui = {
     },
     github: {
       label: "GitHub & Code Activity",
-      meta: "Live metrics from @MertC07",
+      meta: "Live metrics from @mertcerendev",
       /** Shown instead of `meta` when the GitHub API could not be reached. */
-      metaStale: "Curated snapshot — @MertC07",
+      metaStale: "Curated snapshot — @mertcerendev",
       viewProfile: "View GitHub Profile ↗",
       viewRepo: "View on GitHub ↗",
       reposTitle: "Active Repositories",

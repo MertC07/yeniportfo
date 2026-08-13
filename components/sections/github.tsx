@@ -81,7 +81,7 @@ export function GithubStats({
       description: curated.description,
       badge: live?.badge ?? curated.badge,
       language: live?.stack ?? curated.stack,
-      url: live?.url ?? `https://github.com/MertC07/${name}`,
+      url: live?.url ?? `https://github.com/mertcerendev/${name}`,
     };
   });
 
@@ -112,7 +112,7 @@ export function GithubStats({
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">
-                    @MertC07
+                    @mertcerendev
                   </h3>
                   <p className="microlabel text-muted">GitHub · Software Engineering Student</p>
                 </div>
@@ -137,7 +137,7 @@ export function GithubStats({
             </div>
 
             <a
-              href="https://github.com/MertC07"
+              href="https://github.com/mertcerendev"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-accent bg-accent px-6 py-3 font-mono text-xs uppercase tracking-[0.14em] text-accent-ink font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent/20 shrink-0"

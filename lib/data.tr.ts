@@ -276,8 +276,8 @@ export const ui: Ui = {
     },
     github: {
       label: "GitHub & Kod Aktivitesi",
-      meta: "@MertC07 hesabından canlı veriler",
-      metaStale: "Derlenmiş özet — @MertC07",
+      meta: "@mertcerendev hesabından canlı veriler",
+      metaStale: "Derlenmiş özet — @mertcerendev",
       viewProfile: "GitHub Profilini Gör ↗",
       viewRepo: "GitHub'da Gör ↗",
       reposTitle: "Aktif Depolar & Projeler",
