@@ -74,8 +74,13 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
         </div>
       </div>
 
+      {/* Preview thumbnail — desktop only. On a phone the cards are one per
+          row, so six of them ran to 2433px, and this 128px strip was most of
+          each card's height while showing a thumbnail of the very certificate
+          that tapping the card opens full size. The footer's view button and
+          the card itself both still lead there. */}
       {certificate.image && (
-        <div className="relative overflow-hidden rounded-xl border hairline bg-black/40 h-32 w-full mt-1">
+        <div className="relative hidden overflow-hidden rounded-xl border hairline bg-black/40 h-32 w-full mt-1 sm:block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={certificate.image}
