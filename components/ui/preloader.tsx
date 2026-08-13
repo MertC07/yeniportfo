@@ -7,19 +7,28 @@ import { useContent } from "@/components/providers/locale-provider";
 const INTRO_MS = 1650;
 
 /**
- * Records that the intro has played, in both places that matter: sessionStorage
- * for the next page load, and the attribute the stylesheet hides the overlay
- * off for the rest of this one. The head script only ever runs on a full load,
- * so without the attribute being written here too, anything that remounts this
- * component mid-session — switching language re-renders the [lang] layout —
- * would find the overlay unhidden and replay the opening.
+ * Whether the intro has already run in this page session. Module scope, so it
+ * survives the component remounting while the page stays put, and resets on a
+ * real page load — which is exactly what "once per visit" means here.
+ *
+ * The overlay cannot be left to the stylesheet on a remount: switching
+ * language re-renders the [lang] layout, and React rewrites <html> from its
+ * JSX, dropping the data-intro-seen attribute that the CSS hides the overlay
+ * off. Measured, that leaves the overlay on screen at display:flex for the
+ * ~64ms until an effect can put the attribute back. Effects run after paint,
+ * so no effect can close that gap — the component has to render nothing at
+ * all, which this flag lets it decide during render.
  */
+let introPlayed = false;
+
+/** Records the intro for the stylesheet, the next page load, and remounts. */
 function markIntroSeen() {
+  introPlayed = true;
   document.documentElement.dataset.introSeen = "1";
   try {
     window.sessionStorage.setItem("intro-seen", "1");
   } catch {
-    // Locked-down privacy modes throw; the attribute still covers this page.
+    // Locked-down privacy modes throw; the flag still covers this page.
   }
 }
 
@@ -34,7 +43,9 @@ function markIntroSeen() {
  */
 export function Preloader() {
   const { profile, ui } = useContent();
-  const [done, setDone] = useState(false);
+  // Lazy, so a remount after the intro renders nothing rather than flashing it.
+  // The first render of a page load always has this false, matching the server.
+  const [done, setDone] = useState(() => introPlayed);
 
   useEffect(() => {
     let seen = false;
