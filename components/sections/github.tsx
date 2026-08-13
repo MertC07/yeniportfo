@@ -3,65 +3,96 @@
 import { motion } from "motion/react";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { featuredRepos } from "@/lib/data";
+import type { GithubStats as LiveStats } from "@/lib/github";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-export function GithubStats() {
+/**
+ * `stats` is read from the public GitHub API by the page (a Server
+ * Component) and refreshed hourly by ISR. It is null whenever that call
+ * failed — rate limit, outage, offline build — and everything below then
+ * falls back to the hand-written figures, which is exactly what this
+ * section rendered before it was wired up.
+ */
+export function GithubStats({
+  stats,
+  lastPushLabel,
+}: {
+  stats?: LiveStats | null;
+  /** Pre-formatted on the server: see the note where it is rendered. */
+  lastPushLabel?: string | null;
+}) {
   const { ui } = useContent();
+  const isTr = useLocale() === "tr";
 
-  const githubSection = ui.sections.github || {
-    label: "GitHub & Kod Aktivitesi",
-    meta: "@MertC07 hesabından canlı veriler",
-    viewProfile: "GitHub Profilini Gör ↗",
-    reposTitle: "Aktif Depolar & Projeler",
-    commitsNote: "Düzenli commit'ler ve aktif kod geliştirme süreci",
-  };
+  const githubSection = ui.sections.github;
 
-  const languages = [
+  const curatedLanguages = [
     { name: "Python", percentage: 45, note: "YOLOv8, Computer Vision & AI Models", color: "bg-accent" },
     { name: "C# / .NET Core", percentage: 30, note: "ASP.NET Core & Enterprise APIs", color: "bg-blue-500" },
     { name: "TypeScript / React", percentage: 20, note: "Next.js 16 & Modern Web Applications", color: "bg-amber-400" },
     { name: "SQL & PostgreSQL", percentage: 5, note: "Relational Schemas & Query Optimization", color: "bg-emerald-400" },
   ];
 
-  const isTr = useLocale() === "tr";
-
-  const featuredRepos = [
-    {
-      name: "bwai-IK-Karar-Motoru",
-      badge: "C# / .NET",
+  /* Written here rather than read from GitHub because these repositories
+     carry no description there, and what is on GitHub would be English-only
+     anyway. The stack strings are the last-resort values: when the API
+     answers, the real language mix replaces them. */
+  const curatedRepos: Record<
+    (typeof featuredRepos)[number],
+    { description: string; badge: string; stack: string }
+  > = {
+    "bwai-IK-Karar-Motoru": {
       description: isTr
         ? "Yapay zekâ destekli İnsan Kaynakları aday değerlendirme ve yetkinlik karar motoru."
         : "AI-supported HR candidate evaluation and competence decision engine.",
-      url: "https://github.com/MertC07/bwai-IK-Karar-Motoru",
-      language: "C# / AI Engine",
-    },
-    {
-      name: "RossoLoungeWeb",
       badge: "JavaScript",
+      stack: "JavaScript / CSS",
+    },
+    RossoLoungeWeb: {
       description: isTr
         ? "Rosso Lounge Bistro için özel geliştirilmiş dinamik menü ve yönetim panelli web platformu."
         : "Custom dynamic web platform with management panel built for Rosso Lounge Bistro.",
-      url: "https://github.com/MertC07/RossoLoungeWeb",
-      language: "JavaScript / Full-Stack",
+      badge: "HTML",
+      stack: "HTML / C#",
     },
-    {
-      name: "yeniportfo",
-      badge: "TypeScript",
+    yeniportfo: {
       description: isTr
         ? "Next.js 16, TypeScript ve TailwindCSS ile sıfırdan geliştirilmiş kişisel web portfolyosu."
         : "Personal web portfolio built from scratch with Next.js 16, TypeScript & TailwindCSS.",
-      url: "https://github.com/MertC07/yeniportfo",
-      language: "Next.js / TypeScript",
+      badge: "TypeScript",
+      stack: "TypeScript / CSS",
     },
-  ];
+  };
+
+  const isLive = Boolean(stats?.languages.length);
+
+  const languages = isLive ? stats!.languages : curatedLanguages;
+
+  /* Selection and prose stay curated; the stack labels come from GitHub, so
+     a repository whose contents drift no longer needs the badge corrected
+     by hand. */
+  const repos = featuredRepos.map((name) => {
+    const curated = curatedRepos[name];
+    const live = stats?.repoFacts[name];
+    return {
+      name,
+      description: curated.description,
+      badge: live?.badge ?? curated.badge,
+      language: live?.stack ?? curated.stack,
+      url: live?.url ?? `https://github.com/MertC07/${name}`,
+    };
+  });
 
   return (
     <section id="github" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
         index="04"
         label={githubSection.label}
-        meta={githubSection.meta}
+        /* The heading promises live data, so it only says so when the fetch
+           actually landed. */
+        meta={isLive ? githubSection.meta : githubSection.metaStale}
       />
 
       <div className="mt-12 space-y-8">
@@ -89,6 +120,20 @@ export function GithubStats() {
               <p className="text-sm text-muted max-w-xl">
                 {githubSection.commitsNote}
               </p>
+              {/* The one line on the page that can be checked against GitHub
+                  in a second. Formatted upstream on the server so the string
+                  is identical on both sides of hydration. */}
+              {isLive && lastPushLabel && (
+                <p className="microlabel text-accent">
+                  {githubSection.lastPush}: {lastPushLabel}
+                  <span className="mx-2 select-none text-muted" aria-hidden>
+                    ·
+                  </span>
+                  <span className="text-muted">
+                    {stats!.publicRepos} {githubSection.publicRepos}
+                  </span>
+                </p>
+              )}
             </div>
 
             <a
@@ -115,8 +160,8 @@ export function GithubStats() {
             className="flex flex-col justify-between rounded-2xl border hairline bg-surface/40 p-6 sm:p-8 lg:col-span-5"
           >
             <div>
-              <h4 className="font-display text-lg font-bold">Kodlama Dağılımı & Teknolojiler</h4>
-              <p className="mt-1 text-xs text-muted">Aktif geliştirilen projelere göre dil ağırlıkları</p>
+              <h4 className="font-display text-lg font-bold">{githubSection.stackTitle}</h4>
+              <p className="mt-1 text-xs text-muted">{githubSection.stackNote}</p>
 
               <div className="mt-6 space-y-5">
                 {languages.map((lang) => (
@@ -151,11 +196,13 @@ export function GithubStats() {
           >
             <div className="flex items-center justify-between px-1">
               <h4 className="font-display text-lg font-bold">{githubSection.reposTitle}</h4>
-              <span className="microlabel text-accent">public repos</span>
+              <span className="microlabel text-accent">
+                {githubSection.publicRepos}
+              </span>
             </div>
 
             <div className="space-y-3">
-              {featuredRepos.map((repo) => (
+              {repos.map((repo) => (
                 <a
                   key={repo.name}
                   href={repo.url}
@@ -179,7 +226,9 @@ export function GithubStats() {
 
                   <div className="flex items-center justify-between pt-1 border-t hairline text-[0.6875rem] text-muted sm:text-[0.65rem]">
                     <span>{repo.language}</span>
-                    <span className="group-hover:text-accent transition-colors">GitHub'da Gör ↗</span>
+                    <span className="group-hover:text-accent transition-colors">
+                      {githubSection.viewRepo}
+                    </span>
                   </div>
                 </a>
               ))}
