@@ -44,6 +44,18 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    // Everything here is a local file under /public, resized on demand and
+    // served back from /_next/image — same origin, so the img-src 'self'
+    // above already covers it and the CSP needs nothing extra.
+    //
+    // AVIF first, WebP as the fallback: order matters, the first entry the
+    // browser's Accept header matches is the one that gets served. AVIF is
+    // roughly a third smaller than WebP on the photographic content here
+    // (certificates, award photos, project screenshots), which is most of
+    // what this site weighs.
+    formats: ["image/avif", "image/webp"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

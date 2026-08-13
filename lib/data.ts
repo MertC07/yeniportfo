@@ -307,16 +307,43 @@ export const awards: Award[] = [
  * Photo strip shown inside the Awards section (language-independent,
  * so it lives only here — not mirrored in data.tr.ts). Drop new images
  * in /public/gallery and list them to extend the strip.
+ *
+ * The strip renders at a fixed height with `w-auto`, so each entry carries
+ * its intrinsic size: that is what lets the browser reserve the right width
+ * before the file arrives, and what next/image needs to pick a source width.
+ * Read them off a new file with `sharp(path).metadata()`.
  */
-export const awardsGallery: string[] = [
-  "/gallery/awards-01.webp",
-  "/gallery/awards-02.webp",
-  "/gallery/awards-03.webp",
-  "/gallery/awards-04.webp",
-  "/gallery/awards-05.webp",
-  "/gallery/awards-06.webp",
-  "/gallery/awards-07.webp",
+export const awardsGallery: Array<{
+  src: string;
+  width: number;
+  height: number;
+}> = [
+  { src: "/gallery/awards-01.webp", width: 853, height: 640 },
+  { src: "/gallery/awards-02.webp", width: 853, height: 640 },
+  { src: "/gallery/awards-03.webp", width: 853, height: 640 },
+  { src: "/gallery/awards-04.webp", width: 853, height: 640 },
+  { src: "/gallery/awards-05.webp", width: 853, height: 640 },
+  { src: "/gallery/awards-06.webp", width: 960, height: 640 },
+  { src: "/gallery/awards-07.webp", width: 960, height: 640 },
 ];
+
+/**
+ * The three repositories the GitHub section puts on the front page, in
+ * order. Hand-picked on purpose: sorting by last push surfaces scratch
+ * repos, and none of these carry a description on GitHub, so the sentence
+ * under each is written in components/sections/github.tsx and keyed by the
+ * names below. Rename a repository on GitHub and its card quietly keeps the
+ * written-in stack until the name here is updated to match.
+ *
+ * Lives here, not in lib/github.ts, because the section is a Client
+ * Component and importing it from there would pull the API code into the
+ * browser bundle.
+ */
+export const featuredRepos = [
+  "bwai-IK-Karar-Motoru",
+  "RossoLoungeWeb",
+  "yeniportfo",
+] as const;
 
 export type Certificate = {
   title: string;
@@ -526,9 +553,16 @@ export const ui = {
     github: {
       label: "GitHub & Code Activity",
       meta: "Live metrics from @MertC07",
+      /** Shown instead of `meta` when the GitHub API could not be reached. */
+      metaStale: "Curated snapshot — @MertC07",
       viewProfile: "View GitHub Profile ↗",
+      viewRepo: "View on GitHub ↗",
       reposTitle: "Active Repositories",
       commitsNote: "Continuous commits & active development activity",
+      stackTitle: "Code Distribution & Technologies",
+      stackNote: "Language weights across actively developed repositories",
+      lastPush: "Last push",
+      publicRepos: "public repos",
     },
     contact: {
       label: "Contact",

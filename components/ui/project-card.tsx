@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   motion,
   useMotionValue,
@@ -113,12 +114,18 @@ export function ProjectCard({
                   <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
                   <div className="ml-3 flex-1 h-3 rounded bg-white/10 max-w-[200px]" />
                 </div>
-                {/* Project screenshot */}
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover object-left-top"
-                />
+                {/* Project screenshot. The frame caps at 480px wide and the
+                    shot is cropped from the top-left inside it, so there is
+                    no reason to ship the 700KB original. */}
+                <div className="relative w-full flex-1 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="480px"
+                    className="object-cover object-left-top"
+                  />
+                </div>
               </div>
             </div>
           </div>

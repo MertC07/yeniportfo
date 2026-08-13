@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { socials } from "@/lib/data";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
@@ -166,10 +167,17 @@ export function Contact() {
 
               {/* CV Preview Document View */}
               <div className="my-2 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 bg-black/60 flex items-center justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                {/* A single known file, so its intrinsic size can be stated
+                    outright — that keeps `w-auto` working and the border
+                    hugging the page instead of the box. Opened deliberately
+                    and read rather than glanced at, so it is served
+                    generously; AVIF still lands far under the raw JPEG. */}
+                <Image
                   src="/Mert_Ceren_CV.jpg"
                   alt={`${profile.name} Özgeçmiş CV`}
+                  width={1653}
+                  height={2339}
+                  sizes="(max-width: 1024px) 100vw, 1024px"
                   className="max-h-full w-auto max-w-full object-contain rounded-xl shadow-2xl border hairline"
                 />
               </div>

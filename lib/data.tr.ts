@@ -277,9 +277,15 @@ export const ui: Ui = {
     github: {
       label: "GitHub & Kod Aktivitesi",
       meta: "@MertC07 hesabından canlı veriler",
+      metaStale: "Derlenmiş özet — @MertC07",
       viewProfile: "GitHub Profilini Gör ↗",
+      viewRepo: "GitHub'da Gör ↗",
       reposTitle: "Aktif Depolar & Projeler",
       commitsNote: "Düzenli commit'ler ve aktif kod geliştirme süreci",
+      stackTitle: "Kodlama Dağılımı & Teknolojiler",
+      stackNote: "Aktif geliştirilen depolara göre dil ağırlıkları",
+      lastPush: "Son push",
+      publicRepos: "public depo",
     },
     contact: {
       label: "İletişim",

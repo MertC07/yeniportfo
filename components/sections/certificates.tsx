@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -51,10 +52,11 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
       <div className="flex items-start gap-4">
         <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border hairline bg-surface/80 p-2 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40">
           {certificate.logo ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
+            <Image
               src={certificate.logo}
               alt={certificate.issuer}
+              width={48}
+              height={48}
               className="h-full w-full rounded-lg object-contain"
             />
           ) : (
@@ -76,12 +78,17 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
 
       {certificate.image && (
         <div className="relative overflow-hidden rounded-xl border hairline bg-black/40 h-32 w-full mt-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* This strip is 128px tall and shows the top slice of a scan that
+              can be a 700KB JPEG. `fill` plus a `sizes` hint is what stops it
+              downloading the full-resolution file to paint a thumbnail —
+              one card per row on a phone, two from sm, three from lg. */}
+          <Image
             src={certificate.image}
             alt={certificate.title}
+            fill
             loading="lazy"
-            className="h-full w-full object-cover object-top opacity-85 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+            className="object-cover object-top opacity-85 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
             <span className="text-xs text-white/90 font-medium flex items-center gap-1.5 bg-black/60 px-2.5 py-1 rounded-full backdrop-blur-md border hairline">
@@ -379,12 +386,19 @@ export function Certificates() {
               {/* Certificate Image View */}
               <div className="my-4 flex-1 overflow-auto rounded-2xl border hairline bg-black/60 p-2 flex items-center justify-center min-h-[180px] sm:min-h-[300px]">
                 {selectedCert.image ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={selectedCert.image}
-                    alt={selectedCert.title}
-                    className="max-h-full w-auto max-w-full object-contain rounded-lg shadow-lg"
-                  />
+                  /* `fill` needs a positioned box of its own here: putting it
+                      on the padded parent would let the scan sit under the
+                      p-2 and touch the border. The dialog caps at max-w-4xl,
+                      so 896px is as large as this ever needs to be served. */
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={selectedCert.image}
+                      alt={selectedCert.title}
+                      fill
+                      sizes="(max-width: 896px) 100vw, 896px"
+                      className="object-contain rounded-lg shadow-lg"
+                    />
+                  </div>
                 ) : (
                   <p className="text-muted text-sm">Sertifika görseli yükleniyor...</p>
                 )}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import { awardsGallery } from "@/lib/data";
 import { useContent } from "@/components/providers/locale-provider";
@@ -61,13 +62,17 @@ export function Awards() {
                 aria-hidden={hidden || undefined}
                 className="flex shrink-0 gap-4 pr-4"
               >
-                {awardsGallery.map((src, i) => (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    key={src}
-                    src={src}
+                {awardsGallery.map((photo, i) => (
+                  <Image
+                    key={photo.src}
+                    src={photo.src}
                     alt={hidden ? "" : `${ui.sections.awards.label} — ${i + 1}`}
+                    width={photo.width}
+                    height={photo.height}
                     loading="lazy"
+                    // Never taller than 224px (sm:h-56), so the widest it can
+                    // ever render is 960/640 × 224 ≈ 336px.
+                    sizes="336px"
                     className="h-44 w-auto rounded-xl border hairline object-cover sm:h-56"
                   />
                 ))}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import { useContent } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -50,10 +51,17 @@ export function About() {
           >
             {profile.image && (
               <>
-                <img
+                {/* The figure is already `relative` and aspect-locked, so
+                    `fill` is the right shape here — no intrinsic size to
+                    hardcode and no layout shift to reserve against. It never
+                    renders wider than max-w-sm (384px) above the phone
+                    breakpoint, which is what `sizes` tells the optimizer. */}
+                <Image
                   src={profile.image}
                   alt={profile.name}
-                  className="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-luminosity group-hover/portrait:opacity-90 group-hover/portrait:mix-blend-normal group-hover/portrait:scale-[1.03] transition-all duration-700 ease-out"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 384px"
+                  className="object-cover opacity-75 mix-blend-luminosity group-hover/portrait:opacity-90 group-hover/portrait:mix-blend-normal group-hover/portrait:scale-[1.03] transition-all duration-700 ease-out"
                 />
                 {/* Scrim for text readability */}
                 <div
@@ -102,10 +110,11 @@ export function About() {
                   <div className="flex items-start gap-4">
                     {entry.logo && (
                       <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border hairline bg-surface/80 p-1.5 shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40 mt-0.5">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={entry.logo}
                           alt={entry.place}
+                          width={44}
+                          height={44}
                           className="h-full w-full object-contain rounded-lg"
                         />
                       </div>
