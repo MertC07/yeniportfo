@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -97,13 +98,20 @@ export default async function CaseStudyPage({
           </ul>
         </div>
 
-        {/* Palette banner (swap for a real hero screenshot later) */}
-        <div
-          aria-hidden
-          className="relative mt-10 overflow-hidden rounded-2xl sm:rounded-3xl"
-        >
+        {/* Hero: the project's palette as the ground, the real screenshot
+            standing on it. The gradient used to be the whole banner with a
+            note to swap in a screenshot later — the screenshots were already
+            sitting in /public/projects, so this is that swap. Keeping the
+            gradient behind gives the shot somewhere to sit and keeps the
+            per-project colour that the cards on the index page establish. */}
+        <div className="relative mt-10 overflow-hidden rounded-2xl sm:rounded-3xl">
+          {/* 4/3 on a phone rather than 16/9: the panel below is square and
+              a 16/9 band left it 157px wide, too small to read a dashboard
+              in. The wide 21/9 band returns from sm up, where there is room
+              for the numeral beside it. */}
           <div
-            className="aspect-[16/9] w-full sm:aspect-[21/9]"
+            aria-hidden
+            className="aspect-[4/3] w-full sm:aspect-[21/9]"
             style={{
               background: [
                 `radial-gradient(110% 90% at 12% 12%, ${palette.from} 0%, transparent 55%)`,
@@ -113,9 +121,31 @@ export default async function CaseStudyPage({
               ].join(", "),
             }}
           />
-          <span className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2 select-none font-display text-[22vw] font-extrabold leading-none text-white/[0.05] sm:text-[14vw]">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 select-none font-display text-[22vw] font-extrabold leading-none text-white/[0.05] sm:text-[14vw]"
+          >
             {String(index + 1).padStart(2, "0")}
           </span>
+          {project.image && (
+            /* Square panel rather than a wide crop: these are 1024×1024
+               dashboard mockups whose bottom third carries real content
+               (logs, transport controls), and cropping them to the banner's
+               21/9 would throw it away. Centred on a phone, pushed right on
+               wider screens so the index numeral behind it stays readable. */
+            <div className="absolute inset-y-[7%] left-1/2 aspect-square -translate-x-1/2 overflow-hidden rounded-lg border border-white/15 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.75)] sm:inset-y-[8%] sm:left-auto sm:right-[8%] sm:translate-x-0 sm:rounded-xl">
+              {/* The LCP element on this page, so it is preloaded rather than
+                  discovered halfway down the body. */}
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                preload
+                sizes="(max-width: 640px) 60vw, 430px"
+                className="object-cover"
+              />
+            </div>
+          )}
         </div>
 
         {/* Intro + facts */}
