@@ -88,8 +88,20 @@ export function Skills() {
           )}
         </div>
 
-        {/* Tier columns */}
-        <div className="mt-12 grid gap-12 md:grid-cols-3 md:gap-8">
+        {/* Tier columns.
+
+            Side by side, each column sized its own heading block, so a blurb
+            that ran to two lines pushed that column's first card 20px below
+            its neighbours' — visible as soon as you look along the row. The
+            columns share the parent's two rows instead: one for the heading
+            block, one for the list. The heading row takes the height of the
+            tallest of the three and every list starts level, whatever the
+            copy does later.
+
+            Row gap is zeroed from md up because the columns sit in a single
+            row there, so it would only ever open a gap inside a column,
+            between the heading and its list — which `mt-6` already sets. */}
+        <div className="mt-12 grid gap-12 md:grid-cols-3 md:grid-rows-[auto_1fr] md:gap-x-8 md:gap-y-0">
           {skillTiers.map((tier, tierIndex) => (
             <motion.div
               key={tier.tier}
@@ -97,6 +109,12 @@ export function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10% 0px" }}
               transition={{ duration: 0.8, delay: tierIndex * 0.1, ease: EASE }}
+              /* minmax(0,1fr) rather than the implicit `auto` track: a grid
+                 item will not shrink below its min-content width, and the
+                 skill rows have an unwrappable label pinned to the right, so
+                 the list pushed 6px past the viewport at md the moment this
+                 column became a grid. */
+              className="md:row-span-2 md:grid md:grid-cols-[minmax(0,1fr)] md:grid-rows-subgrid"
             >
               <div className="border-t hairline pt-4">
                 <h3 className="font-display text-2xl font-bold">{tier.tier}</h3>
