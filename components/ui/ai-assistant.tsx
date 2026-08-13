@@ -115,6 +115,13 @@ export function AiAssistant() {
   ]);
 
   const [typingMsgId, setTypingMsgId] = useState<string | null>(null);
+  /**
+   * Which ends of the quick-prompt row carry on past the panel. A row clipped
+   * flat at the edge reads as a chip the panel happened to cut off, not as
+   * something that scrolls, so both the soft edge and the arrow hang off this.
+   */
+  const [chipOverflow, setChipOverflow] = useState({ start: false, end: false });
+  const chipRowRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserInteractingRef = useRef(false);
@@ -164,6 +171,47 @@ export function AiAssistant() {
 
     return () => cancelAnimationFrame(frame);
   }, [isOpen]);
+
+  /**
+   * Watches the chip row's scroll position.
+   *
+   * The first reading goes through a microtask, not the ResizeObserver that
+   * follows it: observer callbacks are delivered with the browser's rendering
+   * steps, so a panel opening in a tab that is not painting would sit there
+   * with no hint on it at all. A microtask runs either way, and reading
+   * scrollWidth flushes the layout it needs.
+   */
+  useEffect(() => {
+    const row = chipRowRef.current;
+    if (!row) return;
+
+    const update = () => {
+      const remaining = row.scrollWidth - row.clientWidth - row.scrollLeft;
+      setChipOverflow((prev) => {
+        // A pixel of slack: sub-pixel widths never settle on an exact end.
+        const start = row.scrollLeft > 1;
+        const end = remaining > 1;
+        return prev.start === start && prev.end === end ? prev : { start, end };
+      });
+    };
+
+    queueMicrotask(update);
+
+    // Keeps up with a rotation or a resized window afterwards.
+    const observer = new ResizeObserver(update);
+    observer.observe(row);
+    row.addEventListener("scroll", update, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      row.removeEventListener("scroll", update);
+    };
+  }, [isOpen]);
+
+  /** Fades whichever end the row continues past, and nothing when it fits. */
+  const chipMask = `linear-gradient(to right, ${
+    chipOverflow.start ? "transparent, #000 2rem" : "#000"
+  }, ${chipOverflow.end ? "#000 calc(100% - 2.5rem), transparent" : "#000"})`;
 
   const handleWheelOrScroll = () => {
     isUserInteractingRef.current = true;
@@ -557,20 +605,42 @@ export function AiAssistant() {
             {/* Quick Prompts Bar — one row, scrolled sideways. Wrapped, these
                 four chips ran to three lines and took 155px of a 540px panel,
                 leaving the conversation itself only 240px. The scrollbar is
-                hidden because the panel is too narrow to spare its height;
-                the chip clipped at the edge is what says there is more. */}
-            <div className="flex gap-2 overflow-x-auto overscroll-x-contain border-t hairline bg-surface/50 p-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {quickPrompts.map((prompt, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => handleSend(prompt.text)}
-                  className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border hairline bg-surface/90 px-3 py-2.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer sm:py-1.5"
+                hidden because the panel cannot spare its height; the soft edge
+                and the arrow say there is more, and both go away at the end of
+                the row rather than pointing at nothing.
+
+                The border and background sit on the outer element so the mask
+                only ever fades the chips — masking the whole bar would take
+                the separator line away with them. */}
+            <div className="relative border-t hairline bg-surface/50 p-3">
+              <div
+                ref={chipRowRef}
+                style={{ maskImage: chipMask, WebkitMaskImage: chipMask }}
+                className="flex gap-2 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
+                {quickPrompts.map((prompt, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => handleSend(prompt.text)}
+                    className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border hairline bg-surface/90 px-3 py-2.5 font-mono text-[0.6875rem] text-muted hover:border-accent/60 hover:text-foreground transition-colors cursor-pointer sm:py-1.5"
+                  >
+                    <span>{prompt.emoji}</span>
+                    <span>{prompt.text}</span>
+                  </button>
+                ))}
+              </div>
+
+              {chipOverflow.end && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center text-muted"
                 >
-                  <span>{prompt.emoji}</span>
-                  <span>{prompt.text}</span>
-                </button>
-              ))}
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              )}
             </div>
 
             {/* Input Form */}
