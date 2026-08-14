@@ -83,63 +83,6 @@ const EAT_REACTIONS_EN = [
 const between = ([min, max]: readonly [number, number]) =>
   min + Math.random() * (max - min);
 
-/** Synthesizes a sweet, gentle bird chirp using Web Audio API */
-function playChirpSound() {
-  if (typeof window === "undefined") return;
-  try {
-    const isMuted = localStorage.getItem("mert_cursor_muted") === "true";
-    if (isMuted) return;
-
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-
-    const ctx = new AudioContextClass();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine";
-    const now = ctx.currentTime;
-
-    osc.frequency.setValueAtTime(2200, now);
-    osc.frequency.exponentialRampToValueAtTime(3200, now + 0.05);
-    osc.frequency.exponentialRampToValueAtTime(2500, now + 0.1);
-
-    gain.gain.setValueAtTime(0.06, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.13);
-
-    // Second chirp burst
-    setTimeout(() => {
-      try {
-        const osc2 = ctx.createOscillator();
-        const gain2 = ctx.createGain();
-        osc2.type = "sine";
-        const now2 = ctx.currentTime;
-        osc2.frequency.setValueAtTime(2500, now2);
-        osc2.frequency.exponentialRampToValueAtTime(3500, now2 + 0.05);
-        osc2.frequency.exponentialRampToValueAtTime(2700, now2 + 0.09);
-        gain2.gain.setValueAtTime(0.06, now2);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now2 + 0.11);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now2);
-        osc2.stop(now2 + 0.12);
-      } catch {
-        // ignore
-      }
-    }, 70);
-  } catch {
-    // ignore
-  }
-}
-
 type Grain = {
   id: number;
   x: number;
@@ -241,7 +184,6 @@ export function HeaderChick() {
   const draggingRef = useRef(false);
   const greetingRef = useRef(false);
   const grabOffsetRef = useRef(0);
-  const pointerDownPosRef = useRef<{ x: number; y: number; time: number } | null>(null);
 
   const greetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const queasyTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -256,7 +198,6 @@ export function HeaderChick() {
 
   const grainsRef = useRef<Grain[]>([]);
   const nextGrainIdRef = useRef(1);
-  const targetGrainRef = useRef<Grain | null>(null);
   const speedRef = useRef(SPEED);
 
   const [greeting, setGreeting] = useState(false);
@@ -328,18 +269,18 @@ export function HeaderChick() {
     const max = maxX();
     const clampedX = Math.min(max + 10, Math.max(10, targetX));
 
-    const newGrain: Grain = {
+    // Strictly maximum 1 grain on the field at any time
+    const singleGrain: Grain = {
       id: nextGrainIdRef.current++,
       x: clampedX,
       eaten: false,
     };
 
-    grainsRef.current = [...grainsRef.current, newGrain];
-    setGrains([...grainsRef.current]);
+    grainsRef.current = [singleGrain];
+    setGrains([singleGrain]);
 
     // Wake chick up and turn towards the grain
     pausedUntilRef.current = 0;
-    targetGrainRef.current = newGrain;
   }, [maxX]);
 
   const goQueasy = () => {
@@ -439,10 +380,9 @@ export function HeaderChick() {
             grainsRef.current = grainsRef.current.filter((g) => g.id !== closestGrain.id);
             setGrains([...grainsRef.current]);
 
-            // Eating action & sound!
+            // Eating action
             peckUntilRef.current = now + PECK_MS;
             pausedUntilRef.current = now + PECK_MS + 400;
-            playChirpSound();
 
             // Reaction whisper
             const reactions = isEnglish ? EAT_REACTIONS_EN : EAT_REACTIONS_TR;
@@ -585,11 +525,6 @@ export function HeaderChick() {
             const track = trackRef.current;
             if (!track) return;
             e.stopPropagation();
-            pointerDownPosRef.current = {
-              x: e.clientX,
-              y: e.clientY,
-              time: performance.now(),
-            };
             e.currentTarget.setPointerCapture(e.pointerId);
             grabOffsetRef.current =
               e.clientX - track.getBoundingClientRect().left - xRef.current;
@@ -607,17 +542,6 @@ export function HeaderChick() {
             e.currentTarget.releasePointerCapture(e.pointerId);
             draggingRef.current = false;
             setDragging(false);
-
-            // Check if it was a quick click rather than a drag -> drop grain right beside!
-            if (pointerDownPosRef.current) {
-              const moveDist = Math.abs(e.clientX - pointerDownPosRef.current.x);
-              const duration = performance.now() - pointerDownPosRef.current.time;
-              if (moveDist < 6 && duration < 300) {
-                dropGrain(xRef.current + (dirRef.current === 1 ? 32 : -32));
-              }
-            }
-            pointerDownPosRef.current = null;
-
             pausedUntilRef.current = performance.now() + DROP_PAUSE_MS;
             releaseAfterDelay();
           }}
