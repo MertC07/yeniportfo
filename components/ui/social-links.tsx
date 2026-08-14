@@ -43,7 +43,10 @@ export function SocialLinks() {
                 className="group flex flex-col items-center gap-3.5"
               >
                 <span
-                  className={`relative flex size-16 items-center justify-center rounded-full border hairline bg-surface/40 transition-[border-color,transform] duration-500 ${EXPO} group-hover:border-accent group-active:scale-95`}
+                  /* `scale`, not `transform`: in Tailwind v4 scale-* sets
+                     the standalone property, so transitioning `transform`
+                     would leave the press instant. */
+                  className={`relative flex size-16 items-center justify-center rounded-full border hairline bg-surface/40 transition-[border-color,scale] duration-500 ${EXPO} group-hover:border-accent group-active:scale-95`}
                 >
                   {glyph ? (
                     <>

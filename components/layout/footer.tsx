@@ -28,13 +28,39 @@ export function Footer() {
         <ul className="flex items-center gap-5">
           {socials.map((social) => (
             <li key={social.label}>
+              {/* The label rolls over to an accent copy of itself while the
+                  arrow steps out after it. Kept to transforms and colour so
+                  the row never reflows, and no icons — the footer is a line
+                  of microlabels and a mark here would outweigh everything
+                  beside it. */}
               <a
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="microlabel tap-target transition-colors duration-300 hover:text-accent"
+                className="microlabel tap-target group inline-flex items-center gap-1.5"
               >
-                {social.label}
+                <span className="relative block h-[1.15em] overflow-hidden">
+                  <span className="block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-full">
+                    {social.label}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 block translate-y-full text-accent transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0"
+                  >
+                    {social.label}
+                  </span>
+                </span>
+                <span
+                  aria-hidden
+                  /* `translate`, not `transform`: Tailwind v4's translate-*
+                     utilities set the standalone property, so naming
+                     `transform` here transitions nothing and the arrow
+                     jumps. `transition-transform` happens to cover both,
+                     but this list is explicit and has to say so. */
+                  className="transition-[translate,color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+                >
+                  ↗
+                </span>
               </a>
             </li>
           ))}

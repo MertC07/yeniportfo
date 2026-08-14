@@ -82,7 +82,13 @@ export function Contact() {
             <button
               type="button"
               onClick={() => setIsCvModalOpen(true)}
-              className="group relative inline-flex w-full items-center justify-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-6 py-3.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer sm:px-7 sm:text-xs"
+              /* Sized to its label and centred, unlike the address and the
+                 fields that bracket it. Stretching it to the column made
+                 it the widest, loudest thing in the section; a CTA that
+                 reads as a button wants to look like one. `max-w-full` is
+                 the only guard it needs — the column already keeps it
+                 inside the padding. */
+              className="group relative mt-1 inline-flex w-auto max-w-full self-center items-center justify-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-6 py-3.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer sm:px-7 sm:text-xs"
             >
               <svg
                 className="h-4 w-4 shrink-0 text-accent group-hover:text-accent-ink transition-colors duration-300"
