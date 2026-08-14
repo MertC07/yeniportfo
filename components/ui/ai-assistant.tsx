@@ -285,6 +285,18 @@ export function AiAssistant() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
+  /* The only way in from outside this component. The command palette needs
+     to open the chat, and lifting `isOpen` into a provider to let it would
+     put every message re-render through the whole tree. */
+  useEffect(() => {
+    const open = () => {
+      setIsOpen(true);
+      setHasUnread(false);
+    };
+    window.addEventListener("open-assistant", open);
+    return () => window.removeEventListener("open-assistant", open);
+  }, []);
+
   const handleSend = async (textToSend?: string) => {
     const query = textToSend || input.trim();
     if (!query || loading) return;

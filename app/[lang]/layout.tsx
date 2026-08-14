@@ -12,6 +12,7 @@ import { IdleMode } from "@/components/ui/idle-mode";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { AiAssistant } from "@/components/ui/ai-assistant";
 import { ContextMenu } from "@/components/ui/context-menu";
+import { CommandPalette } from "@/components/ui/command-palette";
 import { getContent, isLocale, localePath, locales } from "@/lib/content";
 import "../globals.css";
 
@@ -186,6 +187,7 @@ export default async function RootLayout({
               {children}
               <ScrollProgress />
               <AiAssistant />
+              <CommandPalette />
               <GrainOverlay />
               <Cursor />
               <IdleMode />
