@@ -44,27 +44,30 @@ export function Works() {
 
           Pulled up into dead space rather than pushed down. Each card is
           80svh centred in a full-viewport sticky wrapper, so the last
-          wrapper ends in an empty band the link was sitting below — which
-          is where the gap came from and why it grew on taller screens.
-
-          The band is smaller than that arithmetic suggests, because the
-          card is also nudged down by `top: calc(-4svh + index*26px)`:
+          wrapper ends in an empty band the link was sitting below:
 
             band = (H − max(0.8H, 520)) / 2 + 0.04H − 52
 
-          At 1300px tall that is 130px, at 812 it is 62, and at 600 the
-          520px floor collapses it to 12 — where a 4svh pull already left
-          the link close enough that easing it further would risk the
-          artwork on short windows. Hence the height gate: above 720px the
-          band is at least 49px and 3svh of it is safe to take back
-          (leaving it sitting a little lower in the band, roughly centred,
-          rather than pinned to the top), below that the gap is already
-          small enough to leave alone.
+          (the last two terms are the card's own `top: calc(-4svh +
+          index*26px)` nudge). That grows with H — 62px at 812 tall, 130 at
+          1300 — and a pull sized as a flat fraction of svh grows with it
+          only a little slower, so on a large monitor the gap this used to
+          leave was still large: a 3svh pull at 1300 tall left ~100px above
+          the link on top of the fixed 256px below it, which is most of a
+          screenshot's worth of empty black.
+
+          Solved for directly instead of approximated: this margin cancels
+          `band(H)` exactly and adds back a flat 64px, so the gap above the
+          link is 64px at *every* height from here up — 720, 812, 1300,
+          whatever a 4K monitor reports — rather than a fraction that keeps
+          growing. Below 720px tall the band itself is already small
+          (12–49px) and closer to the floor a 64px target would have to
+          push through, so that range keeps the plain 8px margin instead.
 
           No rule above it either, which would have separated it from the
           work it belongs to and put a second horizontal line a short way
           above the one the next section's heading opens with. */}
-      <div className="mt-2 flex justify-center [@media(min-height:720px)]:-mt-[3svh]">
+      <div className="mt-2 flex justify-center [@media(min-height:720px)]:mt-[calc(116px_-_14svh)]">
         <Magnetic strength={0.35}>
           <Link
             href={localePath(locale, "/work")}
