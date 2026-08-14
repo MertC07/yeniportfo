@@ -20,7 +20,9 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const { ui, profile, site } = getContent(lang);
-  const title = `${ui.sections.work.label} — ${profile.name}`;
+  /* "All projects", not the home page section's "Selected Works" — this
+     page is the full list, and the link that reaches it says so. */
+  const title = `${ui.workIndex.allProjects} — ${profile.name}`;
   return {
     title,
     description: site.description,
@@ -76,7 +78,7 @@ export default async function WorkIndexPage({
 
         <RevealText
           as="h1"
-          lines={[ui.sections.work.label]}
+          lines={[ui.workIndex.allProjects]}
           className="mt-12 font-display text-display-xl font-extrabold uppercase leading-none tracking-tight"
         />
 

@@ -19,7 +19,10 @@ export function Works() {
   });
 
   return (
-    <section id="work" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+    /* Shorter at the foot than the other sections: About opens with its
+       own generous top padding right after, and the two together left a
+       gap you could lose the link in. */
+    <section id="work" className="px-5 pb-12 pt-24 sm:px-8 sm:pb-16 sm:pt-32 lg:px-12">
       <SectionHeading
         index="01"
         label={ui.sections.work.label}
@@ -42,23 +45,37 @@ export function Works() {
       {/* The way out of the stack — /work was reachable only by typing the
           URL before this.
 
-          Deliberately the same pill as the "view case" control on each
-          card, because it is the same kind of act: one more way through to
-          a project page. It was display type under a rule to begin with,
-          which said the section's own name a second time, made the loudest
-          thing here the link away from the work rather than the work, and
-          drew a closing line across a page that carries on into About
-          directly underneath. No rule of its own either — the next
-          section's heading opens with one a moment later. */}
-      <div className="mt-14 flex justify-center">
-        <Magnetic strength={0.15}>
+          Pulled up into dead space rather than pushed down. Each card is
+          80svh centred in a full-viewport sticky wrapper, so the last
+          wrapper ends in an empty band the link was sitting below — which
+          is where the gap came from and why it grew on taller screens.
+
+          The band is smaller than that arithmetic suggests, because the
+          card is also nudged down by `top: calc(-4svh + index*26px)`:
+
+            band = (H − max(0.8H, 520)) / 2 + 0.04H − 52
+
+          At 1300px tall that is 130px, at 812 it is 62, and at 600 the
+          520px floor collapses it to 12 — where a 5svh pull put the link
+          18px inside the artwork. Hence the height gate: above 720px the
+          band is at least 49px and 4svh of it is safe to take back, below
+          that the gap is already small enough to leave alone.
+
+          No rule above it either, which would have separated it from the
+          work it belongs to and put a second horizontal line a short way
+          above the one the next section's heading opens with. */}
+      <div className="mt-2 flex justify-center [@media(min-height:720px)]:-mt-[4svh]">
+        <Magnetic strength={0.35}>
           <Link
             href={localePath(locale, "/work")}
-            className="inline-flex items-center gap-2 rounded-full border hairline px-6 py-3.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-foreground transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
+            className="group inline-flex items-baseline gap-4 font-display text-display-md font-extrabold uppercase leading-none tracking-tight transition-colors duration-300 hover:text-accent"
           >
             {ui.workIndex.allProjects}
-            <span aria-hidden className="text-sm leading-none">
-              ↗
+            <span
+              aria-hidden
+              className="text-2xl transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2"
+            >
+              →
             </span>
           </Link>
         </Magnetic>
