@@ -185,6 +185,9 @@ export function HeaderChick() {
   const greetingRef = useRef(false);
   const grabOffsetRef = useRef(0);
 
+  const lastDragEndRef = useRef(0);
+  const isDragActiveRef = useRef(false);
+
   const greetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const queasyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const queasyDeckRef = useRef<number[]>([]);
@@ -205,6 +208,51 @@ export function HeaderChick() {
   const [activeMessage, setActiveMessage] = useState<string | null>(null);
   const [isQueasyMessage, setIsQueasyMessage] = useState(false);
   const [grains, setGrains] = useState<Grain[]>([]);
+
+  // Sound and speech mute state integration
+  const [isMuted, setIsMuted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const isMutedRef = useRef(false);
+  const isMobileRef = useRef(false);
+
+  useEffect(() => {
+    try {
+      const savedMute = localStorage.getItem("mert_cursor_muted") === "true";
+      setIsMuted(savedMute);
+      isMutedRef.current = savedMute;
+    } catch {
+      // ignore
+    }
+
+    const handleMuteChange = (e: Event) => {
+      const customEvt = e as CustomEvent<{ muted?: boolean }>;
+      if (typeof customEvt.detail?.muted === "boolean") {
+        setIsMuted(customEvt.detail.muted);
+        isMutedRef.current = customEvt.detail.muted;
+        if (customEvt.detail.muted) {
+          setActiveMessage(null);
+        }
+      }
+    };
+
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      isMobileRef.current = mobile;
+      if (mobile) {
+        setActiveMessage(null);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    window.addEventListener("mert-cursor-mute-changed", handleMuteChange);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("mert-cursor-mute-changed", handleMuteChange);
+    };
+  }, []);
 
   const maxX = useCallback(() => {
     const track = trackRef.current;
@@ -236,54 +284,70 @@ export function HeaderChick() {
     }
   }, []);
 
-  const showWhisper = useCallback((customText?: string) => {
-    if (queasyRef.current) return;
+  const showWhisper = useCallback(
+    (customText?: string) => {
+      if (queasyRef.current || isMutedRef.current || isMobileRef.current) return;
 
-    let text = customText;
-    if (!text) {
-      const pool = isEnglish ? WHISPERS_EN : WHISPERS_TR;
-      if (whispersDeckRef.current.length === 0) {
-        const deck = Array.from({ length: pool.length }, (_, i) => i);
-        for (let i = deck.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [deck[i], deck[j]] = [deck[j], deck[i]];
+      let text = customText;
+      if (!text) {
+        const pool = isEnglish ? WHISPERS_EN : WHISPERS_TR;
+        if (whispersDeckRef.current.length === 0) {
+          const deck = Array.from({ length: pool.length }, (_, i) => i);
+          for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+          }
+          whispersDeckRef.current = deck;
         }
-        whispersDeckRef.current = deck;
+        text = pool[whispersDeckRef.current.pop()!];
       }
-      text = pool[whispersDeckRef.current.pop()!];
-    }
 
-    setIsQueasyMessage(false);
-    setActiveMessage(text);
+      setIsQueasyMessage(false);
+      setActiveMessage(text);
 
-    if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
-    whisperTimerRef.current = setTimeout(() => {
-      setActiveMessage(null);
-    }, WHISPER_DURATION_MS);
-  }, [isEnglish]);
+      if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
+      whisperTimerRef.current = setTimeout(() => {
+        setActiveMessage(null);
+      }, WHISPER_DURATION_MS);
+    },
+    [isEnglish]
+  );
 
-  const dropGrain = useCallback((targetX: number) => {
-    const track = trackRef.current;
-    if (!track) return;
+  const dropGrain = useCallback(
+    (targetX: number) => {
+      const track = trackRef.current;
+      if (!track) return;
 
-    const max = maxX();
-    const clampedX = Math.min(max + 10, Math.max(10, targetX));
+      const max = maxX();
+      const clampedX = Math.min(max + 10, Math.max(10, targetX));
 
-    // Strictly maximum 1 grain on the field at any time
-    const singleGrain: Grain = {
-      id: nextGrainIdRef.current++,
-      x: clampedX,
-      eaten: false,
-    };
+      // Strictly maximum 1 grain on the field at any time
+      const singleGrain: Grain = {
+        id: nextGrainIdRef.current++,
+        x: clampedX,
+        eaten: false,
+      };
 
-    grainsRef.current = [singleGrain];
-    setGrains([singleGrain]);
+      grainsRef.current = [singleGrain];
+      setGrains([singleGrain]);
 
-    // Wake chick up and turn towards the grain
-    pausedUntilRef.current = 0;
-  }, [maxX]);
+      // Wake chick up and turn towards the grain
+      pausedUntilRef.current = 0;
+    },
+    [maxX]
+  );
 
   const goQueasy = () => {
+    if (isMutedRef.current || isMobileRef.current) {
+      queasyRef.current = true;
+      reversalsRef.current = [];
+      if (queasyTimerRef.current) clearTimeout(queasyTimerRef.current);
+      queasyTimerRef.current = setTimeout(() => {
+        queasyRef.current = false;
+      }, QUEASY_MS);
+      return;
+    }
+
     const pool = isEnglish ? QUEASY_EN : QUEASY_TR;
     if (queasyDeckRef.current.length === 0) {
       const deck = Array.from({ length: pool.length }, (_, i) => i);
@@ -361,7 +425,13 @@ export function HeaderChick() {
         }
 
         // Periodic random whisper
-        if (now >= nextWhisperAtRef.current && !held && !activeMessage) {
+        if (
+          now >= nextWhisperAtRef.current &&
+          !held &&
+          !activeMessage &&
+          !isMutedRef.current &&
+          !isMobileRef.current
+        ) {
           showWhisper();
           nextWhisperAtRef.current = now + WHISPER_INTERVAL_MS + Math.random() * 8000;
         }
@@ -384,10 +454,12 @@ export function HeaderChick() {
             peckUntilRef.current = now + PECK_MS;
             pausedUntilRef.current = now + PECK_MS + 400;
 
-            // Reaction whisper
-            const reactions = isEnglish ? EAT_REACTIONS_EN : EAT_REACTIONS_TR;
-            const react = reactions[Math.floor(Math.random() * reactions.length)];
-            showWhisper(react);
+            // Reaction whisper (if not muted and not mobile)
+            if (!isMutedRef.current && !isMobileRef.current) {
+              const reactions = isEnglish ? EAT_REACTIONS_EN : EAT_REACTIONS_TR;
+              const react = reactions[Math.floor(Math.random() * reactions.length)];
+              showWhisper(react);
+            }
           } else if (!resting && dt) {
             // Run enthusiastically towards food!
             const currentSpeed = RUN_SPEED;
@@ -469,6 +541,14 @@ export function HeaderChick() {
   };
 
   const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // If a drag/shake was active or ended within 350ms, do NOT drop grain!
+    if (
+      isDragActiveRef.current ||
+      performance.now() - lastDragEndRef.current < 350
+    ) {
+      return;
+    }
+
     const track = trackRef.current;
     if (!track) return;
     const clickX = e.clientX - track.getBoundingClientRect().left;
@@ -484,7 +564,11 @@ export function HeaderChick() {
       <div
         ref={trackRef}
         onClick={handleTrackClick}
-        title={isEnglish ? "Click to drop a treat for the chick! 🌾" : "Tıkla, civcive yem bırak! 🌾"}
+        title={
+          isEnglish
+            ? "Click to drop a treat for the chick! 🌾"
+            : "Tıkla, civcive yem bırak! 🌾"
+        }
         className="pointer-events-auto relative h-8 overflow-hidden cursor-crosshair group/track"
       >
         {/* Render Active Grains */}
@@ -525,6 +609,7 @@ export function HeaderChick() {
             const track = trackRef.current;
             if (!track) return;
             e.stopPropagation();
+            isDragActiveRef.current = true;
             e.currentTarget.setPointerCapture(e.pointerId);
             grabOffsetRef.current =
               e.clientX - track.getBoundingClientRect().left - xRef.current;
@@ -542,6 +627,8 @@ export function HeaderChick() {
             e.currentTarget.releasePointerCapture(e.pointerId);
             draggingRef.current = false;
             setDragging(false);
+            isDragActiveRef.current = false;
+            lastDragEndRef.current = performance.now();
             pausedUntilRef.current = performance.now() + DROP_PAUSE_MS;
             releaseAfterDelay();
           }}
@@ -562,9 +649,9 @@ export function HeaderChick() {
         </div>
       </div>
 
-      {/* Speech / Whisper & Queasy Bubble */}
+      {/* Speech / Whisper & Queasy Bubble (Hidden when muted or on mobile) */}
       <AnimatePresence>
-        {activeMessage && (
+        {!isMuted && !isMobile && activeMessage && (
           <motion.div
             ref={bubbleRef}
             initial={{ opacity: 0, y: -6, scale: 0.92 }}
