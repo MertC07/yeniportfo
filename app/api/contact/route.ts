@@ -126,10 +126,12 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        /* onboarding@resend.dev needs no verified domain and may only
-           deliver to the account holder — which is the only recipient
-           this form has. Swap for an address on mertceren.com once the
-           domain is verified in Resend, so replies thread properly. */
+        /* Works without a verified domain, at the price of a rule worth
+           stating plainly: this sender may only deliver to the address
+           that owns the Resend account. So the account has to be opened
+           with profile.email below — any other and every send comes back
+           403. Verifying mertceren.com in Resend and sending from there
+           lifts the coupling. */
         from: "Portfolyo <onboarding@resend.dev>",
         to: [profile.email],
         /* The whole point: hitting Reply in the inbox answers the

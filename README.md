@@ -12,6 +12,23 @@ npm run dev      # http://localhost:3000
 npm run build    # production build (fully static)
 ```
 
+## Environment
+
+Both keys are read on the server at request time, never during the build, so
+the site builds and deploys without them — the two features degrade instead
+of breaking.
+
+| Variable | Feature | Without it |
+| --- | --- | --- |
+| `GROQ_API_KEY` | The AI assistant | Falls back to the scripted answers in `lib/ai-knowledge.ts` |
+| `RESEND_API_KEY` | The contact form | The form shows the email address instead |
+
+**Setting up Resend:** sign up with the same address as `profile.email` in
+`lib/data.ts`. Until a domain is verified, Resend sends from
+`onboarding@resend.dev`, and that sender [may only deliver to the account
+holder's own address](https://resend.com/docs/knowledge-base/403-error-resend-dev-domain)
+— sign up with anything else and every send is rejected with a 403.
+
 ## Editing your content
 
 All site content lives in **one file**: [`lib/data.ts`](lib/data.ts)
