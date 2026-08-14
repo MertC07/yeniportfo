@@ -121,23 +121,6 @@ export function Header() {
             </nav>
 
             <LanguageToggle />
-            {/* After the language toggle on purpose: that one carries
-                `data-chick-limit`, and anything placed before it would end
-                up inside the chick's walking range with the bird crossing
-                underneath. Desktop only — below lg the full-screen menu
-                already lists every destination, and a fifth 40px circle
-                does not fit beside the wordmark on a 375px screen. */}
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new Event("open-palette"))}
-              aria-label={ui.palette.open}
-              className="hidden items-center gap-2 rounded-full border hairline px-3 py-2 transition-colors duration-300 hover:border-foreground/40 lg:flex"
-            >
-              <span className="microlabel text-foreground">{ui.palette.open}</span>
-              <span aria-hidden className="microlabel text-accent">
-                ⌘K
-              </span>
-            </button>
             <ThemeToggle />
             <CursorMuteToggle />
 

@@ -608,24 +608,6 @@ export const ui = {
     },
   },
   projectCard: { cta: "View case", ctaAria: "View case study:" },
-  palette: {
-    open: "Search",
-    placeholder: "Jump to a section, a project, a setting…",
-    empty: "Nothing matches that.",
-    hint: "to open",
-    groups: {
-      sections: "Sections",
-      projects: "Projects",
-      actions: "Actions",
-    },
-    actions: {
-      allWork: "All projects",
-      theme: "Switch theme",
-      language: "Switch to Turkish",
-      cv: "Open CV (PDF)",
-      chat: "Ask the assistant",
-    },
-  },
   workIndex: {
     /* The URL above a case study answered with a 404 when it was trimmed —
        a natural thing to try, and the one place a fourth project can go
@@ -633,6 +615,7 @@ export const ui = {
     back: "← Home",
     meta: "All projects, newest first",
     view: "Open case",
+    allProjects: "All projects",
   },
   caseStudy: {
     back: "← Selected Works",

@@ -310,28 +310,11 @@ export const ui: Ui = {
     },
   },
   projectCard: { cta: "Projeyi incele", ctaAria: "Vaka incelemesini gör:" },
-  palette: {
-    open: "Ara",
-    placeholder: "Bölüm, proje veya ayar ara…",
-    empty: "Eşleşen bir şey yok.",
-    hint: "ile aç",
-    groups: {
-      sections: "Bölümler",
-      projects: "Projeler",
-      actions: "Eylemler",
-    },
-    actions: {
-      allWork: "Tüm projeler",
-      theme: "Temayı değiştir",
-      language: "İngilizceye geç",
-      cv: "CV'yi aç (PDF)",
-      chat: "Asistana sor",
-    },
-  },
   workIndex: {
     back: "← Ana sayfa",
     meta: "Tüm projeler, yeniden eskiye",
     view: "Projeyi aç",
+    allProjects: "Tüm projeler",
   },
   caseStudy: {
     back: "← Seçilmiş Projeler",
