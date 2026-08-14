@@ -107,20 +107,47 @@ export default async function RootLayout({
   if (!isLocale(lang)) notFound();
 
   const { site, profile } = getContent(lang);
+  /**
+   * Two entities, linked by @id.
+   *
+   * The WebSite one is what puts a name above the result in Google instead of
+   * "mertceren.com". Google reads the site name from this type and falls back
+   * to the bare domain when it is missing — which it was; only Person was
+   * here. og:site_name already said "Mert Ceren" and was not enough on its
+   * own.
+   *
+   * The name stays the plain one. This field is the name of the site, not a
+   * headline, and Google drops values that read as a tagline; the role
+   * already appears on the line below, which comes from <title>.
+   */
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": profile.name,
-    "jobTitle": profile.role,
-    "description": site.description,
-    "url": site.url,
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Bandırma Onyedi Eylül Üniversitesi",
-    },
-    "sameAs": [
-      "https://github.com/mertcerendev",
-      "https://www.linkedin.com/in/mert-ceren-1a7b10297",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${site.url}#website`,
+        "name": profile.name,
+        "alternateName": profile.wordmark,
+        "url": site.url,
+        "inLanguage": lang,
+        "publisher": { "@id": `${site.url}#person` },
+      },
+      {
+        "@type": "Person",
+        "@id": `${site.url}#person`,
+        "name": profile.name,
+        "jobTitle": profile.role,
+        "description": site.description,
+        "url": site.url,
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "Bandırma Onyedi Eylül Üniversitesi",
+        },
+        "sameAs": [
+          "https://github.com/mertcerendev",
+          "https://www.linkedin.com/in/mert-ceren-1a7b10297",
+        ],
+      },
     ],
   };
 
