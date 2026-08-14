@@ -53,15 +53,18 @@ export function Works() {
             band = (H − max(0.8H, 520)) / 2 + 0.04H − 52
 
           At 1300px tall that is 130px, at 812 it is 62, and at 600 the
-          520px floor collapses it to 12 — where a 5svh pull put the link
-          18px inside the artwork. Hence the height gate: above 720px the
-          band is at least 49px and 4svh of it is safe to take back, below
-          that the gap is already small enough to leave alone.
+          520px floor collapses it to 12 — where a 4svh pull already left
+          the link close enough that easing it further would risk the
+          artwork on short windows. Hence the height gate: above 720px the
+          band is at least 49px and 3svh of it is safe to take back
+          (leaving it sitting a little lower in the band, roughly centred,
+          rather than pinned to the top), below that the gap is already
+          small enough to leave alone.
 
           No rule above it either, which would have separated it from the
           work it belongs to and put a second horizontal line a short way
           above the one the next section's heading opens with. */}
-      <div className="mt-2 flex justify-center [@media(min-height:720px)]:-mt-[4svh]">
+      <div className="mt-2 flex justify-center [@media(min-height:720px)]:-mt-[3svh]">
         <Magnetic strength={0.35}>
           <Link
             href={localePath(locale, "/work")}
