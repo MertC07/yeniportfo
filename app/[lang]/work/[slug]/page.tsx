@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -155,15 +156,18 @@ export default async function CaseStudyPage({
                wider screens so the index numeral behind it stays readable. */
             <div className="absolute inset-y-[7%] left-1/2 aspect-square -translate-x-1/2 overflow-hidden rounded-lg border border-white/15 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.75)] sm:inset-y-[8%] sm:left-auto sm:right-[8%] sm:translate-x-0 sm:rounded-xl">
               {/* The LCP element on this page, so it is preloaded rather than
-                  discovered halfway down the body. */}
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                preload
-                sizes="(max-width: 640px) 60vw, 430px"
-                className="object-cover"
-              />
+                  discovered halfway down the body. The name pairs it with
+                  the same shot on the card that opened this page. */}
+              <ViewTransition name={`shot-${project.slug}`}>
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  preload
+                  sizes="(max-width: 640px) 60vw, 430px"
+                  className="object-cover"
+                />
+              </ViewTransition>
             </div>
           )}
         </div>

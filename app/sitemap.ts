@@ -5,6 +5,7 @@ import { locales, localePath } from "@/lib/content";
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages: Array<{ path: string; priority: number }> = [
     { path: "/", priority: 1 },
+    { path: "/work", priority: 0.9 },
     ...projects.map((project) => ({ path: `/work/${project.slug}`, priority: 0.8 })),
   ];
 

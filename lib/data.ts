@@ -608,6 +608,14 @@ export const ui = {
     },
   },
   projectCard: { cta: "View case", ctaAria: "View case study:" },
+  workIndex: {
+    /* The URL above a case study answered with a 404 when it was trimmed —
+       a natural thing to try, and the one place a fourth project can go
+       without crowding the sticky stack on the home page. */
+    back: "← Home",
+    meta: "All projects, newest first",
+    view: "Open case",
+  },
   caseStudy: {
     back: "← Selected Works",
     live: "Live",

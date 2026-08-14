@@ -44,6 +44,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  /* Lets React's <ViewTransition> run on route changes, which is how a
+     project card morphs into the case study it opens. Browsers without the
+     View Transitions API navigate exactly as before — the animation is the
+     only thing they miss. */
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     // Everything here is a local file under /public, resized on demand and
     // served back from /_next/image — same origin, so the img-src 'self'

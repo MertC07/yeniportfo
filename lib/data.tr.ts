@@ -310,6 +310,11 @@ export const ui: Ui = {
     },
   },
   projectCard: { cta: "Projeyi incele", ctaAria: "Vaka incelemesini gör:" },
+  workIndex: {
+    back: "← Ana sayfa",
+    meta: "Tüm projeler, yeniden eskiye",
+    view: "Projeyi aç",
+  },
   caseStudy: {
     back: "← Seçilmiş Projeler",
     live: "Canlı",

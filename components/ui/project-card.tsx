@@ -1,5 +1,6 @@
 "use client";
 
+import { ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -123,13 +124,21 @@ export function ProjectCard({
                     shot is cropped from the top-left inside it, so there is
                     no reason to ship the 700KB original. */}
                 <div className="relative w-full flex-1 overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="480px"
-                    className="object-cover object-left-top"
-                  />
+                  {/* Paired with the same name on the case study and on the
+                      work index, so the shot travels between the two pages
+                      instead of one disappearing and another appearing.
+                      The screenshot rather than the title: the title is a
+                      RevealText over there, and morphing into something
+                      that is itself animating in fights with it. */}
+                  <ViewTransition name={`shot-${project.slug}`}>
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="480px"
+                      className="object-cover object-left-top"
+                    />
+                  </ViewTransition>
                 </div>
               </div>
             </div>
