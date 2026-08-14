@@ -67,12 +67,10 @@ export function Contact() {
         >
           <CopyEmailButton />
 
-          <a
-            href={`mailto:${profile.email}`}
-            className="microlabel tap-target transition-colors duration-300 hover:text-accent"
-          >
-            {ui.sections.contact.orWrite}
-          </a>
+          {/* The `mailto:` link used to sit here. It now names the form
+              below instead of opening a mail client — the address above is
+              already one tap from the clipboard, and on a phone without a
+              configured client the link did nothing at all. */}
 
           {/* CV PREVIEW & DOWNLOAD BUTTON */}
           <button

@@ -588,9 +588,10 @@ export const ui = {
       label: "Contact",
       meta: "Replies within 24h",
       lines: ["Let's work", "together."],
-      orWrite: "or write directly ↗",
       form: {
-        title: "Send a message",
+        /* Reads as the invitation the `mailto:` link used to be. No arrow:
+           it names the form underneath rather than going anywhere. */
+        title: "Or write directly",
         name: "Name",
         email: "Email",
         message: "Message",

@@ -292,9 +292,8 @@ export const ui: Ui = {
       label: "İletişim",
       meta: "24 saat içinde yanıt",
       lines: ["Birlikte", "çalışalım."],
-      orWrite: "ya da doğrudan yaz ↗",
       form: {
-        title: "Mesaj gönder",
+        title: "Ya da doğrudan yaz",
         name: "Ad",
         email: "E-posta",
         message: "Mesaj",
