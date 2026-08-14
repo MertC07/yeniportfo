@@ -226,24 +226,42 @@ html[data-intro-seen] .intro-overlay {
   }
 }
 
+/* One gait cycle. The trailing leg runs the same animation half a cycle
+   behind, so the offset is derived rather than written twice.
+
+   A phone header is narrow enough that the chick reaches the end and turns
+   almost at once, which reads as frantic. It walks at 0.7x there — matched by
+   MOBILE_GAIT_FACTOR in header-chick.tsx, since the ground speed and the
+   stride have to slow together or the feet skate. Desktop is unchanged. */
+:root {
+  --chick-gait: 0.18s;
+}
+
+@media (max-width: 39.99rem) {
+  :root {
+    --chick-gait: 0.257s;
+  }
+}
+
 .chick-leg-a {
-  animation: chick-leg 0.18s linear infinite;
+  animation: chick-leg var(--chick-gait) linear infinite;
 }
 
 .chick-leg-b {
-  animation: chick-leg 0.18s linear -0.09s infinite;
+  animation: chick-leg var(--chick-gait) linear calc(var(--chick-gait) / -2)
+    infinite;
 }
 
 .chick-body {
-  animation: chick-body 0.18s ease-in-out infinite;
+  animation: chick-body var(--chick-gait) ease-in-out infinite;
 }
 
 .chick-head {
-  animation: chick-head 0.18s ease-out infinite;
+  animation: chick-head var(--chick-gait) ease-out infinite;
 }
 
 .chick-tail {
-  animation: chick-tail 0.18s ease-in-out infinite;
+  animation: chick-tail var(--chick-gait) ease-in-out infinite;
 }
 
 .chick-eye {

@@ -9,6 +9,17 @@ import { usePathname } from "next/navigation";
  * under that keeps the feet from visibly sliding.
  */
 const SPEED = 58;
+/**
+ * Phones get a slower stroll. The px/s never changed between breakpoints, but
+ * the runway does: a phone header is narrow enough that the chick reaches the
+ * far end and turns almost immediately, which reads as frantic rather than
+ * brisk. Ground speed and the gait cycle have to move together or the feet
+ * slide, so this factor is also applied to `--chick-gait` in globals.css —
+ * change one and change the other.
+ */
+const MOBILE_GAIT_FACTOR = 0.7;
+/** Matches Tailwind's `sm`, which is where the CSS side switches too. */
+const MOBILE_QUERY = "(max-width: 39.99rem)";
 const GREET_MS = 1800;
 const TURN_PAUSE = [420, 950] as const;
 /**
@@ -157,6 +168,8 @@ export function HeaderChick() {
   const shakeDirRef = useRef(0);
   const reversalsRef = useRef<number[]>([]);
   const queasyRef = useRef(false);
+  /** Read inside the frame loop, so it is a ref rather than state. */
+  const speedRef = useRef(SPEED);
 
   const [greeting, setGreeting] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -251,6 +264,19 @@ export function HeaderChick() {
     }
   };
 
+  /* Kept in step with the `--chick-gait` media query in globals.css: the
+     stride length is fixed by the leg geometry, so slowing one without the
+     other would have the feet skating. */
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+    const sync = () => {
+      speedRef.current = mq.matches ? SPEED * MOBILE_GAIT_FACTOR : SPEED;
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   useEffect(() => {
     let frame = 0;
 
@@ -274,7 +300,7 @@ export function HeaderChick() {
         }
 
         if (!resting && dt) {
-          xRef.current += dirRef.current * SPEED * (dt / 1000);
+          xRef.current += dirRef.current * speedRef.current * (dt / 1000);
 
           if (xRef.current >= max) {
             xRef.current = max;
