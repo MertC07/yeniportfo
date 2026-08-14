@@ -21,11 +21,15 @@ export function CopyEmailButton() {
   };
 
   return (
-    <Magnetic strength={0.2}>
+    /* Fills the column rather than sizing to the address. Left to its own
+       width it came out 374px, which overflowed the section's padding on a
+       phone — the button reached within a pixel of the screen edge — and on
+       a wider screen left it sharing an edge with nothing. */
+    <Magnetic strength={0.2} className="block w-full">
       <button
         type="button"
         onClick={copy}
-        className="group relative overflow-hidden rounded-full border hairline bg-surface px-8 py-5 transition-colors duration-300 hover:border-accent sm:px-12 sm:py-6"
+        className="group relative w-full overflow-hidden rounded-full border hairline bg-surface px-5 py-5 transition-colors duration-300 hover:border-accent sm:px-8 sm:py-6"
       >
         <span className="sr-only" aria-live="polite">
           {copied ? ui.copyEmail.srCopied : `${ui.copyEmail.srCopy} ${profile.email}`}
@@ -50,10 +54,14 @@ export function CopyEmailButton() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -28, opacity: 0 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-3 font-mono text-sm tracking-tight sm:text-base"
+                /* Address left, action right, now that the box is wider
+                   than its contents. `min-w-0` + `truncate` are the floor:
+                   below roughly 340px the address gives up characters
+                   rather than pushing the pill out of the button. */
+                className="flex w-full items-center justify-between gap-3 font-mono text-xs tracking-tight sm:text-base"
               >
-                {profile.email}
-                <span className="microlabel rounded-full border hairline px-2.5 py-1 transition-colors duration-300 group-hover:border-accent group-hover:text-accent">
+                <span className="min-w-0 truncate">{profile.email}</span>
+                <span className="microlabel shrink-0 rounded-full border hairline px-2.5 py-1 transition-colors duration-300 group-hover:border-accent group-hover:text-accent">
                   {ui.copyEmail.copy}
                 </span>
               </motion.span>

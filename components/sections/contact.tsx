@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { socials } from "@/lib/data";
 import { cvVersion } from "@/lib/cv-version";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealText } from "@/components/ui/reveal-text";
 import { CopyEmailButton } from "@/components/ui/copy-email-button";
 import { ContactForm } from "@/components/ui/contact-form";
+import { SocialLinks } from "@/components/ui/social-links";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -58,65 +58,61 @@ export function Contact() {
           className="font-display text-display-xl font-extrabold uppercase leading-[0.95] tracking-tight"
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
-          className="mt-12 flex flex-col items-center gap-6"
-        >
-          <CopyEmailButton />
-
-          {/* The `mailto:` link used to sit here. It now names the form
-              below instead of opening a mail client — the address above is
-              already one tap from the clipboard, and on a phone without a
-              configured client the link did nothing at all. */}
-
-          {/* CV PREVIEW & DOWNLOAD BUTTON */}
-          <button
-            type="button"
-            onClick={() => setIsCvModalOpen(true)}
-            className="group relative mt-2 inline-flex items-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer"
+        {/* One column for the address, the CV and the form. They used to be
+            three centred blocks of three different widths — 374, 350 and
+            545 — so nothing shared an edge and the stack read as a tree.
+            Sharing `max-w-xl` and stretching to it gives them one left and
+            one right, which is the whole of the fix. */}
+        <div className="mt-12 w-full max-w-xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+            className="flex flex-col gap-4"
           >
-            <svg
-              className="h-4 w-4 text-accent group-hover:text-accent-ink transition-colors duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <CopyEmailButton />
+
+            {/* The `mailto:` link used to sit here. It now names the form
+                below instead of opening a mail client — the address above is
+                already one tap from the clipboard, and on a phone without a
+                configured client the link did nothing at all. */}
+
+            {/* CV PREVIEW & DOWNLOAD BUTTON */}
+            <button
+              type="button"
+              onClick={() => setIsCvModalOpen(true)}
+              className="group relative inline-flex w-full items-center justify-center gap-2.5 rounded-full border border-accent/60 bg-accent/10 px-6 py-3.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/20 cursor-pointer sm:px-7 sm:text-xs"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <span>{isTr ? "Özgeçmişi İncele & İndir (PDF)" : "Preview & Download Resume (PDF)"}</span>
-          </button>
-        </motion.div>
+              <svg
+                className="h-4 w-4 shrink-0 text-accent group-hover:text-accent-ink transition-colors duration-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span>{isTr ? "Özgeçmişi İncele & İndir (PDF)" : "Preview & Download Resume (PDF)"}</span>
+            </button>
+          </motion.div>
 
-        <ContactForm />
+          <ContactForm />
+        </div>
 
-        <motion.ul
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-5% 0px" }}
           transition={{ duration: 0.8, delay: 0.45 }}
-          className="mt-20 flex flex-wrap items-center justify-center gap-8"
+          className="mt-20"
         >
-          {socials.map((social) => (
-            <li key={social.label}>
-              <a
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="microlabel tap-target relative text-foreground before:absolute before:-bottom-1 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-accent before:transition-transform before:duration-300 hover:before:origin-left hover:before:scale-x-100"
-              >
-                {social.label}
-              </a>
-            </li>
-          ))}
-        </motion.ul>
+          <SocialLinks />
+        </motion.div>
       </div>
 
       {/* FULL-SCREEN CV PREVIEW MODAL */}

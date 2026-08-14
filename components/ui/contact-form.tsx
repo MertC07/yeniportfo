@@ -87,7 +87,7 @@ export function ContactForm() {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="mt-16 w-full max-w-xl text-left"
+      className="mt-14 w-full text-left"
     >
       <p className="microlabel text-center">{t.title}</p>
 
@@ -149,9 +149,10 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          /* py-3.5 lands the box on 44px, the smallest comfortable thumb
-             target; py-3 left it at 40. */
-          className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent-ink transition-opacity duration-300 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          /* Full width, to close the column on the same two edges the
+             address and the CV open it on. py-3.5 lands the box on 44px,
+             the smallest comfortable thumb target. */
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent-ink transition-opacity duration-300 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === "sending" ? t.sending : t.send}
         </button>
