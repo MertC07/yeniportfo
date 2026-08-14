@@ -9,6 +9,7 @@ import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RevealText } from "@/components/ui/reveal-text";
 import { CopyEmailButton } from "@/components/ui/copy-email-button";
+import { ContactForm } from "@/components/ui/contact-form";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -95,6 +96,8 @@ export function Contact() {
             <span>{isTr ? "Özgeçmişi İncele & İndir (PDF)" : "Preview & Download Resume (PDF)"}</span>
           </button>
         </motion.div>
+
+        <ContactForm />
 
         <motion.ul
           initial={{ opacity: 0 }}
