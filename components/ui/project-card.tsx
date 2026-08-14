@@ -60,8 +60,13 @@ export function ProjectCard({
   };
 
   return (
+    /* pointer-events-none, re-enabled on the card itself: this box is a full
+       viewport tall while the card inside it is not, and the empty band above
+       and below belongs to whichever card comes later in the stack. Left
+       clickable, that transparent band sits over the previous card's button
+       and swallows the tap. */
     <div
-      className="sticky top-0 flex h-svh items-center justify-center"
+      className="pointer-events-none sticky top-0 flex h-svh items-center justify-center"
       style={{ perspective: 1400 }}
     >
       <motion.article
@@ -73,7 +78,7 @@ export function ProjectCard({
           rotateY,
           top: `calc(-4svh + ${index * 26}px)`,
         }}
-        className="group relative flex h-[80svh] min-h-[520px] w-full origin-top flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl"
+        className="pointer-events-auto group relative flex h-[80svh] min-h-[520px] w-full origin-top flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl"
       >
         {/* Gradient-mesh artwork (swap for a real screenshot later) */}
         <div
@@ -131,6 +136,16 @@ export function ProjectCard({
           </div>
         )}
 
+        {/* The scrim near the top of this file sits under the mockup, so on a
+            phone — where the mockup is full width rather than tucked into the
+            right third — the description was printed straight onto the
+            screenshot. This one comes after it and so paints over it, under
+            the text. Heavier below sm because that is where the two overlap. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 z-10 h-2/3 bg-gradient-to-t from-black/90 via-black/65 to-transparent sm:h-1/2 sm:from-black/75 sm:via-black/35"
+        />
+
         {/* Top meta row */}
         <div className="relative flex items-baseline justify-between p-6 sm:p-10 lg:p-12 z-20">
           <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white/70">
@@ -161,11 +176,18 @@ export function ProjectCard({
           <h3 className="font-display text-display-lg font-extrabold uppercase leading-none tracking-tight text-white">
             {project.title}
           </h3>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
+          {/* Three lines on a phone. The card is a fixed 80svh with a 520px
+              floor, and on a 653px-tall screen the full text needed 614px of
+              it — the overflow was hidden, which quietly cut the button off
+              the bottom of the second card entirely. The full description is
+              a tap away on the case study. */}
+          <p className="mt-3 line-clamp-3 max-w-xl text-sm leading-relaxed text-white/80 sm:mt-4 sm:line-clamp-none sm:text-base sm:text-white/75">
             {project.description}
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-6">
-            <ul className="flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 sm:mt-6 sm:gap-6">
+            {/* Same budget: five tags wrapped to two rows below sm. Hidden by
+                position rather than sliced in JS so both sides render alike. */}
+            <ul className="flex flex-wrap gap-2 [&>*:nth-child(n+4)]:hidden sm:[&>*:nth-child(n+4)]:block">
               {project.tags.map((tag) => (
                 <li
                   key={tag}
