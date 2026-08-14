@@ -1,70 +1,22 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { ImageResponse } from "next/og";
 import { profile, site } from "@/lib/data";
+import { OG, inlineImage, loadSyne } from "@/lib/og";
 
-export const size = { width: 1200, height: 630 };
+export const size = OG.size;
 export const contentType = "image/png";
 export const alt = site.title;
 
-const BG = "#0a0a0b";
-const INK = "#f2f0ea";
-const MUTED = "#8a867c";
-const ACCENT = "#ff4d00";
+const BG = OG.bg;
+const INK = OG.ink;
+const MUTED = OG.muted;
+const ACCENT = OG.accent;
 const PHOTO_W = 470;
-
-/**
- * Fetches a Syne weight at build time. The old-browser User-Agent makes
- * Google Fonts serve a single unsubsetted TTF/WOFF instead of the
- * unicode-range-split woff2 files satori can't read — which also keeps
- * Turkish glyphs (ü, ğ, ı) available. Returns null if offline.
- */
-async function loadSyne(weight: 500 | 800): Promise<ArrayBuffer | null> {
-  try {
-    const css = await (
-      await fetch(`https://fonts.googleapis.com/css2?family=Syne:wght@${weight}`, {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0",
-        },
-      })
-    ).text();
-    const url = css.match(
-      /src: url\((.+?)\) format\('(?:truetype|opentype|woff)'\)/
-    )?.[1];
-    if (!url) return null;
-    return await (await fetch(url)).arrayBuffer();
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Inlines the portrait as a data URI. The mime type comes from the magic
- * bytes rather than the file extension — public/portrait.png is actually
- * a JPEG, and satori rejects a mislabelled one.
- */
-async function loadPortrait(): Promise<string | null> {
-  if (!profile.image) return null;
-  try {
-    const file = await readFile(
-      path.join(process.cwd(), "public", profile.image)
-    );
-    const isPng =
-      file[0] === 0x89 && file[1] === 0x50 && file[2] === 0x4e && file[3] === 0x47;
-    const isJpeg = file[0] === 0xff && file[1] === 0xd8 && file[2] === 0xff;
-    if (!isPng && !isJpeg) return null;
-    return `data:image/${isPng ? "png" : "jpeg"};base64,${file.toString("base64")}`;
-  } catch {
-    return null;
-  }
-}
 
 export default async function OpengraphImage() {
   const [syneBold, syneMedium, portrait] = await Promise.all([
     loadSyne(800),
     loadSyne(500),
-    loadPortrait(),
+    profile.image ? inlineImage(profile.image) : null,
   ]);
 
   const glow = (

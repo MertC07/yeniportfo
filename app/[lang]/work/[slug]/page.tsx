@@ -25,8 +25,9 @@ export async function generateMetadata({
   const { projects: localizedProjects, profile } = getContent(lang);
   const project = localizedProjects.find((p) => p.slug === slug);
   if (!project) return {};
+  const title = `${project.title} — ${profile.name}`;
   return {
-    title: `${project.title} — ${profile.name}`,
+    title,
     description: project.description,
     alternates: {
       canonical: localePath(lang, `/work/${slug}`),
@@ -34,6 +35,25 @@ export async function generateMetadata({
         tr: localePath("tr", `/work/${slug}`),
         en: localePath("en", `/work/${slug}`),
       },
+    },
+    /* Metadata merges per field, not per object: the layout sets a whole
+       openGraph block and overriding title/description above left it
+       untouched, so sharing any case study produced the home page's card —
+       its headline, its description, and an og:url pointing at "/". Restated
+       here for this page. Images are left out on purpose; the colocated
+       opengraph-image.tsx is file-based metadata, which outranks this. */
+    openGraph: {
+      title,
+      description: project.description,
+      url: localePath(lang, `/work/${slug}`),
+      siteName: profile.name,
+      locale: lang === "tr" ? "tr_TR" : "en_US",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: project.description,
     },
   };
 }
