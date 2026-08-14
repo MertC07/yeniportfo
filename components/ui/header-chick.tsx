@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
 
 /**
  * Legs swing ±30° on a ~5.5px shank, so a foot covers ~11px per gait cycle.
@@ -10,23 +9,36 @@ import { AnimatePresence, motion } from "motion/react";
  * under that keeps the feet from visibly sliding.
  */
 const SPEED = 58;
-const RUN_SPEED = 105;
+/**
+ * Phones get a slower stroll. The px/s never changed between breakpoints, but
+ * the runway does: a phone header is narrow enough that the chick reaches the
+ * far end and turns almost immediately, which reads as frantic rather than
+ * brisk. Ground speed and the gait cycle have to move together or the feet
+ * slide, so this factor is also applied to `--chick-gait` in globals.css —
+ * change one and change the other.
+ */
 const MOBILE_GAIT_FACTOR = 0.7;
+/** Matches Tailwind's `sm`, which is where the CSS side switches too. */
 const MOBILE_QUERY = "(max-width: 39.99rem)";
 const GREET_MS = 1800;
 const TURN_PAUSE = [420, 950] as const;
-const PECK_EVERY = [5000, 8000] as const;
+/**
+ * Roughly every five seconds of walking it stops for a peck at the ground.
+ * The window is loose so the rhythm never turns metronomic, and PECK_MS must
+ * match the `chick-peck` keyframe duration.
+ */
+const PECK_EVERY = [4200, 6000] as const;
 const PECK_MS = 1400;
 const DROP_PAUSE_MS = 300;
+/** Breathing room between the chick's beak and the first header control. */
 const LIMIT_GAP = 10;
 
 const INK = "#2a2118";
 
+/** Four changes of direction inside this window counts as being shaken. */
 const SHAKE_WINDOW_MS = 900;
 const SHAKE_REVERSALS = 4;
 const QUEASY_MS = 3600;
-const WHISPER_INTERVAL_MS = 16000;
-const WHISPER_DURATION_MS = 4000;
 
 const QUEASY_TR = [
   "Öğğ... sallamayı bırak 🤢",
@@ -42,52 +54,8 @@ const QUEASY_EN = [
   "Do that again and I'll be sick on you 🤮",
 ];
 
-const WHISPERS_TR = [
-  "Mert dün gece yine YOLO modeli eğitiyordu... 🤖",
-  "İSKİ stajında çaylar şirketten ☕",
-  "TEKNOFEST 2026'ya az kaldı, 5Genç roket gibi 🚀",
-  "Beni beslediğin için teşekkürler cik cik! 🐣",
-  "Sanal Kampüs'te kayboldum, 360° döndürüp duruyorlar 😵‍💫",
-  "Rosso Lounge'un pizzasından bana da ayırsalar keşke 🍕",
-  "22 sertifika topladı ama beni hâlâ devriyede tutuyor 🏃",
-  "Gece C# ve Python yazarken klavye sesinden uyuyamıyorum 😴",
-  "Sağ tıkla bakayım, orada komik şeyler var 😉",
-];
-
-const WHISPERS_EN = [
-  "Mert was up all night training YOLO models again... 🤖",
-  "Tea is free at the İSKİ internship ☕",
-  "TEKNOFEST 2026 is around the corner, 5Genç is ready 🚀",
-  "Thanks for the grain treats, cheep cheep! 🐣",
-  "I got lost in the 360° Virtual Campus tour 😵‍💫",
-  "Wish they saved me some pizza from Rosso Lounge 🍕",
-  "He collected 22 certs yet keeps me on patrol 🏃",
-  "Can't sleep with all his Python & C# typing at night 😴",
-  "Right click anywhere for dev easter eggs 😉",
-];
-
-const EAT_REACTIONS_TR = [
-  "Ham ham! Çok lezzetli 🌾",
-  "Cik cik! Teşekkürler 😋",
-  "En sevdiğim buğday tanesi ✨",
-  "Enerji depolandı! 🚀",
-];
-
-const EAT_REACTIONS_EN = [
-  "Yum yum! Delicious 🌾",
-  "Cheep cheep! Thank you 😋",
-  "My favorite golden grain ✨",
-  "Energy refueled! 🚀",
-];
-
 const between = ([min, max]: readonly [number, number]) =>
   min + Math.random() * (max - min);
-
-type Grain = {
-  id: number;
-  x: number;
-  eaten: boolean;
-};
 
 /** Walking pose, drawn facing right; the walk loop flips it to go left. */
 function ChickSide() {
@@ -167,6 +135,15 @@ function ChickFront() {
   );
 }
 
+/**
+ * Decorative easter egg: a chick patrolling the bottom edge of the header.
+ * Hover it and it turns to face you with a heart; grab it and you can slide
+ * it along its track, and it walks on from wherever you drop it.
+ *
+ * Horizontal position is driven here rather than in CSS because a keyframed
+ * walk cannot be picked up mid-stride and resumed at an arbitrary point. It
+ * is written straight to the DOM so dragging does not re-render at 60fps.
+ */
 export function HeaderChick() {
   const pathname = usePathname() ?? "/";
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
@@ -176,7 +153,7 @@ export function HeaderChick() {
   const bubbleRef = useRef<HTMLDivElement>(null);
 
   const xRef = useRef(0);
-  const dirRef = useRef(1); // 1 → right, -1 → left
+  const dirRef = useRef(1); // 1 → walking right, -1 → walking left
   const pausedUntilRef = useRef(0);
   const peckUntilRef = useRef(0);
   const nextPeckAtRef = useRef(0);
@@ -184,77 +161,28 @@ export function HeaderChick() {
   const draggingRef = useRef(false);
   const greetingRef = useRef(false);
   const grabOffsetRef = useRef(0);
-
-  const lastDragEndRef = useRef(0);
-  const isDragActiveRef = useRef(false);
-
   const greetTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const queasyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const queasyDeckRef = useRef<number[]>([]);
   const shakeDirRef = useRef(0);
   const reversalsRef = useRef<number[]>([]);
   const queasyRef = useRef(false);
-
-  const whispersDeckRef = useRef<number[]>([]);
-  const whisperTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const nextWhisperAtRef = useRef(0);
-
-  const grainsRef = useRef<Grain[]>([]);
-  const nextGrainIdRef = useRef(1);
+  /** Read inside the frame loop, so it is a ref rather than state. */
   const speedRef = useRef(SPEED);
 
   const [greeting, setGreeting] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [activeMessage, setActiveMessage] = useState<string | null>(null);
-  const [isQueasyMessage, setIsQueasyMessage] = useState(false);
-  const [grains, setGrains] = useState<Grain[]>([]);
+  const [queasyMessage, setQueasyMessage] = useState<string | null>(null);
 
-  // Sound and speech mute state integration
-  const [isMuted, setIsMuted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const isMutedRef = useRef(false);
-  const isMobileRef = useRef(false);
-
-  useEffect(() => {
-    try {
-      const savedMute = localStorage.getItem("mert_cursor_muted") === "true";
-      setIsMuted(savedMute);
-      isMutedRef.current = savedMute;
-    } catch {
-      // ignore
-    }
-
-    const handleMuteChange = (e: Event) => {
-      const customEvt = e as CustomEvent<{ muted?: boolean }>;
-      if (typeof customEvt.detail?.muted === "boolean") {
-        setIsMuted(customEvt.detail.muted);
-        isMutedRef.current = customEvt.detail.muted;
-        if (customEvt.detail.muted) {
-          setActiveMessage(null);
-        }
-      }
-    };
-
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 640;
-      setIsMobile(mobile);
-      isMobileRef.current = mobile;
-      if (mobile) {
-        setActiveMessage(null);
-      }
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    window.addEventListener("mert-cursor-mute-changed", handleMuteChange);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      window.removeEventListener("mert-cursor-mute-changed", handleMuteChange);
-    };
-  }, []);
-
-  const maxX = useCallback(() => {
+  /**
+   * Far end of the walk. The track spans the whole header, but the chick has
+   * to turn back where the header controls begin — the element tagged
+   * `data-chick-limit` — or it ends up strolling under the language and theme
+   * buttons with its head across them. On wide screens that boundary lands
+   * just past the last nav item.
+   */
+  const maxX = () => {
     const track = trackRef.current;
     const chick = chickRef.current;
     if (!track || !chick) return 0;
@@ -270,84 +198,31 @@ export function HeaderChick() {
       LIMIT_GAP;
 
     return Math.max(0, Math.min(full, stopBefore));
-  }, []);
+  };
 
-  const paint = useCallback((resting: boolean) => {
+  /**
+   * Writes the current position out. Called from the walk loop and straight
+   * from the drag handler, so dragging tracks the pointer within the same
+   * event rather than waiting for the next frame.
+   */
+  const paint = (resting: boolean) => {
     const chick = chickRef.current;
     if (!chick) return;
+    // The artwork faces right, so only walking left needs the flip. The
+    // greeting pose faces front and is symmetrical, so it stays unflipped —
+    // otherwise the mirror would throw the heart out to the wrong side.
     const facing = greetingRef.current || queasyRef.current ? 1 : dirRef.current;
     chick.style.transform = `translateX(${xRef.current}px) scaleX(${facing})`;
     chick.classList.toggle("chick-resting", resting);
 
+    // The complaint bubble lives outside the clipped strip, so it has to be
+    // moved to match rather than riding along inside the chick.
     if (bubbleRef.current) {
-      bubbleRef.current.style.transform = `translateX(${Math.max(0, xRef.current - 20)}px)`;
+      bubbleRef.current.style.transform = `translateX(${xRef.current}px)`;
     }
-  }, []);
-
-  const showWhisper = useCallback(
-    (customText?: string) => {
-      if (queasyRef.current || isMutedRef.current || isMobileRef.current) return;
-
-      let text = customText;
-      if (!text) {
-        const pool = isEnglish ? WHISPERS_EN : WHISPERS_TR;
-        if (whispersDeckRef.current.length === 0) {
-          const deck = Array.from({ length: pool.length }, (_, i) => i);
-          for (let i = deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [deck[i], deck[j]] = [deck[j], deck[i]];
-          }
-          whispersDeckRef.current = deck;
-        }
-        text = pool[whispersDeckRef.current.pop()!];
-      }
-
-      setIsQueasyMessage(false);
-      setActiveMessage(text);
-
-      if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
-      whisperTimerRef.current = setTimeout(() => {
-        setActiveMessage(null);
-      }, WHISPER_DURATION_MS);
-    },
-    [isEnglish]
-  );
-
-  const dropGrain = useCallback(
-    (targetX: number) => {
-      const track = trackRef.current;
-      if (!track) return;
-
-      const max = maxX();
-      const clampedX = Math.min(max + 10, Math.max(10, targetX));
-
-      // Strictly maximum 1 grain on the field at any time
-      const singleGrain: Grain = {
-        id: nextGrainIdRef.current++,
-        x: clampedX,
-        eaten: false,
-      };
-
-      grainsRef.current = [singleGrain];
-      setGrains([singleGrain]);
-
-      // Wake chick up and turn towards the grain
-      pausedUntilRef.current = 0;
-    },
-    [maxX]
-  );
+  };
 
   const goQueasy = () => {
-    if (isMutedRef.current || isMobileRef.current) {
-      queasyRef.current = true;
-      reversalsRef.current = [];
-      if (queasyTimerRef.current) clearTimeout(queasyTimerRef.current);
-      queasyTimerRef.current = setTimeout(() => {
-        queasyRef.current = false;
-      }, QUEASY_MS);
-      return;
-    }
-
     const pool = isEnglish ? QUEASY_EN : QUEASY_TR;
     if (queasyDeckRef.current.length === 0) {
       const deck = Array.from({ length: pool.length }, (_, i) => i);
@@ -359,18 +234,17 @@ export function HeaderChick() {
     }
 
     queasyRef.current = true;
-    setIsQueasyMessage(true);
-    setActiveMessage(pool[queasyDeckRef.current.pop()!]);
+    setQueasyMessage(pool[queasyDeckRef.current.pop()!]);
     reversalsRef.current = [];
 
     if (queasyTimerRef.current) clearTimeout(queasyTimerRef.current);
     queasyTimerRef.current = setTimeout(() => {
       queasyRef.current = false;
-      setActiveMessage(null);
-      setIsQueasyMessage(false);
+      setQueasyMessage(null);
     }, QUEASY_MS);
   };
 
+  /** Counts changes of direction; enough of them in a short window is a shake. */
   const noteShake = (from: number, to: number) => {
     const direction = to > from ? 1 : to < from ? -1 : 0;
     if (direction === 0) return;
@@ -390,7 +264,9 @@ export function HeaderChick() {
     }
   };
 
-  // Sync speed with media query
+  /* Kept in step with the `--chick-gait` media query in globals.css: the
+     stride length is fixed by the leg geometry, so slowing one without the
+     other would have the feet skating. */
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_QUERY);
     const sync = () => {
@@ -401,10 +277,8 @@ export function HeaderChick() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  // Main frame loop
   useEffect(() => {
     let frame = 0;
-    nextWhisperAtRef.current = performance.now() + 10000;
 
     const tick = (now: number) => {
       const track = trackRef.current;
@@ -420,53 +294,12 @@ export function HeaderChick() {
         const pecking = now < peckUntilRef.current;
         const resting = held || pecking || now < pausedUntilRef.current;
 
+        // First frame: start the clock rather than pecking immediately.
         if (!nextPeckAtRef.current) {
           nextPeckAtRef.current = now + between(PECK_EVERY);
         }
 
-        // Periodic random whisper
-        if (
-          now >= nextWhisperAtRef.current &&
-          !held &&
-          !activeMessage &&
-          !isMutedRef.current &&
-          !isMobileRef.current
-        ) {
-          showWhisper();
-          nextWhisperAtRef.current = now + WHISPER_INTERVAL_MS + Math.random() * 8000;
-        }
-
-        // Check for active uneaten grains
-        const activeGrains = grainsRef.current.filter((g) => !g.eaten);
-        const closestGrain = activeGrains.length > 0 ? activeGrains[0] : null;
-
-        if (closestGrain && !held) {
-          const dist = closestGrain.x - xRef.current;
-          dirRef.current = dist > 0 ? 1 : -1;
-
-          // Close enough to eat!
-          if (Math.abs(dist) <= 12) {
-            closestGrain.eaten = true;
-            grainsRef.current = grainsRef.current.filter((g) => g.id !== closestGrain.id);
-            setGrains([...grainsRef.current]);
-
-            // Eating action
-            peckUntilRef.current = now + PECK_MS;
-            pausedUntilRef.current = now + PECK_MS + 400;
-
-            // Reaction whisper (if not muted and not mobile)
-            if (!isMutedRef.current && !isMobileRef.current) {
-              const reactions = isEnglish ? EAT_REACTIONS_EN : EAT_REACTIONS_TR;
-              const react = reactions[Math.floor(Math.random() * reactions.length)];
-              showWhisper(react);
-            }
-          } else if (!resting && dt) {
-            // Run enthusiastically towards food!
-            const currentSpeed = RUN_SPEED;
-            xRef.current += dirRef.current * currentSpeed * (dt / 1000);
-          }
-        } else if (!resting && dt) {
-          // Standard patrol
+        if (!resting && dt) {
           xRef.current += dirRef.current * speedRef.current * (dt / 1000);
 
           if (xRef.current >= max) {
@@ -483,6 +316,7 @@ export function HeaderChick() {
           }
         }
 
+        // A resize can leave the chick past the new right edge.
         xRef.current = Math.min(max, Math.max(0, xRef.current));
         paint(resting);
         chick.classList.toggle("chick-pecking", pecking);
@@ -494,13 +328,12 @@ export function HeaderChick() {
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [maxX, paint, isEnglish, showWhisper, activeMessage]);
+  }, []);
 
   useEffect(
     () => () => {
       if (greetTimerRef.current) clearTimeout(greetTimerRef.current);
       if (queasyTimerRef.current) clearTimeout(queasyTimerRef.current);
-      if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
     },
     []
   );
@@ -517,6 +350,7 @@ export function HeaderChick() {
     setGreeting(false);
   };
 
+  /** Touch has no pointerleave, so it lets go on a timer instead. */
   const releaseAfterDelay = () => {
     if (greetTimerRef.current) clearTimeout(greetTimerRef.current);
     greetTimerRef.current = setTimeout(endGreeting, GREET_MS);
@@ -532,6 +366,7 @@ export function HeaderChick() {
       clientX - track.getBoundingClientRect().left - grabOffsetRef.current;
     const clamped = Math.min(max, Math.max(0, next));
 
+    // Face the way it is being dragged, so it carries on that way.
     if (clamped > xRef.current + 0.5) dirRef.current = 1;
     else if (clamped < xRef.current - 0.5) dirRef.current = -1;
 
@@ -540,65 +375,22 @@ export function HeaderChick() {
     paint(true);
   };
 
-  const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // If a drag/shake was active or ended within 350ms, do NOT drop grain!
-    if (
-      isDragActiveRef.current ||
-      performance.now() - lastDragEndRef.current < 350
-    ) {
-      return;
-    }
-
-    const track = trackRef.current;
-    if (!track) return;
-    const clickX = e.clientX - track.getBoundingClientRect().left;
-    dropGrain(clickX);
-  };
-
   return (
+    // The wrapper is deliberately unclipped so the complaint bubble can hang
+    // below the header; only the walking strip inside it clips.
     <div
       aria-hidden
       className="pointer-events-none absolute inset-x-0 bottom-0 px-5 sm:px-8 lg:px-12"
     >
-      {/* Interactive Walking Track */}
-      <div
-        ref={trackRef}
-        onClick={handleTrackClick}
-        title={
-          isEnglish
-            ? "Click to drop a treat for the chick! 🌾"
-            : "Tıkla, civcive yem bırak! 🌾"
-        }
-        className="pointer-events-auto relative h-8 overflow-hidden cursor-crosshair group/track"
-      >
-        {/* Render Active Grains */}
-        <AnimatePresence>
-          {grains.map((grain) => (
-            <motion.div
-              key={grain.id}
-              initial={{ scale: 0, y: -12, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 1.4, y: -8, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              style={{ left: `${grain.x}px` }}
-              className="absolute bottom-1 -translate-x-1/2 flex items-center justify-center pointer-events-none z-10"
-            >
-              <span className="text-xs select-none filter drop-shadow-[0_2px_4px_rgba(255,190,0,0.5)]">
-                🌾
-              </span>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-
-        {/* The Chick Mascot */}
+      <div ref={trackRef} className="relative h-7 overflow-hidden">
         <div
           ref={chickRef}
           data-cursor="chick"
           data-dragging={dragging ? "true" : undefined}
           style={
             {
-              "--chick-body": isQueasyMessage ? "#a8c46a" : "#f7cf4e",
-              "--chick-shade": isQueasyMessage ? "#8fae55" : "#e3b336",
+              "--chick-body": queasyMessage ? "#a8c46a" : "#f7cf4e",
+              "--chick-shade": queasyMessage ? "#8fae55" : "#e3b336",
             } as React.CSSProperties
           }
           onPointerEnter={startGreeting}
@@ -608,13 +400,13 @@ export function HeaderChick() {
           onPointerDown={(e) => {
             const track = trackRef.current;
             if (!track) return;
-            e.stopPropagation();
-            isDragActiveRef.current = true;
+            e.preventDefault();
             e.currentTarget.setPointerCapture(e.pointerId);
             grabOffsetRef.current =
               e.clientX - track.getBoundingClientRect().left - xRef.current;
             draggingRef.current = true;
             setDragging(true);
+            // Picked up mid-peck: drop the mouthful and reset the clock.
             peckUntilRef.current = 0;
             nextPeckAtRef.current = performance.now() + between(PECK_EVERY);
             startGreeting();
@@ -627,18 +419,17 @@ export function HeaderChick() {
             e.currentTarget.releasePointerCapture(e.pointerId);
             draggingRef.current = false;
             setDragging(false);
-            isDragActiveRef.current = false;
-            lastDragEndRef.current = performance.now();
+            // A beat to find its feet before walking off again.
             pausedUntilRef.current = performance.now() + DROP_PAUSE_MS;
             releaseAfterDelay();
           }}
-          className={`pointer-events-auto absolute bottom-0 left-0 touch-none select-none leading-none cursor-grab active:cursor-grabbing${
-            isQueasyMessage ? " chick-queasy" : ""
-          }`}
+          className={`pointer-events-auto absolute bottom-0 left-0 touch-none select-none leading-none${queasyMessage ? " chick-queasy" : ""}`}
         >
-          {greeting || isQueasyMessage ? <ChickFront /> : <ChickSide />}
+          {greeting || queasyMessage ? <ChickFront /> : <ChickSide />}
 
-          {greeting && !isQueasyMessage && (
+          {greeting && (
+            // Sits beside the head rather than above it: the track clips
+            // anything that rises past its top edge.
             <span
               style={{ animation: `chick-heart ${GREET_MS}ms ease-out forwards` }}
               className="absolute left-full top-0.5 text-[0.7rem] leading-none"
@@ -649,25 +440,14 @@ export function HeaderChick() {
         </div>
       </div>
 
-      {/* Speech / Whisper & Queasy Bubble (Hidden when muted or on mobile) */}
-      <AnimatePresence>
-        {!isMuted && !isMobile && activeMessage && (
-          <motion.div
-            ref={bubbleRef}
-            initial={{ opacity: 0, y: -6, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.92 }}
-            transition={{ duration: 0.25 }}
-            className={`pointer-events-auto absolute left-0 top-full mt-1.5 whitespace-nowrap rounded-xl border px-3 py-1.5 text-xs font-medium shadow-xl backdrop-blur-md z-30 ${
-              isQueasyMessage
-                ? "border-amber-500/40 bg-amber-950/90 text-amber-200"
-                : "border-accent/40 bg-surface/95 text-foreground shadow-accent/5"
-            }`}
-          >
-            {activeMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {queasyMessage && (
+        <div
+          ref={bubbleRef}
+          className="absolute left-0 top-full mt-1 whitespace-nowrap rounded-xl border border-accent/30 bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-xl backdrop-blur-md"
+        >
+          {queasyMessage}
+        </div>
+      )}
     </div>
   );
 }
