@@ -19,10 +19,7 @@ export function Works() {
   });
 
   return (
-    /* Shorter at the foot than the other sections: About opens with its
-       own generous top padding right after, and the two together left a
-       gap you could lose the link in. */
-    <section id="work" className="px-5 pb-12 pt-24 sm:px-8 sm:pb-16 sm:pt-32 lg:px-12">
+    <section id="work" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading
         index="01"
         label={ui.sections.work.label}
