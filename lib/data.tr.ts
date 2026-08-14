@@ -37,6 +37,7 @@ export const projects: Project[] = [
     tags: ["Python", "YOLOv11", "Bilgisayarlı Görü", "5G"],
     href: "#",
     image: "/projects/road-safety.png",
+    aiPrompt: "Akıllı Yol Güvenliği projesinde 5G bağlantısı, YOLOv11 mimarisi ve takım kaptanı olarak rolünü detaylı anlatır mısın?",
     palette: { from: "#FF4D00", via: "#2952E3", to: "#0B1024" },
     caseStudy: {
       intro:
@@ -65,6 +66,7 @@ export const projects: Project[] = [
     href: "#",
     image: "/projects/virtual-campus.png",
     status: "Geliştirme aşamasında",
+    aiPrompt: "Sanal Kampüs projesinin 360° panoramik yapısı, harita entegrasyonu ve envanter yönetim mimarisi nasıl çalışıyor?",
     palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
     caseStudy: {
       intro:
@@ -96,6 +98,7 @@ export const projects: Project[] = [
     tags: ["Web Platformu", "Yönetim Paneli", "SQL", "AI destekli"],
     href: "#",
     image: "/projects/rosso-lounge.png",
+    aiPrompt: "Rosso Lounge Bistro için geliştirdiğin özel yönetim paneli ve web platformu mimarisi nasıl çalışıyor?",
     palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
     caseStudy: {
       intro:
@@ -309,7 +312,12 @@ export const ui: Ui = {
       },
     },
   },
-  projectCard: { cta: "Projeyi incele", ctaAria: "Vaka incelemesini gör:" },
+  projectCard: {
+    cta: "Projeyi incele",
+    ctaAria: "Vaka incelemesini gör:",
+    askAi: "Asistana Sor",
+    askAiAria: "Yapay zekâ asistanına sor:",
+  },
   workIndex: {
     back: "← Ana sayfa",
     meta: "Tüm projeler, yeniden eskiye",
@@ -321,6 +329,7 @@ export const ui: Ui = {
     live: "Canlı",
     visit: "Siteye git ↗",
     next: "Sıradaki proje",
+    askAiPrompt: "Bu projeyi Asistana Sor ✨",
     blocks: { challenge: "Zorluk", approach: "Yaklaşım", outcome: "Sonuç" },
   },
   copyEmail: {

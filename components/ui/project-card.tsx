@@ -14,6 +14,7 @@ import type { Project } from "@/lib/data";
 import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { localePath } from "@/lib/content";
 import { Magnetic } from "@/components/ui/magnetic-button";
+import { AskAiButton } from "@/components/ui/ask-ai-button";
 
 type ProjectCardProps = {
   project: Project;
@@ -206,18 +207,27 @@ export function ProjectCard({
                 </li>
               ))}
             </ul>
-            <Magnetic>
-              <Link
-                href={localePath(locale, `/work/${project.slug}`)}
-                aria-label={`${ui.projectCard.ctaAria} ${project.title}`}
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
-              >
-                {ui.projectCard.cta}
-                <span aria-hidden className="text-sm leading-none">
-                  ↗
-                </span>
-              </Link>
-            </Magnetic>
+            <div className="flex items-center gap-3">
+              {project.aiPrompt && (
+                <AskAiButton
+                  prompt={project.aiPrompt}
+                  label={ui.projectCard.askAi}
+                  variant="card"
+                />
+              )}
+              <Magnetic>
+                <Link
+                  href={localePath(locale, `/work/${project.slug}`)}
+                  aria-label={`${ui.projectCard.ctaAria} ${project.title}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink"
+                >
+                  {ui.projectCard.cta}
+                  <span aria-hidden className="text-sm leading-none">
+                    ↗
+                  </span>
+                </Link>
+              </Magnetic>
+            </div>
           </div>
         </div>
       </motion.article>

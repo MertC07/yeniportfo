@@ -3,8 +3,9 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { useContent } from "@/components/providers/locale-provider";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { AskAiButton } from "@/components/ui/ask-ai-button";
 import type { Certificate } from "@/lib/data";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -121,6 +122,7 @@ function CertificateCard({ certificate, index, viewLabel, onSelect }: CardProps)
 
 export function Certificates() {
   const { certificates, ui } = useContent();
+  const locale = useLocale();
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const [isAllModalOpen, setIsAllModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -195,14 +197,18 @@ export function Certificates() {
         ))}
       </ul>
 
-      {certificates.length > FEATURED_COUNT && (
-        <div className="mt-10 flex justify-center">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        {certificates.length > FEATURED_COUNT && (
           <button
             type="button"
             onClick={() => setIsAllModalOpen(true)}
-            className="microlabel group relative inline-flex items-center gap-2 rounded-full border hairline px-8 py-3.5 text-sm font-semibold text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/10"
+            className="microlabel group relative inline-flex items-center gap-2 rounded-full border hairline px-8 py-3.5 text-sm font-semibold text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-accent-ink hover:shadow-lg hover:shadow-accent/10 cursor-pointer"
           >
-            <span>Tüm Sertifikaları İncele ({certificates.length})</span>
+            <span>
+              {locale === "tr"
+                ? `Tüm Sertifikaları İncele (${certificates.length})`
+                : `Explore All Credentials (${certificates.length})`}
+            </span>
             <svg
               className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
               fill="none"
@@ -212,8 +218,18 @@ export function Certificates() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
-        </div>
-      )}
+        )}
+        <AskAiButton
+          prompt={
+            locale === "tr"
+              ? "Mert'in BTK Akademi, edX HP ve yapay zekâ sertifikaları hakkında özet bilgi verir misin?"
+              : "Can you summarize Mert's credentials from BTK Akademi, edX HP, and AI programs?"
+          }
+          label={locale === "tr" ? "Sertifikaları Asistana Sor" : "Ask AI about Credentials"}
+          variant="subtle"
+          size="md"
+        />
+      </div>
 
       {/* ALL CERTIFICATES MODAL */}
       <AnimatePresence>

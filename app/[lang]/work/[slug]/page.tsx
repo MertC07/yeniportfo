@@ -9,6 +9,7 @@ import { RevealText } from "@/components/ui/reveal-text";
 import { Magnetic } from "@/components/ui/magnetic-button";
 import { getContent, isLocale, localePath } from "@/lib/content";
 import { projects } from "@/lib/data";
+import { AskAiButton } from "@/components/ui/ask-ai-button";
 
 type Params = { lang: string; slug: string };
 
@@ -222,6 +223,29 @@ export default async function CaseStudyPage({
             </section>
           ))}
         </div>
+
+        {/* Contextual AI Copilot Callout */}
+        {project.aiPrompt && (
+          <div className="mt-20 flex flex-col items-start justify-between gap-6 rounded-2xl border hairline bg-surface/40 p-6 backdrop-blur-sm sm:flex-row sm:items-center sm:p-8">
+            <div className="space-y-1">
+              <p className="font-display text-lg font-bold text-foreground">
+                {lang === "tr"
+                  ? "Bu proje hakkında merak ettiklerin mi var?"
+                  : "Curious about the technical details?"}
+              </p>
+              <p className="text-sm text-muted">
+                {lang === "tr"
+                  ? "Mimari kararları, model eğitimi ve entegrasyon süreçlerini yapay zekâ asistanına doğrudan sor."
+                  : "Ask the AI assistant directly about architecture choices, model training, and pipelines."}
+              </p>
+            </div>
+            <AskAiButton
+              prompt={project.aiPrompt}
+              label={ui.caseStudy.askAiPrompt}
+              variant="glass"
+            />
+          </div>
+        )}
 
         {/* Next project */}
         <div className="mt-24 border-t hairline pt-10 sm:mt-32">

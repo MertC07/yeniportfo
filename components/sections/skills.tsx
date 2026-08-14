@@ -9,9 +9,10 @@ import {
   useVelocity,
 } from "motion/react";
 import { techMarquee, type Skill } from "@/lib/data";
-import { useContent } from "@/components/providers/locale-provider";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Marquee } from "@/components/ui/marquee";
+import { AskAiButton } from "@/components/ui/ask-ai-button";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -27,6 +28,7 @@ export function Skills() {
   const [pinned, setPinned] = useState<Skill["discipline"] | null>(null);
   const [hovered, setHovered] = useState<Skill["discipline"] | null>(null);
   const { skillTiers, ui } = useContent();
+  const locale = useLocale();
 
   const active = hovered ?? pinned;
 
@@ -47,45 +49,58 @@ export function Skills() {
 
         {/* Discipline filter — hover to preview, click to pin */}
         <div
-          className="mt-10 flex flex-wrap items-center gap-2"
+          className="mt-10 flex flex-wrap items-center justify-between gap-3"
           onMouseLeave={() => setHovered(null)}
         >
-          {DISCIPLINES.map((discipline) => {
-            const isPinned = pinned === discipline;
-            const isHovered = hovered === discipline;
+          <div className="flex flex-wrap items-center gap-2">
+            {DISCIPLINES.map((discipline) => {
+              const isPinned = pinned === discipline;
+              const isHovered = hovered === discipline;
 
-            return (
+              return (
+                <button
+                  key={discipline}
+                  type="button"
+                  aria-pressed={isPinned}
+                  onMouseEnter={() => setHovered(discipline)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() =>
+                    setPinned((current) => (current === discipline ? null : discipline))
+                  }
+                  className={cn(
+                    "rounded-full border px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-all duration-300 cursor-pointer select-none sm:py-2",
+                    isPinned
+                      ? "border-accent bg-accent text-accent-ink font-semibold"
+                      : isHovered
+                      ? "border-accent/60 bg-accent/10 text-foreground"
+                      : "hairline text-muted hover:border-foreground/40 hover:text-foreground"
+                  )}
+                >
+                  {discipline} {isPinned && "✓"}
+                </button>
+              );
+            })}
+            {pinned && (
               <button
-                key={discipline}
                 type="button"
-                aria-pressed={isPinned}
-                onMouseEnter={() => setHovered(discipline)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() =>
-                  setPinned((current) => (current === discipline ? null : discipline))
-                }
-                className={cn(
-                  "rounded-full border px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-all duration-300 cursor-pointer select-none sm:py-2",
-                  isPinned
-                    ? "border-accent bg-accent text-accent-ink font-semibold"
-                    : isHovered
-                    ? "border-accent/60 bg-accent/10 text-foreground"
-                    : "hairline text-muted hover:border-foreground/40 hover:text-foreground"
-                )}
+                onClick={() => setPinned(null)}
+                className="rounded-full border hairline px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted hover:border-foreground/40 hover:text-foreground transition-colors duration-300 cursor-pointer sm:px-3 sm:py-2"
               >
-                {discipline} {isPinned && "✓"}
+                ✕
               </button>
-            );
-          })}
-          {pinned && (
-            <button
-              type="button"
-              onClick={() => setPinned(null)}
-              className="rounded-full border hairline px-4 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted hover:border-foreground/40 hover:text-foreground transition-colors duration-300 cursor-pointer sm:px-3 sm:py-2"
-            >
-              ✕
-            </button>
-          )}
+            )}
+          </div>
+
+          <AskAiButton
+            prompt={
+              locale === "tr"
+                ? "Mert'in C#, Python ve YOLOv11 yetenek seviyesini ve yazılım geliştirme araçlarını anlatır mısın?"
+                : "Can you explain Mert's proficiency in C#, Python, YOLOv11, and AI tooling?"
+            }
+            label={locale === "tr" ? "Yetenekleri Asistana Sor" : "Ask AI about Skills"}
+            size="sm"
+            variant="subtle"
+          />
         </div>
 
         {/* Tier columns.

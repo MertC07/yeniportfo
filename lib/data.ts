@@ -39,6 +39,8 @@ export type Project = {
   image?: string;
   /** Shown as a badge on the card while a project is still being built. */
   status?: string;
+  /** Contextual prompt sent to the AI Assistant when asked from the card or case study. */
+  aiPrompt?: string;
   /** Colors driving the CSS-generated visual for each card. */
   palette: { from: string; via: string; to: string };
   caseStudy: {
@@ -63,6 +65,7 @@ export const projects: Project[] = [
     tags: ["Python", "YOLOv11", "Computer Vision", "5G"],
     href: "#", // EDIT: project/demo link if public
     image: "/projects/road-safety.png",
+    aiPrompt: "Can you explain the 5G and YOLOv11 architecture and your role as Team Captain in the Smart Road Safety project in detail?",
     palette: { from: "#FF4D00", via: "#2952E3", to: "#0B1024" },
     caseStudy: {
       intro:
@@ -91,6 +94,7 @@ export const projects: Project[] = [
     href: "#",
     image: "/projects/virtual-campus.png",
     status: "In development",
+    aiPrompt: "Can you explain the 360° panoramic scenes, map integration, and inventory management architecture in the Virtual Campus project?",
     palette: { from: "#2952E3", via: "#14224F", to: "#080B18" },
     caseStudy: {
       intro:
@@ -122,6 +126,7 @@ export const projects: Project[] = [
     tags: ["Web Platform", "Admin Panel", "SQL", "AI-assisted"],
     href: "#", // EDIT: live site URL
     image: "/projects/rosso-lounge.png",
+    aiPrompt: "How does the custom management panel and web platform architecture for Rosso Lounge Bistro work?",
     palette: { from: "#C1121F", via: "#6E0E14", to: "#170406" },
     caseStudy: {
       intro:
@@ -607,7 +612,12 @@ export const ui = {
       },
     },
   },
-  projectCard: { cta: "View case", ctaAria: "View case study:" },
+  projectCard: {
+    cta: "View case",
+    ctaAria: "View case study:",
+    askAi: "Ask AI",
+    askAiAria: "Ask AI assistant about:",
+  },
   workIndex: {
     /* The URL above a case study answered with a 404 when it was trimmed —
        a natural thing to try, and the one place a fourth project can go
@@ -622,6 +632,7 @@ export const ui = {
     live: "Live",
     visit: "Visit site ↗",
     next: "Next project",
+    askAiPrompt: "Ask AI about this project ✨",
     blocks: { challenge: "Challenge", approach: "Approach", outcome: "Outcome" },
   },
   copyEmail: {

@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { useContent } from "@/components/providers/locale-provider";
+import { useContent, useLocale } from "@/components/providers/locale-provider";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { AskAiButton } from "@/components/ui/ask-ai-button";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function About() {
   const { about, experience, profile, ui } = useContent();
+  const locale = useLocale();
   return (
     <section id="about" className="px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
       <SectionHeading index="02" label={ui.sections.about.label} meta={profile.location} />
@@ -93,7 +95,19 @@ export function About() {
 
         {/* Experience timeline */}
         <div>
-          <p className="microlabel mb-2">{ui.sections.about.timeline}</p>
+          <div className="mb-3 flex items-center justify-between">
+            <p className="microlabel">{ui.sections.about.timeline}</p>
+            <AskAiButton
+              prompt={
+                locale === "tr"
+                  ? "Mert'in İSKİ stajı, BANÜ Bilgi İşlem asistanlığı ve yazılım mühendisliği eğitim geçmişini özetler misin?"
+                  : "Can you summarize Mert's internship at İSKİ, BANÜ IT assistant role, and software engineering education?"
+              }
+              label={locale === "tr" ? "Deneyimleri Asistana Sor" : "Ask AI about Experience"}
+              size="sm"
+              variant="subtle"
+            />
+          </div>
           <ol>
             {experience.map((entry, i) => (
               <motion.li

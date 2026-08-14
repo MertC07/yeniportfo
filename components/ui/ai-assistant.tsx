@@ -274,6 +274,8 @@ export function AiAssistant() {
     setIsOpen(val);
   };
 
+  const handleSendRef = useRef<((textToSend?: string) => Promise<void>) | null>(null);
+
   // Handle ESC key close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -284,6 +286,28 @@ export function AiAssistant() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
+
+  // Handle external contextual copilot requests ("mert-ask-ai")
+  useEffect(() => {
+    const handleAskAiEvent = (e: Event) => {
+      const customEvt = e as CustomEvent<{ prompt: string; autoSend?: boolean }>;
+      const prompt = customEvt.detail?.prompt;
+      if (!prompt) return;
+
+      setIsOpen(true);
+      setHasUnread(false);
+
+      // Short timeout to let the drawer animate in and ref initialize
+      setTimeout(() => {
+        if (handleSendRef.current) {
+          handleSendRef.current(prompt);
+        }
+      }, 150);
+    };
+
+    window.addEventListener("mert-ask-ai", handleAskAiEvent);
+    return () => window.removeEventListener("mert-ask-ai", handleAskAiEvent);
+  }, []);
 
   const handleSend = async (textToSend?: string) => {
     const query = textToSend || input.trim();
@@ -352,6 +376,8 @@ export function AiAssistant() {
       setLoading(false);
     }
   };
+
+  handleSendRef.current = handleSend;
 
   const handleActionClick = (link: ActionLink) => {
     // 1. Immediately close the chatbot drawer

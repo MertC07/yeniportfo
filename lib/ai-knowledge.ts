@@ -268,20 +268,85 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // TEKNOFEST & YOL GÜVENLİĞİ & 5GENÇ
-  if (has("teknofest", "yol güvenliği", "5genç", "yolo", "kaptan")) {
+  // ROSSO LOUNGE BISTRO
+  if (has("rosso", "rosso lounge", "bistro", "menü", "restoran", "restaurant", "lounge")) {
     if (locale === "tr") {
       return {
-        text: "🚀 **TEKNOFEST 2026 (Kaptan Mert ve 5Genç iş başında! 😄)**:\n\n• **Takım**: 5Genç\n• **Mert'in Rolü**: Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi\n• **Teknolojiler**: Python, YOLOv11, OpenCV, 5G Edge Computing\n\n5G ile entegre otonom sürüş için YOLOv11 modelleri geliştiriyoruz 🤖✨",
+        text: "🍷 **Rosso Lounge Bistro Web Platformu**:\n\n• **Müşteri**: Rosso Lounge Bistro\n• **Rol**: Yapay Zekâ Destekli Web Geliştirme (Mert Ceren)\n• **Öne Çıkan Özellik**: Özel Yönetim Paneli (Admin Panel)\n• **Mimari**: HTML, C#, CSS, SQL\n\n**Nasıl Çalışıyor?**\nKüçük işletmelerin en büyük sorunu menü veya fiyat değiştiğinde sitenin atıl kalmasıdır. Mert bu proje için işletme personelinin teknik bilgiye ihtiyaç duymadan menüyü, fotoğrafları ve işletme bilgilerini tek panelden güncelleyebildiği dinamik bir yönetim paneli kurguladı. Dil modelleriyle birlikte mimarisi tasarlanıp teslim edildi 🚀",
         actionLinks: [
-          { label: "Seçilmiş Projeler Bölümüne Git 🚀", href: "#work", isAnchor: true },
+          { label: "Rosso Lounge Vaka İncelemesi ↗", href: "/work/rosso-lounge" },
+          { label: "Seçilmiş Projeler 🚀", href: "#work", isAnchor: true },
         ],
       };
     } else {
       return {
-        text: "🚀 **TEKNOFEST 2026 Smart Road Safety Project Summary**:\n\n• **Team**: 5Genç\n• **Mert's Role**: Team Captain, Project Coordinator & AI/ML Engineer\n• **Tech**: Python, YOLOv11, Computer Vision, 5G Edge\n\nDeveloping real-time YOLOv11 object detection models integrated with 5G edge communication for assisted and autonomous driving scenarios.",
+        text: "🍷 **Rosso Lounge Bistro Web Platform**:\n\n• **Client**: Rosso Lounge Bistro\n• **Role**: AI-assisted Web Development (Mert Ceren)\n• **Key Feature**: Custom Admin & Management Panel\n• **Tech**: HTML, C#, CSS, SQL\n\n**How it works:**\nRestaurant sites often become outdated when menus change. Mert engineered a complete web platform with an intuitive management panel allowing non-technical staff to update food items, pricing, and operating hours instantly without touching code.",
         actionLinks: [
-          { label: "Jump to Projects Section 🚀", href: "#work", isAnchor: true },
+          { label: "View Rosso Lounge Case Study ↗", href: "/en/work/rosso-lounge" },
+          { label: "Featured Projects 🚀", href: "#work", isAnchor: true },
+        ],
+      };
+    }
+  }
+
+  // SANAL KAMPÜS (VIRTUAL CAMPUS)
+  if (has("sanal kampüs", "virtual campus", "kampüs", "campus", "panorama", "panoramik", "sphere", "envanter")) {
+    if (locale === "tr") {
+      return {
+        text: "🏫 **Sanal Kampüs (Virtual Campus & Envanter Yönetimi)**:\n\n• **Rol**: Yazılım Mühendisliği Öğrencisi (Mert Ceren)\n• **Frontend**: React + Vite, Tailwind CSS, Photo Sphere Viewer, Leaflet\n• **Backend & DB**: Node.js, Express, Prisma, PostgreSQL 16 (Docker)\n• **Geliştirme Metodu**: Yapay zekâ destekli geliştirme\n\n**Nasıl Çalışıyor?**\nSanal Kampüs iki büyük ihtiyacı tek platformda birleştiriyor: Aday öğrencilerin kampüsü 360° panoramik sahnelerle gezebilmesi ve üniversite idaresinin aynı binalardaki oda ve demirbaş envanterini Leaflet haritası ve PostgreSQL veritabanı üzerinden tek panelden yönetebilmesi ✨",
+        actionLinks: [
+          { label: "Sanal Kampüs Vaka İncelemesi ↗", href: "/work/virtual-campus" },
+          { label: "Seçilmiş Projeler 🚀", href: "#work", isAnchor: true },
+        ],
+      };
+    } else {
+      return {
+        text: "🏫 **Virtual Campus & Inventory Management**:\n\n• **Role**: Software Engineering Student (Mert Ceren)\n• **Frontend**: React + Vite, Tailwind CSS, Photo Sphere Viewer, Leaflet\n• **Backend & DB**: Node.js, Express, Prisma, PostgreSQL 16 (Docker)\n• **Methodology**: AI-assisted development\n\n**How it works:**\nCombines an immersive 360° panoramic virtual tour for visitors with a comprehensive room-by-room inventory tracking system for campus administration, querying unified PostgreSQL records.",
+        actionLinks: [
+          { label: "View Virtual Campus Case Study ↗", href: "/en/work/virtual-campus" },
+          { label: "Featured Projects 🚀", href: "#work", isAnchor: true },
+        ],
+      };
+    }
+  }
+
+  // TEKNOFEST & YOL GÜVENLİĞİ & 5GENÇ
+  if (has("teknofest", "yol güvenliği", "road safety", "5genç", "5genc", "yolo", "yolov11", "kaptan", "captain")) {
+    if (locale === "tr") {
+      return {
+        text: "🚦 **Akıllı Yol Güvenliği (TEKNOFEST 2026 — 5Genç)**:\n\n• **Takım**: 5Genç (Takım Kaptanı: Mert Ceren)\n• **Mert'in Rolü**: Takım Kaptanı, Proje Koordinatörü & AI/ML Mühendisi\n• **Teknolojiler**: Python, YOLOv11, Bilgisayarlı Görü, 5G Düşük Gecikmeli İletim\n• **Aşama**: Geliştirme Aşamasında (TEKNOFEST 2026 Finalisti)\n\n**Nasıl Çalışıyor?**\nDestekli ve otonom sürüş senaryolarında yol üzerindeki araç, yaya ve engelleri tespit etmek için Python ortamında YOLOv11 modelleri eğitildi. Tespit edilen risk verileri 5G düşük gecikmeli iletişim altyapısıyla yol hızında araçlara ve kontrol merkezine aktarılıyor 🤖✨",
+        actionLinks: [
+          { label: "Akıllı Yol Güvenliği Vaka İncelemesi ↗", href: "/work/smart-road-safety" },
+          { label: "Ödüller & TEKNOFEST 🏆", href: "#awards", isAnchor: true },
+        ],
+      };
+    } else {
+      return {
+        text: "🚦 **Smart Road Safety (TEKNOFEST 2026 — 5Genç)**:\n\n• **Team**: 5Genç (Team Captain: Mert Ceren)\n• **Mert's Role**: Team Captain, Project Coordinator & AI/ML Engineer\n• **Tech**: Python, YOLOv11, Computer Vision, Low-latency 5G\n• **Stage**: In Development (TEKNOFEST 2026 Finalist)\n\n**How it works:**\nPairs scenario-trained YOLOv11 vision models with low-latency 5G communication to detect hazards, vehicles, and pedestrians in real time for assisted and autonomous driving.",
+        actionLinks: [
+          { label: "View Smart Road Safety Case Study ↗", href: "/en/work/smart-road-safety" },
+          { label: "Awards Section 🏆", href: "#awards", isAnchor: true },
+        ],
+      };
+    }
+  }
+
+  // İSKİ STAJI & BANÜ DENEYİMİ
+  if (has("iski", "staj", "intern", "internship", "asistan", "assistant", "etkin kampus", "etkin kampüs")) {
+    if (locale === "tr") {
+      return {
+        text: "💼 **Mert'in Deneyimleri & İSKİ Stajı**:\n\n• **İSKİ (Yazılım Şube Müdürlüğü)** — *Yazılım Mühendisliği Stajyeri (Haz 2026 — Güncel)*: Bilgi İşlem Dairesi Başkanlığı Yazılım Şube Müdürlüğü bünyesinde 20 günlük zorunlu yazılım mühendisliği stajını gerçekleştiriyor.\n• **BANÜ Bilgi İşlem** — *Öğrenci Asistanı (Ara 2025 — Haz 2026)*: Kullanıcı desteği, donanım kurulumu ve envanter yönetimi.\n• **BANÜ Yazılım Mühendisliği** — *Sınıf Temsilcisi (2024 — Güncel)*: Akademisyenler ve öğrenciler arası iletişim koordinatörü ✨",
+        actionLinks: [
+          { label: "Hakkımda & Zaman Çizelgesi ↗", href: "#about", isAnchor: true },
+          { label: "İletişime Geç ✉️", href: "#contact", isAnchor: true },
+        ],
+      };
+    } else {
+      return {
+        text: "💼 **Mert's Experience & İSKİ Internship**:\n\n• **İSKİ (Software Branch Directorate)** — *Software Engineering Intern (Jun 2026 — Present)*: 20-day compulsory software engineering internship at Istanbul Water and Sewerage Administration.\n• **BANÜ IT Department** — *Student Assistant (Dec 2025 — Jun 2026)*: Technical support, hardware installation, and inventory.\n• **BANÜ Software Engineering** — *Class Representative (2024 — Present)*: Coordination between faculty and students.",
+        actionLinks: [
+          { label: "View About & Timeline ↗", href: "#about", isAnchor: true },
+          { label: "Contact Mert ✉️", href: "#contact", isAnchor: true },
         ],
       };
     }
@@ -306,8 +371,8 @@ export function getLocalAiResponse(query: string, locale: "tr" | "en" = "tr"): {
     }
   }
 
-  // PROJELER (TEKNOFEST, Sanal Kampüs, Rosso Lounge, bwai İK)
-  if (has("proje", "project", "sanal kampüs", "rosso", "ik karar", "işler")) {
+  // GENEL PROJELER (TEKNOFEST, Sanal Kampüs, Rosso Lounge, bwai İK)
+  if (has("proje", "project", "işler", "works")) {
     if (locale === "tr") {
       return {
         text: "💻 **Projeler (Mert'in geliştirdiği harika işlere bakalım 😄)**:\n\n1. 🚦 **Akıllı Yol Güvenliği (TEKNOFEST 2026)** — 5G & YOLOv11 ile Otonom Sürüş Desteği (5Genç Takım Kaptanı)\n2. 🏫 **Sanal Kampüs** — 360° Panoramik Sanal Tur & İdare Envanter Yönetim Platformu\n3. 🍷 **Rosso Lounge Bistro** — Özel Yönetim Panelli Web Platformu & Menü Sistemi\n4. 🤖 **bwai İK Karar Motoru** — Açık kaynak yapay zekâ İK karar destek motoru ✨",
